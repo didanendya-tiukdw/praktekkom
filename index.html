@@ -1,1522 +1,470 @@
 <!doctype html>
 <html lang="id">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<style>[hidden]{display:none!important}body{margin:0}img{max-width:100%}</style>
-<title>Introduction to C · P10</title>
-<meta name="claude:viewport-fit-sides" content="cover">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&family=Sora:wght@600;700&display=swap">
-<script>
-try{
-  const savedTheme=JSON.parse(localStorage.getItem("intro-c-theme"));
-  if(savedTheme==="light"||savedTheme==="dark")document.documentElement.dataset.theme=savedTheme;
-}catch(e){console.warn("Preferensi tema tidak dapat dibaca.",e)}
-</script>
-<style>
-/* Layout: sticky progress header · sticky table of contents on the left (desktop) · one reading column whose demos break out into code | terminal pairs */
-:root{
-  --bg:#F4F6F9; --surface:#FFFFFF; --surface-2:#EAEFF5; --ink:#152132; --muted:#566476; --line:#D3DBE5;
-  --accent:#C9581A; --accent-soft:#FBE9DD; --teal:#13797F; --teal-soft:#DDF1F1; --violet:#5745B0; --violet-soft:#ECE8FA;
-  --green:#2C7A33; --green-soft:#E1F2E2; --red:#B8352A; --red-soft:#FBE3E0; --amber:#9A6510; --amber-soft:#FBF0D9;
-  --code-bg:#F8FAFC; --kw:#0B57D0; --type:#0A7480; --str:#A82A1F; --num:#0B7A3E; --com:#6B7785; --pre:#8A35B0; --fn:#7A4B00; --ln:#A3AEBB;
-  --term-bg:#11161D; --term-head:#1B222C; --term-fg:#D8DFE8; --term-dim:#7F8B9A; --term-ok:#5FD3C4; --term-in:#F2C14E; --term-prompt:#86C98A; --term-err:#FF8A7A;
-  --f-display:"Sora","Segoe UI",system-ui,sans-serif; --f-body:"IBM Plex Sans","Segoe UI",system-ui,sans-serif; --f-mono:"JetBrains Mono",Consolas,"Courier New",monospace;
-  --radius:10px; --shadow:0 1px 2px rgba(21,33,50,.06),0 4px 14px rgba(21,33,50,.06);
-}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#0D131A; --surface:#141C26; --surface-2:#1A2430; --ink:#E3E9F0; --muted:#9BA8B8; --line:#283442;
-  --accent:#F08A4B; --accent-soft:#3A2416; --teal:#4CC3C9; --teal-soft:#132E31; --violet:#A797F3; --violet-soft:#241F3D;
-  --green:#6CCB73; --green-soft:#16301A; --red:#F07468; --red-soft:#3A1C19; --amber:#E3B341; --amber-soft:#33280F;
-  --code-bg:#101821; --kw:#7AB7FF; --type:#4FD1C5; --str:#F3A08F; --num:#9BDB9E; --com:#7D8A9A; --pre:#D5A2F0; --fn:#E8C97A; --ln:#55626F;
-  --term-bg:#080C11; --term-head:#121921; --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.25); color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#0D131A; --surface:#141C26; --surface-2:#1A2430; --ink:#E3E9F0; --muted:#9BA8B8; --line:#283442;
-  --accent:#F08A4B; --accent-soft:#3A2416; --teal:#4CC3C9; --teal-soft:#132E31; --violet:#A797F3; --violet-soft:#241F3D;
-  --green:#6CCB73; --green-soft:#16301A; --red:#F07468; --red-soft:#3A1C19; --amber:#E3B341; --amber-soft:#33280F;
-  --code-bg:#101821; --kw:#7AB7FF; --type:#4FD1C5; --str:#F3A08F; --num:#9BDB9E; --com:#7D8A9A; --pre:#D5A2F0; --fn:#E8C97A; --ln:#55626F;
-  --term-bg:#080C11; --term-head:#121921; --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.25); color-scheme:dark}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101b2d">
+  <meta name="description" content="Portal materi interaktif Praktikum Teknologi Komputer, Program Studi Informatika UKDW.">
+  <title>Praktikum Teknologi Komputer · Informatika UKDW</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17243a;
+      --muted: #647087;
+      --paper: #f7f8f5;
+      --surface: #fff;
+      --line: #e2e7e5;
+      --navy: #101b2d;
+      --navy-soft: #1b2a40;
+      --green: #b7ee63;
+      --green-dark: #4a7121;
+      --orange: #f2a375;
+      --radius: 18px;
+      --shadow: 0 16px 45px rgb(23 36 58 / 8%);
+      font-family: Inter, "Segoe UI", Arial, sans-serif;
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+    }
 
-*{box-sizing:border-box;font-variant-ligatures:none;font-feature-settings:"liga" 0,"calt" 0}
-html{scroll-behavior:smooth;scroll-padding-top:72px}
-@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
-body{background:var(--bg);color:var(--ink);font:16px/1.65 var(--f-body);-webkit-font-smoothing:antialiased}
-body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
-a{color:var(--teal)}
-h1,h2,h3,h4{font-family:var(--f-display);line-height:1.2;text-wrap:balance;margin:0}
-h2{font-size:1.75rem;letter-spacing:-.01em}
-h3{font-size:1.2rem;margin-top:2rem}
-h4{font-size:1rem;font-family:var(--f-body);font-weight:600}
-p{margin:.6rem 0;text-wrap:pretty;overflow-wrap:break-word}
-code,kbd{font-family:var(--f-mono);font-size:.88em}
-:not(pre)>code{background:var(--surface-2);padding:.08em .35em;border-radius:5px;color:var(--accent)}
-kbd{border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 .35em;background:var(--surface)}
-button,input,select{font:inherit;color:inherit}
-:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--paper); color: var(--ink); line-height: 1.6; }
+    a { color: inherit; }
+    button, input { font: inherit; }
+    button:focus-visible, a:focus-visible, input:focus-visible {
+      outline: 3px solid #87b83c;
+      outline-offset: 3px;
+    }
+    .container { width: min(1120px, calc(100% - 48px)); margin-inline: auto; }
 
-/* header */
-.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line);
-  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-.topbar-in{max-width:1240px;margin:0 auto;display:flex;align-items:center;gap:14px;height:56px}
-.brand{font-family:var(--f-display);font-weight:700;font-size:1rem;white-space:nowrap}
-.brand b{color:var(--accent)}
-.topbar .meta{color:var(--muted);font-size:.85rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
-.theme-control{margin-left:auto;display:flex;align-items:center;gap:8px;color:var(--muted);font-size:.84rem;white-space:nowrap}
-.theme-control select{border:1px solid var(--line);border-radius:7px;background:var(--surface);padding:5px 8px}
-@media (max-width:420px){.brand{font-size:.82rem}.theme-control .theme-label{display:none}.theme-control select{padding-inline:5px}}
-@media (max-width:360px){.brand{font-size:.78rem}}
-.progress{position:absolute;left:0;bottom:-1px;height:3px;background:var(--accent);width:0}
+    .topbar {
+      position: absolute;
+      inset: 0 0 auto;
+      z-index: 2;
+      color: #fff;
+    }
+    .nav {
+      min-height: 82px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      border-bottom: 1px solid rgb(255 255 255 / 13%);
+    }
+    .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+    .brand-mark {
+      width: 38px; height: 38px; display: grid; place-items: center;
+      border-radius: 12px; background: var(--green); color: var(--navy);
+      font-size: 15px; font-weight: 850; letter-spacing: -.08em;
+    }
+    .brand-text { display: grid; font-size: 13px; font-weight: 750; line-height: 1.2; }
+    .brand-text small { margin-top: 4px; color: #b6c1d0; font-size: 10px; font-weight: 550; letter-spacing: .1em; text-transform: uppercase; }
+    .nav-links { display: flex; align-items: center; gap: 30px; }
+    .nav-links a { color: #d3dae4; font-size: 13px; text-decoration: none; }
+    .nav-links a:hover { color: var(--green); }
+    .nav-links .nav-cta {
+      border: 1px solid rgb(255 255 255 / 30%);
+      border-radius: 999px;
+      padding: 9px 16px;
+      color: #fff;
+    }
 
-.wrap{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:230px minmax(0,1fr);gap:40px;
-  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 80px}
-nav.toc{position:sticky;top:84px;align-self:start;max-height:calc(100vh - 100px);overflow:auto;font-size:.88rem}
-nav.toc ol{list-style:none;margin:0;padding:0;display:grid;gap:2px}
-nav.toc a{display:block;padding:5px 10px;border-radius:7px;color:var(--muted);text-decoration:none;border-left:2px solid transparent}
-nav.toc a:hover{background:var(--surface-2);color:var(--ink)}
-nav.toc a.active{color:var(--ink);border-left-color:var(--accent);background:var(--surface);font-weight:600}
-nav.toc .sub a{padding-left:22px;font-size:.84rem}
-.toc-label{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 8px 10px}
-.mobile-toc{display:none}
-main{min-width:0}
-section.sec{padding-top:12px;margin-top:56px}
-section.sec:first-of-type{margin-top:0}
-.eyebrow{font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:6px}
-.lead{font-size:1.08rem;color:var(--muted);max-width:68ch}
-.prose{max-width:72ch}
-.prose a,.refs a{overflow-wrap:anywhere}
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 145px 0 92px;
+      background:
+        radial-gradient(ellipse at 78% 47%, rgb(183 238 99 / 10%), transparent 32%),
+        var(--navy);
+      color: #fff;
+    }
+    .hero::after {
+      position: absolute;
+      right: -120px;
+      bottom: -240px;
+      width: 580px;
+      height: 580px;
+      border: 1px solid rgb(255 255 255 / 7%);
+      border-radius: 50%;
+      content: "";
+      box-shadow: 0 0 0 55px rgb(255 255 255 / 2%), 0 0 0 110px rgb(255 255 255 / 2%);
+      pointer-events: none;
+    }
+    .hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1.2fr .8fr; align-items: center; gap: 60px; }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 9px;
+      color: var(--green); font-size: 11px; font-weight: 750;
+      letter-spacing: .14em; text-transform: uppercase;
+    }
+    .eyebrow::before { width: 21px; height: 2px; background: currentColor; content: ""; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      max-width: 680px; margin: 20px 0 18px;
+      font-size: clamp(42px, 6vw, 72px); letter-spacing: -.065em; line-height: 1.06;
+    }
+    h1 span { color: var(--green); }
+    .hero-copy { max-width: 580px; margin-bottom: 28px; color: #c1ccda; font-size: 16px; }
+    .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+    .button {
+      display: inline-flex; min-height: 46px; align-items: center; justify-content: center; gap: 10px;
+      border: 1px solid transparent; border-radius: 9px; padding: 0 18px;
+      font-size: 13px; font-weight: 750; text-decoration: none; transition: transform .18s ease, background .18s ease;
+    }
+    .button:hover { transform: translateY(-2px); }
+    .button-primary { background: var(--green); color: var(--navy); }
+    .button-primary:hover { background: #cef596; }
+    .button-quiet { border-color: rgb(255 255 255 / 22%); color: #fff; }
+    .button-quiet:hover { background: rgb(255 255 255 / 7%); }
+    .hero-note { margin: 16px 0 0; color: #99a8bb; font-size: 11px; }
+    .hero-art {
+      position: relative; min-height: 300px; display: grid; place-items: center;
+      border: 1px solid rgb(255 255 255 / 13%); border-radius: 24px;
+      background: linear-gradient(145deg, rgb(255 255 255 / 7%), rgb(255 255 255 / 2%));
+      box-shadow: inset 0 1px rgb(255 255 255 / 6%);
+      transform: rotate(1.5deg);
+    }
+    .code-window { width: min(330px, 82%); overflow: hidden; border: 1px solid #34445a; border-radius: 13px; background: #0c1421; box-shadow: 0 24px 60px rgb(0 0 0 / 30%); transform: rotate(-1.5deg); }
+    .window-bar { display: flex; align-items: center; gap: 6px; height: 34px; padding: 0 12px; border-bottom: 1px solid #28364a; color: #8190a4; font-size: 10px; }
+    .window-dot { width: 7px; height: 7px; border-radius: 50%; background: #fb8e78; }
+    .window-dot:nth-child(2) { background: #f6c96b; }
+    .window-dot:nth-child(3) { margin-right: 7px; background: #a7df75; }
+    .code-window pre { margin: 0; padding: 20px 18px 22px; color: #e6edf7; font: 12px/1.9 "Cascadia Code", Consolas, monospace; }
+    .code-green { color: var(--green); }
+    .code-orange { color: var(--orange); }
+    .art-label {
+      position: absolute; right: -17px; bottom: 28px;
+      border: 1px solid rgb(255 255 255 / 12%); border-radius: 10px;
+      padding: 10px 13px; background: #23344b; color: #dce5ef;
+      font-size: 10px; font-weight: 700; letter-spacing: .05em;
+      transform: rotate(-2deg);
+    }
+    .art-label strong { color: var(--green); }
 
-@media (max-width:1000px){
-  .wrap{grid-template-columns:minmax(0,1fr)}
-  nav.toc{display:none}
-  .mobile-toc{display:block;margin-bottom:20px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:10px 14px}
-  .mobile-toc summary{cursor:pointer;font-weight:600}
-  .mobile-toc ol{margin:.5rem 0 0;padding-left:1.2rem;columns:2;font-size:.9rem}
-  .topbar .meta{display:none}
-}
+    .facts { position: relative; z-index: 1; display: flex; flex-wrap: wrap; gap: 0; margin-top: 60px; border-top: 1px solid rgb(255 255 255 / 13%); }
+    .fact { min-width: 145px; padding: 19px 30px 0 0; margin: 0 30px 0 0; border-right: 1px solid rgb(255 255 255 / 13%); }
+    .fact:last-child { border: 0; }
+    .fact strong { display: block; color: #fff; font-size: 20px; letter-spacing: -.03em; }
+    .fact span { color: #aab6c6; font-size: 11px; }
 
-/* hero */
-.hero{display:grid;gap:18px}
-.hero h1{font-size:clamp(2rem,4.6vw,3.2rem);letter-spacing:-.02em}
-.hero h1 span{color:var(--accent)}
-.chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:3px 12px;font-size:.82rem;color:var(--muted)}
-.chip b{color:var(--ink);font-weight:600}
-.stage3d{position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:var(--surface)}
-.stage3d canvas{display:block;width:100%;height:100%}
-.stage3d .fallback{position:absolute;inset:0;display:grid;place-items:center;color:var(--muted);font-size:.9rem;padding:20px;text-align:center}
-.pipe{height:300px}
-.pipe-controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.pill-btn{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 14px;cursor:pointer;font-size:.88rem;display:inline-flex;gap:6px;align-items:center}
-.pill-btn:hover{border-color:var(--accent)}
-.pill-btn[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
-.pill-btn .dot{width:9px;height:9px;border-radius:50%}
-.pipe-caption{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:12px 16px;font-size:.95rem;min-height:3.4em}
-.pipe-caption code{color:var(--teal)}
+    .section { padding: 86px 0; }
+    .section-heading { display: flex; align-items: end; justify-content: space-between; gap: 30px; margin-bottom: 30px; }
+    .section-heading h2 { margin: 9px 0 0; font-size: clamp(27px, 3.4vw, 39px); letter-spacing: -.05em; line-height: 1.15; }
+    .section-heading p { max-width: 390px; margin: 0; color: var(--muted); font-size: 13px; }
+    .section .eyebrow { color: #638e2c; }
+    .section .eyebrow::before { display: none; }
 
-/* cards & grids */
-.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
-.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.grid2>*,.grid3>*{min-width:0}
-@media (max-width:720px){.grid2,.grid3{grid-template-columns:minmax(0,1fr)}}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;min-width:0}
-.card h4{margin-bottom:4px}
-ol.goals{counter-reset:g;list-style:none;padding:0;margin:0;display:grid;gap:8px}
-ol.goals li{counter-increment:g;display:grid;grid-template-columns:28px minmax(0,1fr);gap:8px;align-items:start}
-ol.goals li::before{content:counter(g);font-family:var(--f-display);font-weight:700;color:var(--accent)}
-dl.ident{display:grid;grid-template-columns:max-content 1fr;gap:6px 18px;margin:0;font-size:.93rem}
-dl.ident dt{color:var(--muted)}
-dl.ident dd{margin:0}
-@media (max-width:560px){dl.ident{grid-template-columns:1fr}dl.ident dd{margin-bottom:6px}}
+    .featured {
+      display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 28px;
+      overflow: hidden; border: 1px solid #dfebcd; border-radius: var(--radius);
+      padding: 29px 34px; background: #eef6e6;
+    }
+    .featured-label { display: flex; align-items: center; gap: 8px; color: #537b25; font-size: 10px; font-weight: 800; letter-spacing: .11em; text-transform: uppercase; }
+    .live-dot { width: 7px; height: 7px; border-radius: 50%; background: #7caf39; box-shadow: 0 0 0 4px rgb(124 175 57 / 14%); }
+    .featured h3 { margin: 11px 0 6px; font-size: 22px; letter-spacing: -.04em; }
+    .featured p { max-width: 690px; margin: 0; color: #536147; font-size: 13px; }
+    .featured .button { white-space: nowrap; background: var(--navy); color: #fff; }
+    .featured .button:hover { background: #263a57; }
 
-/* timeline */
-.timeline{display:flex;border-radius:10px;overflow:hidden;border:1px solid var(--line);margin-top:12px}
-.timeline a{display:block;padding:10px 8px;text-decoration:none;color:var(--ink);font-size:.78rem;line-height:1.3;border-right:1px solid var(--bg);min-width:0}
-.timeline a:last-child{border-right:0}
-.timeline a b{display:block;font-family:var(--f-mono);font-size:.72rem;color:var(--muted);font-weight:400}
-.timeline a:hover{filter:brightness(.96)}
-@media (max-width:720px){.timeline{flex-direction:column}.timeline a{flex:none!important;border-right:0;border-bottom:1px solid var(--bg)}}
-.tl-list{display:grid;gap:6px;margin-top:14px;font-size:.92rem}
-.tl-row{display:grid;grid-template-columns:96px 1fr;gap:12px;padding:8px 12px;background:var(--surface);border:1px solid var(--line);border-radius:8px}
-.tl-row .t{font-family:var(--f-mono);font-size:.82rem;color:var(--muted)}
+    .catalog { background: #fff; }
+    .catalog .section-heading { margin-bottom: 24px; }
+    .catalog-controls { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 14px; margin-bottom: 24px; }
+    .filters { display: flex; flex-wrap: wrap; gap: 7px; }
+    .filter {
+      min-height: 36px; border: 1px solid var(--line); border-radius: 999px;
+      padding: 0 13px; background: #fff; color: #58667b; cursor: pointer;
+      font-size: 11px; font-weight: 650; transition: .18s ease;
+    }
+    .filter:hover { border-color: #a6c77e; color: var(--ink); }
+    .filter[aria-pressed="true"] { border-color: var(--navy); background: var(--navy); color: #fff; }
+    .search {
+      width: min(250px, 100%); min-height: 37px;
+      border: 1px solid var(--line); border-radius: 8px;
+      padding: 0 12px; background: #fff; color: var(--ink); font-size: 12px;
+    }
+    .sr-only {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+    }
+    .catalog-meta { display: flex; justify-content: space-between; gap: 16px; margin: 0 0 12px; color: var(--muted); font-size: 11px; }
+    .catalog-meta strong { color: var(--ink); }
+    .cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 13px; }
+    .topic-card {
+      display: flex; min-height: 193px; flex-direction: column; align-items: flex-start;
+      border: 1px solid var(--line); border-radius: 13px; padding: 19px;
+      background: #fff; transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+    }
+    .topic-card:hover { border-color: #bdcfaa; box-shadow: 0 9px 28px rgb(23 36 58 / 7%); transform: translateY(-3px); }
+    .card-top { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .topic-number { color: #8a96a5; font: 700 10px/1 "Cascadia Code", Consolas, monospace; letter-spacing: .06em; }
+    .status { border-radius: 999px; padding: 4px 8px; background: #f1f3f5; color: #758093; font-size: 9px; font-weight: 750; white-space: nowrap; }
+    .status-ready { background: #edf6e3; color: #527d24; }
+    .topic-card h3 { margin: 20px 0 7px; font-size: 15px; letter-spacing: -.025em; line-height: 1.35; }
+    .topic-card p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.55; }
+    .card-link { display: inline-flex; align-items: center; gap: 7px; margin-top: auto; padding-top: 14px; color: #557d27; font-size: 10px; font-weight: 800; text-decoration: none; }
+    .card-link:hover { color: #2f5010; }
+    .card-soon { margin-top: auto; padding-top: 14px; color: #929baa; font-size: 10px; }
+    .empty-state { grid-column: 1 / -1; padding: 42px 16px; border: 1px dashed var(--line); border-radius: 12px; color: var(--muted); text-align: center; font-size: 13px; }
+    .empty-state[hidden] { display: none; }
 
-/* tables */
-.tbl-wrap{overflow-x:auto;margin:14px 0;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface)}
-table{border-collapse:collapse;width:100%;font-size:.9rem}
-th{background:var(--surface-2);text-align:left;font-weight:600;padding:9px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
-td{padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
-tr:last-child td{border-bottom:0}
-td code{white-space:nowrap}
-.num{font-variant-numeric:tabular-nums}
+    .bottom { padding: 0 0 80px; }
+    .bottom-panel {
+      display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 24px;
+      border-radius: var(--radius); padding: 29px 34px; background: #f0eee8;
+    }
+    .bottom-panel h2 { margin: 0 0 5px; font-size: 20px; letter-spacing: -.035em; }
+    .bottom-panel p { margin: 0; color: var(--muted); font-size: 12px; }
+    .bottom-panel .button { background: #fff; border-color: #dedbd2; }
+    footer { border-top: 1px solid var(--line); background: #fff; }
+    .footer-in { display: flex; min-height: 78px; align-items: center; justify-content: space-between; gap: 20px; color: #798397; font-size: 10px; }
+    .footer-in strong { color: var(--ink); }
+    .footer-in a { color: #59667b; text-decoration: none; }
+    .footer-in a:hover { color: var(--green-dark); }
 
-/* callouts */
-.note{border-radius:var(--radius);padding:12px 16px;margin:16px 0;font-size:.94rem;border:1px solid transparent}
-.note .lbl{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;display:block;margin-bottom:2px}
-.note.tip{background:var(--teal-soft);border-color:color-mix(in srgb,var(--teal) 30%,transparent)} .note.tip .lbl{color:var(--teal)}
-.note.warn{background:var(--red-soft);border-color:color-mix(in srgb,var(--red) 30%,transparent)} .note.warn .lbl{color:var(--red)}
-.note.info{background:var(--violet-soft);border-color:color-mix(in srgb,var(--violet) 30%,transparent)} .note.info .lbl{color:var(--violet)}
-.note.check{background:var(--amber-soft);border-color:color-mix(in srgb,var(--amber) 30%,transparent)} .note.check .lbl{color:var(--amber)}
-.note p{margin:.25rem 0}
-
-/* demo: code | terminal */
-.demo{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:0;margin:18px 0;border-radius:12px;overflow:hidden;border:1px solid var(--line);box-shadow:var(--shadow)}
-@media (max-width:820px){.demo{grid-template-columns:minmax(0,1fr)}}
-.pane{min-width:0;display:flex;flex-direction:column}
-.pane-head{display:flex;align-items:center;gap:8px;padding:7px 12px;font-size:.78rem;font-family:var(--f-mono)}
-.code-pane{background:var(--code-bg)}
-.code-pane .pane-head{border-bottom:1px solid var(--line);color:var(--muted)}
-.code-pane .pane-head .fname{color:var(--ink);font-weight:600}
-.pane-head .sp{flex:1}
-.mini-btn{border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:2px 8px;font-size:.74rem;cursor:pointer;font-family:var(--f-body)}
-.mini-btn:hover{border-color:var(--accent)}
-pre{margin:0}
-pre.code{font:13.5px/1.6 var(--f-mono);padding:12px 0;overflow-x:auto;flex:1;tab-size:4}
-pre.code .line{display:block;padding:0 14px 0 0;white-space:pre}
-pre.code .line .ln{display:inline-block;width:2.6em;padding-right:.9em;text-align:right;color:var(--ln);user-select:none}
-pre.code .line.hl{background:color-mix(in srgb,var(--accent) 14%,transparent)}
-.t-kw{color:var(--kw)} .t-type{color:var(--type)} .t-str{color:var(--str)} .t-num{color:var(--num)} .t-com{color:var(--com);font-style:italic} .t-pre{color:var(--pre)} .t-fn{color:var(--fn)} .t-param{background:color-mix(in srgb,var(--amber) 22%,transparent);border-radius:3px;outline:1px dashed color-mix(in srgb,var(--amber) 60%,transparent)}
-.term-pane{background:var(--term-bg);color:var(--term-fg)}
-.term-pane .pane-head{background:var(--term-head);color:var(--term-dim)}
-.term-pane .pane-head .dots{display:flex;gap:5px}
-.term-pane .pane-head .dots i{width:9px;height:9px;border-radius:50%;background:#3A4350;display:block}
-pre.term{font:13.5px/1.6 var(--f-mono);padding:12px 14px;white-space:pre-wrap;word-break:break-word;flex:1;min-height:120px}
-pre.term .p{color:var(--term-prompt)} pre.term .c{color:#E8D58A} pre.term .in{color:var(--term-in);font-weight:600} pre.term .ok{color:var(--term-ok)} pre.term .dim{color:var(--term-dim)} pre.term .err{color:var(--term-err)}
-.stdin{display:flex;flex-wrap:wrap;gap:8px 12px;padding:10px 14px;border-bottom:1px solid #263040;background:color-mix(in srgb,var(--term-head) 70%,var(--term-bg))}
-.stdin label{display:flex;flex-direction:column;font-size:.7rem;color:var(--term-dim);gap:2px;font-family:var(--f-mono)}
-.stdin input,.stdin select{background:#0B1016;border:1px solid #2C3746;border-radius:6px;color:var(--term-in);padding:3px 8px;width:9.5em;font-family:var(--f-mono);font-size:.85rem}
-.stdin input:focus{outline:1px solid var(--term-in)}
-.stdin .kind{width:100%;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--term-dim)}
-.run-flash{animation:flash .5s ease}
-@keyframes flash{from{background:color-mix(in srgb,var(--term-ok) 18%,transparent)}to{background:transparent}}
-
-/* latihan */
-.lt{border:1px solid color-mix(in srgb,var(--accent) 45%,var(--line));border-radius:14px;margin:28px 0;background:var(--surface);overflow:hidden}
-.lt-head{display:grid;grid-template-columns:88px 1fr;background:var(--accent-soft)}
-.lt-num{background:var(--accent);color:#fff;display:grid;place-items:center;text-align:center;font-family:var(--f-display);line-height:1}
-.lt-num small{display:block;font-size:.6rem;letter-spacing:.12em;font-family:var(--f-body);font-weight:600;margin-bottom:4px}
-.lt-num span{font-size:2rem;font-weight:700}
-.lt-meta{padding:12px 16px;font-size:.9rem}
-.lt-meta h4{font-family:var(--f-display);font-size:1.12rem;margin-bottom:4px}
-.lt-body{padding:6px 18px 18px}
-ol.steps{padding-left:1.3rem;margin:.6rem 0}
-ol.steps li{margin:.3rem 0}
-details.key{margin-top:14px;border:1px dashed var(--line);border-radius:10px;padding:10px 14px;background:var(--bg)}
-details.key>summary{cursor:pointer;font-weight:600;color:var(--green)}
-details.key[open]>summary{margin-bottom:6px}
-
-/* forms in exercises */
-.answer-grid{display:grid;gap:6px}
-.ans-row{display:grid;grid-template-columns:34px minmax(0,1fr) 150px 32px;gap:10px;align-items:center;padding:6px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
-.ans-row code{white-space:normal}
-.ans-row input{border:1px solid var(--line);border-radius:6px;padding:4px 8px;background:var(--bg);width:100%;font-family:var(--f-mono);font-size:.88rem}
-.ans-row .mark{font-weight:700;text-align:center}
-.ans-row.ok{border-color:var(--green);background:var(--green-soft)} .ans-row.ok .mark{color:var(--green)}
-.ans-row.no{border-color:var(--red);background:var(--red-soft)} .ans-row.no .mark{color:var(--red)}
-.ans-row .why{grid-column:2/-1;font-size:.84rem;color:var(--muted)}
-@media (max-width:560px){.ans-row{grid-template-columns:28px minmax(0,1fr) 30px}.ans-row input{grid-column:2}.ans-row .mark{grid-row:1;grid-column:3}}
-.btn{border:0;background:var(--ink);color:var(--bg);border-radius:8px;padding:8px 16px;cursor:pointer;font-weight:600}
-.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
-.btn-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px}
-.score{font-weight:600}
-
-/* detective */
-.det-code{font:13.5px/1.6 var(--f-mono);background:var(--code-bg);border:1px solid var(--line);border-radius:10px;padding:10px 0;overflow-x:auto}
-.det-line{display:flex;gap:0;width:100%;text-align:left;border:0;background:transparent;padding:1px 14px 1px 0;cursor:pointer;white-space:pre;font:inherit}
-.det-line .ln{display:inline-block;width:2.6em;padding-right:.9em;text-align:right;color:var(--ln)}
-.det-line:hover{background:var(--surface-2)}
-.det-line.marked{background:var(--amber-soft);box-shadow:inset 3px 0 0 var(--amber)}
-.det-line.ghost{color:var(--muted);font-style:italic}
-.det-line.found{background:var(--green-soft);box-shadow:inset 3px 0 0 var(--green)}
-.det-line.wrong{background:var(--red-soft);box-shadow:inset 3px 0 0 var(--red)}
-
-/* anatomy */
-.anat{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:16px;align-items:start}
-@media (max-width:820px){.anat{grid-template-columns:minmax(0,1fr)}}
-.anat-notes{display:grid;gap:8px}
-.anat-note{border:1px solid var(--line);border-left:4px solid var(--c);border-radius:8px;padding:8px 12px;background:var(--surface);cursor:default;font-size:.9rem}
-.anat-note b{color:var(--c)}
-.anat-note.on{background:color-mix(in srgb,var(--c) 12%,var(--surface))}
-.anat pre.code .line{cursor:default}
-
-/* stage explorer */
-.stage-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
-.stage-panel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:14px}
-@media (max-width:720px){.stage-panel{grid-template-columns:minmax(0,1fr)}}
-.file-flow{display:flex;align-items:center;gap:10px;font-family:var(--f-mono);font-size:.95rem;flex-wrap:wrap}
-.file-flow .f{border:1px solid var(--line);border-radius:6px;padding:4px 10px;background:var(--surface-2)}
-.excerpt{background:var(--term-bg);color:var(--term-fg);border-radius:10px;padding:12px 14px;font:12.5px/1.55 var(--f-mono);white-space:pre;overflow-x:auto}
-
-/* install */
-.install-steps{display:grid;gap:12px;counter-reset:s}
-.install-overview{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;max-width:800px;margin:14px 0 18px}
-.install-overview>div{min-width:0;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
-.install-overview b{display:block;color:var(--teal);font-family:var(--f-display);font-size:.92rem}
-.install-overview p{margin:4px 0 0;color:var(--muted);font-size:.9rem}
-@media (max-width:560px){.install-overview{grid-template-columns:minmax(0,1fr)}}
-.istep{display:grid;grid-template-columns:44px minmax(0,1fr);gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
-.istep .n{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-family:var(--f-display);font-weight:700;color:#fff;background:var(--c,var(--ink))}
-.istep h4{font-family:var(--f-display);font-size:1.02rem}
-.istep .src{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-left:6px;font-weight:600}
-.istep ul{margin:.4rem 0;padding-left:1.1rem}
-.istep.done{border-color:var(--green);background:color-mix(in srgb,var(--green) 6%,var(--surface))}
-.istep.done .n{background:var(--green)}
-.istep label.chk{display:inline-flex;gap:8px;align-items:center;font-size:.88rem;color:var(--muted);cursor:pointer;margin-top:6px}
-.cmd{display:flex;align-items:center;gap:8px;background:var(--term-bg);color:var(--term-fg);border-radius:8px;padding:8px 10px 8px 14px;font:13.5px var(--f-mono);margin:8px 0;overflow-x:auto}
-.cmd span{flex:1;white-space:nowrap}
-.cmd .mini-btn{background:#1E2733;border-color:#334152;color:#D8DFE8}
-.prog-wrap{display:flex;align-items:center;gap:12px;margin:12px 0}
-.prog{flex:1;height:8px;background:var(--surface-2);border-radius:99px;overflow:hidden}
-.prog i{display:block;height:100%;background:var(--green);width:0;transition:width .3s}
-.path-mock{border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:.85rem;background:var(--surface);max-width:520px}
-.path-mock .tb{background:var(--surface-2);padding:6px 12px;border-bottom:1px solid var(--line)}
-.path-mock .row{padding:4px 12px;font-family:var(--f-mono);font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.path-mock .row.new{background:color-mix(in srgb,var(--teal) 18%,transparent);font-weight:600;color:var(--teal)}
-
-/* memory lab */
-.mem3d{height:300px}
-.memlab{display:grid;gap:12px;margin-top:12px}
-.var-row{display:grid;grid-template-columns:110px minmax(0,1fr) minmax(0,1fr) 34px;gap:8px;align-items:center}
-.var-row select,.var-row input{border:1px solid var(--line);border-radius:7px;padding:6px 8px;background:var(--surface);width:100%;font-family:var(--f-mono);font-size:.86rem}
-.var-row .rm{border:1px solid var(--line);background:var(--surface);border-radius:7px;cursor:pointer;height:34px}
-.var-row.bad input{border-color:var(--red)}
-.var-head{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-.mem-legend{display:flex;flex-wrap:wrap;gap:14px;font-size:.82rem;color:var(--muted)}
-.mem-legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:-1px}
-
-/* playground */
-.play{display:grid;gap:12px}
-.play-inputs{display:flex;flex-wrap:wrap;gap:14px;align-items:end}
-.play-inputs label{display:flex;flex-direction:column;font-size:.8rem;color:var(--muted);gap:3px}
-.play-inputs input,.play-inputs select{border:1px solid var(--line);border-radius:7px;padding:6px 10px;background:var(--surface);font-family:var(--f-mono);width:9em}
-.op-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:8px}
-.op-cell{border:1px solid var(--line);border-radius:9px;padding:8px 12px;background:var(--surface);font-family:var(--f-mono);font-size:.86rem;min-width:0}
-.op-cell .ex{color:var(--muted)}
-.op-cell .val{font-size:1.15rem;font-weight:600;color:var(--ink)}
-.op-cell .val.t{color:var(--green)} .op-cell .val.f{color:var(--red)}
-.op-cell .val.warn{color:var(--red);font-size:.85rem}
-.op-cat{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:10px 0 2px;font-weight:600}
-.fmt-out{font-family:var(--f-mono);font-size:1.3rem;background:var(--term-bg);color:var(--term-ok);border-radius:8px;padding:10px 14px;white-space:pre;overflow-x:auto}
-.fmt-out .ruler{color:var(--term-dim);font-size:.8rem;display:block}
-
-/* quiz */
-.q{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:12px 0}
-.q h4{font-weight:500;margin-bottom:8px;font-size:.98rem}
-.q h4 b{font-family:var(--f-display);color:var(--accent);margin-right:6px}
-.q label{display:flex;gap:10px;align-items:flex-start;padding:6px 10px;border-radius:8px;cursor:pointer;font-size:.94rem}
-.q label:hover{background:var(--surface-2)}
-.q label.right{background:var(--green-soft)} .q label.wrongpick{background:var(--red-soft)}
-.q .exp{font-size:.86rem;color:var(--muted);margin-top:6px}
-
-/* misc */
-.search{border:1px solid var(--line);border-radius:8px;padding:8px 12px;background:var(--surface);width:100%;max-width:420px}
-ul.summary{display:grid;gap:8px;padding-left:1.2rem}
-.refs li{margin:.35rem 0;font-size:.92rem}
-footer{color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);margin-top:60px;padding-top:18px}
-.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
-</style>
-
+    @media (max-width: 760px) {
+      .container { width: min(100% - 36px, 560px); }
+      .nav { min-height: 70px; }
+      .nav-links { gap: 15px; }
+      .nav-links a:not(.nav-cta) { display: none; }
+      .hero { padding: 122px 0 62px; }
+      .hero-grid { grid-template-columns: 1fr; gap: 34px; }
+      .hero-art { min-height: 230px; }
+      .facts { margin-top: 39px; }
+      .fact { min-width: 120px; padding-right: 16px; margin-right: 16px; }
+      .fact strong { font-size: 17px; }
+      .section { padding: 62px 0; }
+      .section-heading { align-items: flex-start; flex-direction: column; gap: 12px; }
+      .featured, .bottom-panel { grid-template-columns: 1fr; padding: 23px; }
+      .featured .button, .bottom-panel .button { justify-self: start; }
+      .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 480px) {
+      .container { width: calc(100% - 30px); }
+      .brand-text { font-size: 12px; }
+      .nav-links .nav-cta { padding: 8px 11px; font-size: 11px; }
+      .hero { padding-top: 115px; }
+      h1 { font-size: 44px; }
+      .hero-copy { font-size: 14px; }
+      .hero-art { min-height: 205px; }
+      .facts { display: grid; grid-template-columns: 1fr 1fr; row-gap: 8px; }
+      .fact { border: 0; }
+      .catalog-controls { flex-direction: column; }
+      .search { width: 100%; }
+      .cards { grid-template-columns: 1fr; }
+      .topic-card { min-height: 170px; }
+      .footer-in { align-items: flex-start; flex-direction: column; justify-content: center; padding-block: 18px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+    }
+  </style>
 </head>
 <body>
-<header class="topbar">
-  <div class="topbar-in">
-    <div class="brand">P10 · <b>Introduction to C</b></div>
-    <div class="meta">Praktikum Teknologi Komputer (IT0022) · VS Code, GCC &amp; Introduction to C</div>
-    <label class="theme-control" for="theme-select"><span class="theme-label">Tema</span>
-      <select id="theme-select" aria-label="Pilih tema tampilan">
-        <option value="system">Sesuai sistem</option>
-        <option value="light">Terang (Light)</option>
-        <option value="dark">Gelap (Dark)</option>
-      </select>
-    </label>
-  </div>
-  <div class="progress" id="progress"></div>
-</header>
-
-<div class="wrap">
-  <nav class="toc" aria-label="Daftar isi">
-    <p class="toc-label">Daftar isi</p>
-    <ol id="toc"></ol>
-  </nav>
+  <header class="topbar">
+    <nav class="nav container" aria-label="Navigasi utama">
+      <a class="brand" href="#beranda" aria-label="Praktikum Teknologi Komputer, beranda">
+        <span class="brand-mark" aria-hidden="true">&lt;/&gt;</span>
+        <span class="brand-text">Praktikum Teknologi Komputer<small>Informatika · UKDW</small></span>
+      </a>
+      <div class="nav-links">
+        <a href="#tentang">Tentang</a>
+        <a href="#materi">Materi</a>
+        <a class="nav-cta" href="./RPS-PrTekkom.pdf" target="_blank" rel="noopener">Lihat RPS ↗</a>
+      </div>
+    </nav>
+  </header>
 
   <main>
-    <details class="mobile-toc"><summary>Daftar isi</summary><ol id="toc-m"></ol></details>
-
-    <!-- HERO -->
-    <section class="sec hero" id="mulai">
-      <div>
-        <p class="eyebrow">Modul Perkuliahan · Pertemuan 10</p>
-        <h1>Introduction to C</h1>
-      </div>
-      <p class="lead">Modul interaktif VS Code, GCC &amp; Introduction to C: compiler, struktur program, variabel, tipe data, operator, dan input/output. Setiap contoh kode menampilkan hasilnya langsung di sebelahnya, dan sebagian besar bisa Anda ubah nilainya.</p>
-      <div class="chips">
-        <span class="chip"><b>IT0022</b> Praktikum Teknologi Komputer</span>
-        <span class="chip"><b>Rabu, 11-11-2026</b> · Daring</span>
-        <span class="chip"><b>90 menit</b> materi + latihan</span>
-        <span class="chip"><b>CPMK-IT0022-04</b> · IKCP-71-09, 71-25</span>
-      </div>
-      <div class="stage3d pipe" id="pipe3d" aria-label="Animasi tiga dimensi tahapan kompilasi dari halo.c sampai halo.exe"><div class="fallback" id="pipe-fb" hidden>Animasi 3D tidak dapat dimuat di perangkat ini. Lihat penjelasan tahapan kompilasi di bawah.</div></div>
-      <div class="pipe-controls" id="pipe-controls" role="group" aria-label="Pilih tahap kompilasi"></div>
-      <div class="pipe-caption" id="pipe-caption" aria-live="polite"></div>
-    </section>
-
-    <!-- 1 IDENTITAS -->
-    <section class="sec" id="identitas">
-      <p class="eyebrow">Bagian 1</p>
-      <h2>Identitas dan capaian pembelajaran</h2>
-      <div class="grid2" style="margin-top:16px">
-        <div class="card">
-          <h4>Identitas modul</h4>
-          <dl class="ident">
-            <dt>Mata kuliah</dt><dd>Praktikum Teknologi Komputer (IT0022), 2 SKS</dd>
-            <dt>Pertemuan</dt><dd>10 · Rabu, 11-11-2026 · Daring</dd>
-            <dt>CPMK</dt><dd>CPMK-IT0022-04: mengimplementasikan solusi pemrograman menggunakan bahasa C</dd>
-            <dt>IKCP</dt><dd>IKCP-71-09, IKCP-71-25</dd>
-            <dt>Indikator</dt><dd>Mahasiswa mampu <b>membuat, mengompilasi, dan menjalankan</b> program C sederhana</dd>
-            <dt>Metode</dt><dd>TCL, Discovery Learning, Problem Based Learning</dd>
-            <dt>Dosen</dt><dd>Matahari Bhakti Nendya, S.Kom., M.T<br>Maria Nila Anggia Rini, S.T., M.T.I</dd>
-          </dl>
-        </div>
-        <div class="card">
-          <h4>Setelah pertemuan ini Anda mampu</h4>
-          <ol class="goals">
-            <li><span>Menjelaskan peran <b>compiler</b> dan tahapan kompilasi dengan <b>GCC</b>.</span></li>
-            <li><span>Memakai <b>VS Code</b> dan terminal untuk menulis, mengompilasi, dan menjalankan program C.</span></li>
-            <li><span>Mengenali <b>struktur program C</b> dan memperbaiki error dari pesan compiler.</span></li>
-            <li><span>Mendeklarasikan <b>variabel</b> dengan <b>tipe data</b> dan format specifier yang tepat.</span></li>
-            <li><span>Menerapkan <b>operator</b> aritmatika, penugasan, increment, relasional, dan logika.</span></li>
-            <li><span>Membuat program interaktif dengan <code>scanf()</code> dan <code>printf()</code>.</span></li>
-          </ol>
-        </div>
-      </div>
-      <h3 id="rencana">Rencana kegiatan 90 menit</h3>
-      <p class="prose">Klik segmen untuk melompat ke bagiannya. Instalasi (Tahap 0) dikerjakan sebelum kelas; di kelas hanya diverifikasi. Sesi coding lanjutan dan troubleshooting 60 menit dari RPS berada di luar 90 menit ini.</p>
-      <div class="timeline" id="timeline"></div>
-      <div class="tl-list" id="tl-list"></div>
-    </section>
-
-    <!-- TAHAP 0 -->
-    <section class="sec" id="instalasi">
-      <p class="eyebrow">Tahap 0 · sebelum kelas</p>
-      <h2>Instalasi C compiler (MSYS2 + GCC)</h2>
-      <p class="prose">Sebelum menulis program C, komputer perlu <b>C compiler</b>. Praktikum ini memakai <b>GCC</b> yang dipasang lewat <b>MSYS2</b>, kumpulan tools untuk membangun program Windows dengan pengelola paket <b>pacman</b>.</p>
-      <div class="install-overview" aria-label="Rangkuman tahapan instalasi">
-        <div><b>Langkah 1–4 · Pasang GCC</b><p>Unduh MSYS2, jalankan terminal UCRT64, lalu pasang GCC dengan <code>pacman</code> sesuai <a href="https://www.msys2.org/" target="_blank" rel="noopener">panduan resmi MSYS2</a>.</p></div>
-        <div><b>Langkah 5–7 · Hubungkan ke Windows</b><p>Tambahkan GCC ke PATH, siapkan ekstensi C/C++ di VS Code, lalu verifikasi compiler.</p></div>
-      </div>
-      <div class="note info"><span class="lbl">Syarat</span><p>Windows 10 64-bit (versi 1809) atau lebih baru · ± 500 MB ruang disk · unduhan ± 70 MB. Estimasi 20–30 menit.</p></div>
-      <div class="prog-wrap"><div class="prog"><i id="inst-bar"></i></div><span class="score" id="inst-count">0/7 selesai</span></div>
-      <div class="install-steps" id="install-steps"></div>
-    </section>
-
-    <!-- A -->
-    <section class="sec" id="compiler">
-      <p class="eyebrow">Bagian A · menit 05–20</p>
-      <h2>Lingkungan C: compiler, GCC, dan VS Code</h2>
-      <p class="prose">Bahasa C dikembangkan <b>Dennis Ritchie</b> di Bell Labs pada <b>1972</b>. Bahasa ini masih dipakai untuk sistem operasi dan perangkat tertanam karena cepat, sederhana, dan portabel. Berbeda dengan Scratch yang langsung berjalan, kode C harus <b>diterjemahkan</b> dulu ke kode mesin oleh <b>compiler</b>.</p>
-      <div class="tbl-wrap"><table>
-        <thead><tr><th>Aspek</th><th>Compiler (C dengan GCC)</th><th>Interpreter (Python)</th></tr></thead>
-        <tbody>
-          <tr><td>Cara kerja</td><td>Menerjemahkan <b>seluruh</b> kode menjadi file executable</td><td>Menjalankan baris per baris</td></tr>
-          <tr><td>Hasil</td><td>File baru, misalnya <code>halo.exe</code></td><td>Tidak ada file executable</td></tr>
-          <tr><td>Error sintaks</td><td>Ketahuan <b>sebelum</b> program berjalan</td><td>Ketahuan saat baris itu dijalankan</td></tr>
-          <tr><td>Setelah kode diubah</td><td>Wajib <b>kompilasi ulang</b></td><td>Cukup jalankan ulang</td></tr>
-        </tbody></table></div>
-
-      <h3 id="tahap-kompilasi">Empat tahap di balik <code>gcc</code></h3>
-      <p class="prose">Animasi di bagian atas halaman menunjukkan alurnya. Pilih tahap untuk melihat contoh isi file yang dihasilkan dari <code>halo.c</code>.</p>
-      <div class="stage-tabs" id="stage-tabs" role="tablist"></div>
-      <div class="stage-panel" id="stage-panel"></div>
-      <div class="tbl-wrap"><table>
-        <thead><tr><th>Perintah</th><th>Fungsi</th></tr></thead>
-        <tbody>
-          <tr><td><code>gcc --version</code></td><td>Cek GCC terpasang dan versinya</td></tr>
-          <tr><td><code>gcc -Wall halo.c -o halo</code></td><td>Kompilasi + tampilkan semua warning (disarankan)</td></tr>
-          <tr><td><code>gcc -E halo.c -o halo.i</code></td><td>Berhenti setelah preprocessing</td></tr>
-          <tr><td><code>gcc -S halo.c</code></td><td>Berhenti setelah compile, menghasilkan <code>halo.s</code></td></tr>
-          <tr><td><code>.\halo</code></td><td>Menjalankan program di PowerShell</td></tr>
-        </tbody></table></div>
-
-      <h3>Siklus kerja di VS Code</h3>
-      <p class="prose">Editor untuk menulis, terminal (<kbd>Ctrl</kbd> + <kbd>`</kbd>) untuk kompilasi dan menjalankan. Siklusnya selalu: <b>tulis → simpan (<kbd>Ctrl</kbd>+<kbd>S</kbd>) → kompilasi → jalankan</b>. Jika kompilasi gagal, baca pesan error, perbaiki, simpan, kompilasi ulang.</p>
-      <div class="note warn"><span class="lbl">Perhatian</span><p>Lupa menyimpan atau lupa kompilasi ulang adalah penyebab paling umum "program saya tidak berubah". Titik putih di tab editor berarti file belum disimpan.</p></div>
-
-      <div class="lt" id="lt1">
-        <div class="lt-head"><div class="lt-num"><div><small>LATIHAN</small><span>1</span></div></div>
-          <div class="lt-meta"><h4>Program C pertama di VS Code</h4>± 7 menit · file <code>halo.c</code> · Tujuan: menulis, mengompilasi, dan menjalankan program C.</div></div>
-        <div class="lt-body">
-          <ol class="steps">
-            <li>VS Code → <b>File → Open Folder</b> → <code>D:\PraktikumC\P10</code>.</li>
-            <li>Buka terminal, ketik <code>gcc --version</code>.</li>
-            <li>Buat <code>halo.c</code>, ketik kode di bawah. Ganti nama dan NIM (coba ubah di kolom kuning).</li>
-            <li>Simpan, lalu <code>gcc -Wall halo.c -o halo</code> dan jalankan <code>.\halo</code>. Ketik <code>dir</code> dan amati file baru.</li>
-          </ol>
-          <div data-demo="halo"></div>
-          <div class="note check"><span class="lbl">Checkpoint</span>
-            <p><b>a.</b> File apa yang baru muncul setelah kompilasi?</p>
-            <p><b>b.</b> Ubah teks "Halo, C!", simpan, lalu jalankan <code>.\halo</code> <b>tanpa</b> kompilasi ulang. Apa yang terjadi?</p>
-            <p><b>c.</b> Jalankan <code>gcc -E halo.c -o halo.i</code>. Mengapa <code>halo.i</code> jauh lebih panjang?</p></div>
-          <details class="key"><summary>Kunci jawaban Latihan 1</summary>
-            <p><b>a.</b> <code>halo.exe</code>, program hasil kompilasi yang bisa dijalankan tanpa source code.</p>
-            <p><b>b.</b> Output masih versi lama, karena <code>.\halo</code> menjalankan <code>halo.exe</code> lama. Perubahan baru berlaku setelah kompilasi ulang.</p>
-            <p><b>c.</b> Preprocessor menyalin seluruh isi <code>stdio.h</code> (dan header turunannya) ke dalam file, lalu membuang komentar.</p></details>
-        </div>
-      </div>
-    </section>
-
-    <!-- B -->
-    <section class="sec" id="struktur">
-      <p class="eyebrow">Bagian B · menit 20–30</p>
-      <h2>Struktur program C</h2>
-      <p class="prose">Setiap program C punya kerangka yang sama. Arahkan kursor (atau ketuk) baris kode atau kartu penjelasan untuk melihat pasangannya.</p>
-      <div class="anat" id="anatomy"></div>
-      <ul class="prose">
-        <li>C bersifat <b>case sensitive</b>: <code>main</code>, <code>Main</code>, dan <code>MAIN</code> berbeda.</li>
-        <li>Statement diakhiri <code>;</code>. Baris <code>#include</code> dan pembuka blok <code>{</code> tidak.</li>
-        <li>String memakai kutip ganda <code>"..."</code>, satu karakter memakai kutip tunggal <code>'A'</code>.</li>
-      </ul>
-      <h3>Membaca pesan error</h3>
-      <p class="prose">Format pesan GCC: <code>file:baris:kolom: error: penjelasan</code>. Perbaiki mulai dari <b>error pertama</b>.</p>
-      <div data-demo="errmsg"></div>
-
-      <div class="lt" id="lt2">
-        <div class="lt-head"><div class="lt-num"><div><small>LATIHAN</small><span>2</span></div></div>
-          <div class="lt-meta"><h4>Detektif error</h4>± 6 menit · file <code>salah.c</code> · Tujuan: menemukan dan memperbaiki kesalahan sintaks.</div></div>
-        <div class="lt-body">
-          <p>Program ini seharusnya mencetak <code>Jumlah = 10</code> tetapi punya <b>4 kesalahan</b>. Klik baris yang menurut Anda salah (baris abu-abu mewakili sesuatu yang <i>hilang</i> di atas baris 1), lalu periksa. Setelah itu, coba juga kompilasi di komputer Anda.</p>
-          <div class="det-code" id="detective"></div>
-          <div class="btn-row"><button class="btn" id="det-check">Periksa</button><button class="btn ghost" id="det-reset">Ulangi</button><span class="score" id="det-score" aria-live="polite"></span></div>
-          <details class="key"><summary>Kunci jawaban Latihan 2</summary>
-            <div class="tbl-wrap"><table><thead><tr><th>Baris</th><th>Kesalahan &amp; pesan compiler</th><th>Perbaikan</th></tr></thead><tbody>
-              <tr><td>atas</td><td>Tidak ada <code>#include &lt;stdio.h&gt;</code> → <i>implicit declaration of function 'printf'</i></td><td>Tambahkan include</td></tr>
-              <tr><td>2</td><td>Titik koma hilang → <i>expected ',' or ';' before 'printf'</i> (dilaporkan di baris 3)</td><td><code>int jumlah = 10;</code></td></tr>
-              <tr><td>3</td><td><code>Jumlah</code> belum dideklarasikan → <i>'Jumlah' undeclared … did you mean 'jumlah'?</i></td><td>Ganti ke <code>jumlah</code></td></tr>
-              <tr><td>1</td><td><code>Main</code> ≠ <code>main</code> → error saat linking: <i>undefined reference to 'main' / 'WinMain'</i></td><td><code>int main(void)</code></td></tr>
-            </tbody></table></div>
-            <div data-demo="salahfix"></div>
-            <p>Error linking muncul paling akhir karena linking adalah tahap terakhir kompilasi.</p>
-          </details>
-        </div>
-      </div>
-    </section>
-
-    <!-- C -->
-    <section class="sec" id="variabel">
-      <p class="eyebrow">Bagian C · menit 30–45</p>
-      <h2>Variabel dan tipe data</h2>
-      <p class="prose"><b>Variabel</b> adalah nama untuk lokasi di memori. Bayangkan kotak berlabel: label = nama, isi = nilai, ukuran kotak = <b>tipe data</b>. C mewajibkan setiap variabel dideklarasikan beserta tipenya agar compiler tahu berapa byte yang disiapkan.</p>
-
-      <h3 id="lab-memori">Lab memori 3D</h3>
-      <p class="prose">Setiap kubus adalah satu byte. Angka di kubus adalah isi byte dalam heksadesimal (urutan <i>little-endian</i>, seperti di laptop Intel/AMD). Ubah tipe, nama, atau nilai; kode dan output di bawahnya ikut berubah. Seret untuk memutar.</p>
-      <div class="stage3d mem3d" id="mem3d" aria-label="Visualisasi tiga dimensi byte memori untuk setiap variabel"><div class="fallback" id="mem-fb" hidden>Visualisasi 3D tidak dapat dimuat. Tabel variabel dan output di bawah tetap berfungsi.</div></div>
-      <div class="mem-legend" id="mem-legend"></div>
-      <div class="memlab">
-        <div class="var-row var-head"><span>Tipe</span><span>Nama</span><span>Nilai</span><span></span></div>
-        <div id="var-rows" class="memlab"></div>
-        <div class="btn-row" style="margin-top:0"><button class="btn ghost" id="var-add">+ Tambah variabel</button><button class="btn ghost" id="var-reset">Kembalikan contoh</button><span id="var-size" class="score"></span></div>
-      </div>
-      <div data-demo="memlab"></div>
-      <p class="prose" style="font-size:.88rem;color:var(--muted)">Penyederhanaan: compiler sebenarnya dapat menambahkan <i>padding</i> agar alamat sejajar, dan urutan variabel di memori bisa berbeda.</p>
-
-      <h3>Aturan penamaan</h3>
-      <div class="tbl-wrap"><table><thead><tr><th>Aturan</th><th>Benar</th><th>Salah</th></tr></thead><tbody>
-        <tr><td>Huruf, angka, underscore <code>_</code></td><td><code>nilai_ujian</code>, <code>x1</code></td><td><code>nilai-ujian</code>, <code>nilai ujian</code></td></tr>
-        <tr><td>Tidak diawali angka</td><td><code>data2</code></td><td><code>2data</code></td></tr>
-        <tr><td>Case sensitive</td><td><code>nilai</code> ≠ <code>Nilai</code></td><td>–</td></tr>
-        <tr><td>Bukan keyword C</td><td><code>jumlah</code></td><td><code>int</code>, <code>return</code></td></tr>
-        <tr><td>Deskriptif</td><td><code>total_harga</code></td><td><code>xx</code></td></tr>
-      </tbody></table></div>
-
-      <h3>Tipe data dasar dan format specifier</h3>
-      <div class="tbl-wrap"><table><thead><tr><th>Tipe</th><th>Ukuran</th><th>Jangkauan / presisi</th><th>Contoh</th><th>printf</th><th>scanf</th></tr></thead><tbody class="num">
-        <tr><td><code>char</code></td><td>1 byte</td><td>−128 s.d. 127 (satu karakter)</td><td><code>'A'</code></td><td><code>%c</code></td><td><code>%c</code></td></tr>
-        <tr><td><code>int</code></td><td>4 byte</td><td>−2.147.483.648 s.d. 2.147.483.647</td><td><code>2026</code></td><td><code>%d</code></td><td><code>%d</code></td></tr>
-        <tr><td><code>unsigned int</code></td><td>4 byte</td><td>0 s.d. 4.294.967.295</td><td><code>40000</code></td><td><code>%u</code></td><td><code>%u</code></td></tr>
-        <tr><td><code>long long</code></td><td>8 byte</td><td>± 9,2 × 10¹⁸</td><td><code>71260001234</code></td><td><code>%lld</code></td><td><code>%lld</code></td></tr>
-        <tr><td><code>float</code></td><td>4 byte</td><td>± 6–7 digit presisi</td><td><code>3.75f</code></td><td><code>%f</code></td><td><code>%f</code></td></tr>
-        <tr><td><code>double</code></td><td>8 byte</td><td>± 15–16 digit presisi</td><td><code>3.14159265</code></td><td><code>%f</code></td><td><code>%lf</code></td></tr>
-        <tr><td><code>char[]</code></td><td>n byte</td><td>String, diakhiri <code>'\0'</code></td><td><code>"Dida"</code></td><td><code>%s</code></td><td><code>%s</code></td></tr>
-      </tbody></table></div>
-      <div data-demo="datavar"></div>
-
-      <h3>Pembagian integer dan type casting</h3>
-      <p class="prose">Jika kedua operand bilangan bulat, hasil pembagian juga bulat: desimal <b>dibuang</b>, bukan dibulatkan. Pakai literal desimal (<code>7.0</code>) atau casting <code>(float)</code> untuk hasil pecahan. Ubah pembilang dan penyebut di kolom kuning.</p>
-      <div data-demo="casting"></div>
-
-      <div class="lt" id="lt3">
-        <div class="lt-head"><div class="lt-num"><div><small>LATIHAN</small><span>3</span></div></div>
-          <div class="lt-meta"><h4>Kartu mahasiswa &amp; prediksi tipe data</h4>± 10 menit · file <code>kartu.c</code>, <code>prediksi.c</code> · Tujuan: memilih tipe data dan format specifier yang tepat.</div></div>
-        <div class="lt-body">
-          <p><b>Bagian A.</b> Lengkapi kerangka berikut di VS Code: ganti setiap <code>/* ... */</code> dengan tipe data atau format specifier yang tepat. NIM disimpan sebagai string karena tidak dihitung dan bisa diawali 0.</p>
-          <div data-demo="kartuskel"></div>
-          <p><b>Bagian B.</b> Tanpa menjalankan program, tebak output tiap baris. Tulis tebakan Anda lalu periksa.</p>
-          <div data-demo="prediksicode"></div>
-          <div class="answer-grid" id="pred-grid"></div>
-          <div class="btn-row"><button class="btn" id="pred-check">Periksa tebakan</button><span class="score" id="pred-score" aria-live="polite"></span></div>
-          <details class="key"><summary>Kunci jawaban Latihan 3</summary>
-            <p>Ubah data kartu di kolom kuning untuk melihat output berubah.</p>
-            <div data-demo="kartu"></div>
-            <div data-demo="prediksi"></div>
-          </details>
-        </div>
-      </div>
-    </section>
-
-    <!-- D -->
-    <section class="sec" id="operator">
-      <p class="eyebrow">Bagian D · menit 45–60</p>
-      <h2>Operator</h2>
-      <p class="prose"><b>Operator</b> adalah simbol yang memerintahkan operasi pada nilai (<b>operand</b>). Hasil operator relasional dan logika di C berupa bilangan: <b>1 = benar</b>, <b>0 = salah</b>.</p>
-      <h3>Playground operator</h3>
-      <p class="prose">Masukkan dua bilangan bulat. Semua hasil dihitung dengan aturan <code>int</code> 32-bit seperti di C.</p>
-      <div class="play">
-        <div class="play-inputs">
-          <label for="op-a">int a<input id="op-a" type="number" value="17" step="1"></label>
-          <label for="op-b">int b<input id="op-b" type="number" value="5" step="1"></label>
-        </div>
-        <div id="op-out"></div>
-      </div>
-      <h3>Urutan prioritas</h3>
-      <p class="prose"><code>( )</code> → <code>++ -- ! (cast)</code> → <code>* / %</code> → <code>+ -</code> → <code>&lt; &gt; &lt;= &gt;=</code> → <code>== !=</code> → <code>&amp;&amp;</code> → <code>||</code> → <code>= += -= …</code></p>
-      <div class="tbl-wrap"><table><thead><tr><th>Bentuk</th><th>Nama</th><th>Perilaku</th><th>Contoh (i = 5)</th></tr></thead><tbody>
-        <tr><td><code>i++</code></td><td>Post-increment</td><td>Nilai lama dipakai dulu, lalu i +1</td><td><code>j = i++;</code> → j = 5, i = 6</td></tr>
-        <tr><td><code>++i</code></td><td>Pre-increment</td><td>i +1 dulu, lalu nilainya dipakai</td><td><code>j = ++i;</code> → j = 6, i = 6</td></tr>
-      </tbody></table></div>
-      <div class="note warn"><span class="lbl">Jebakan umum</span><p><code>=</code> adalah penugasan, <code>==</code> adalah perbandingan. Ekspresi <code>a &gt; b &gt; c</code> tidak bermakna seperti matematika; tulis <code>(a &gt; b) &amp;&amp; (b &gt; c)</code>.</p></div>
-      <div data-demo="operator"></div>
-
-      <div class="lt" id="lt4">
-        <div class="lt-head"><div class="lt-num"><div><small>LATIHAN</small><span>4</span></div></div>
-          <div class="lt-meta"><h4>Tracing ekspresi</h4>± 10 menit · file <code>tracing.c</code> · Tujuan: menghitung hasil ekspresi berdasarkan operator, tipe, dan prioritas.</div></div>
-        <div class="lt-body">
-          <p>Diketahui <code>int p = 23, q = 4;</code>. Isi prediksi Anda, periksa, lalu buktikan dengan membuat <code>tracing.c</code> (kompilasi dengan <code>-Wall</code> dan perhatikan warning untuk nomor 12).</p>
-          <div class="answer-grid" id="trace-grid"></div>
-          <div class="btn-row"><button class="btn" id="trace-check">Periksa prediksi</button><span class="score" id="trace-score" aria-live="polite"></span></div>
-          <details class="key"><summary>Kunci jawaban Latihan 4</summary><div data-demo="tracing"></div>
-            <p>Nomor 12: <code>(23 &gt; 4)</code> = 1, lalu <code>1 &gt; 1</code> = 0. GCC memberi warning <i>comparisons like 'X&lt;=Y&lt;=Z' do not have their mathematical meaning</i>.</p></details>
-        </div>
-      </div>
-    </section>
-
-    <!-- E -->
-    <section class="sec" id="io">
-      <p class="eyebrow">Bagian E · menit 60–75</p>
-      <h2>Input dan output</h2>
-      <p class="prose">Program menjadi interaktif saat bisa <b>menerima input</b> (<code>scanf</code>) dan <b>menampilkan output</b> (<code>printf</code>). Polanya <b>Input → Proses → Output</b>. <code>scanf</code> perlu <b>alamat</b> variabel (<code>&amp;</code>) agar bisa menyimpan nilai ke sana; <code>printf</code> hanya membaca nilai.</p>
-      <h3>Playground format printf</h3>
-      <div class="play">
-        <div class="play-inputs">
-          <label for="fmt-spec">Specifier<select id="fmt-spec"><option value="d">%d (int)</option><option value="f" selected>%f (float/double)</option><option value="c">%c (char)</option><option value="s">%s (string)</option></select></label>
-          <label for="fmt-flag">Rata<select id="fmt-flag"><option value="">kanan</option><option value="-">kiri (-)</option></select></label>
-          <label for="fmt-w">Lebar<input id="fmt-w" type="number" min="0" max="20" value="8"></label>
-          <label for="fmt-p">Presisi<input id="fmt-p" type="number" min="0" max="10" value="2"></label>
-          <label for="fmt-v">Nilai<input id="fmt-v" type="text" value="3.14159"></label>
-        </div>
-        <div class="fmt-out" id="fmt-out"></div>
-      </div>
-      <div class="tbl-wrap"><table><thead><tr><th>Escape</th><th>Arti</th><th>Escape</th><th>Arti</th></tr></thead><tbody>
-        <tr><td><code>\n</code></td><td>Baris baru</td><td><code>\\</code></td><td>Backslash</td></tr>
-        <tr><td><code>\t</code></td><td>Tab</td><td><code>\"</code></td><td>Kutip ganda</td></tr>
-        <tr><td><code>%%</code></td><td>Tanda % (di printf)</td><td></td><td></td></tr>
-      </tbody></table></div>
-      <h3>Program interaktif pertama</h3>
-      <p class="prose">Ketik input di panel terminal. Output menyesuaikan seperti saat program dijalankan.</p>
-      <div data-demo="io"></div>
-      <div class="tbl-wrap"><table><thead><tr><th>Aturan scanf</th><th>Penjelasan</th></tr></thead><tbody>
-        <tr><td>Pakai <code>&amp;</code> untuk int, float, double, char</td><td><code>scanf("%d", &amp;umur);</code> tanpa <code>&amp;</code> program bisa crash</td></tr>
-        <tr><td>String <b>tanpa</b> <code>&amp;</code></td><td>Nama array sudah berupa alamat: <code>scanf("%49s", nama);</code></td></tr>
-        <tr><td><code>double</code> dibaca dengan <code>%lf</code></td><td>Dengan <code>%f</code> nilai yang tersimpan salah</td></tr>
-        <tr><td><code>%s</code> berhenti di spasi</td><td>"Dida Pratama" hanya terbaca "Dida"</td></tr>
-        <tr><td>Karakter dibaca dengan <code>" %c"</code></td><td>Spasi sebelum <code>%c</code> membuang Enter dari input sebelumnya</td></tr>
-      </tbody></table></div>
-
-      <div class="lt" id="lt5">
-        <div class="lt-head"><div class="lt-num"><div><small>LATIHAN</small><span>5</span></div></div>
-          <div class="lt-meta"><h4>Konversi suhu interaktif</h4>± 10 menit · file <code>suhu.c</code> · Tujuan: membaca <code>double</code>, menghitung, dan mencetak 2 desimal.</div></div>
-        <div class="lt-body">
-          <p>Rumus: <b>F = C × 9/5 + 32</b>, <b>K = C + 273.15</b>, <b>R = C × 4/5</b>. Lengkapi TODO pada kerangka. Hati-hati: tulis <code>9.0 / 5.0</code>, bukan <code>9 / 5</code>.</p>
-          <div data-demo="suhuskel"></div>
-          <details class="key"><summary>Kunci jawaban Latihan 5</summary>
-            <div data-demo="suhu"></div>
-            <p><b>Mengapa 9.0 / 5.0?</b> <code>9 / 5</code> adalah pembagian integer = 1, sehingga 36.5 °C akan menjadi 68.50 °F. Jika <code>scanf</code> memakai <code>%f</code> untuk <code>double</code>, nilainya salah dan GCC memberi warning.</p>
-            <div data-demo="suhubug"></div>
-          </details>
-        </div>
-      </div>
-    </section>
-
-    <!-- F -->
-    <section class="sec" id="terpadu">
-      <p class="eyebrow">Bagian F · menit 75–85</p>
-      <h2>Latihan terpadu</h2>
-      <div class="lt" id="lt6">
-        <div class="lt-head"><div class="lt-num"><div><small>LATIHAN</small><span>6</span></div></div>
-          <div class="lt-meta"><h4>Kalkulator nilai akhir mahasiswa</h4>10 menit · file <code>nilai_akhir.c</code> · Tujuan: memadukan variabel, tipe data, operator, dan I/O.</div></div>
-        <div class="lt-body">
-          <p>Program menerima <b>nama</b> (satu kata) serta nilai <b>Tugas</b>, <b>UTS</b>, <b>UAS</b>. Nilai akhir = <b>30% Tugas + 30% UTS + 40% UAS</b>. Status lulus (nilai akhir ≥ 60) ditampilkan sebagai <b>1 = ya, 0 = tidak</b>.</p>
-          <div class="grid3">
-            <div class="card"><h4>Input</h4><code>char nama[50]</code><br><code>float tugas, uts, uas</code></div>
-            <div class="card"><h4>Proses</h4><code>akhir = 0.3·tugas + 0.3·uts + 0.4·uas</code><br><code>lulus = akhir &gt;= 60</code></div>
-            <div class="card"><h4>Output</h4>Nama, nilai akhir (2 desimal), status 1/0</div>
+    <section class="hero" id="beranda">
+      <div class="container">
+        <div class="hero-grid">
+          <div>
+            <span class="eyebrow">Program Studi Informatika · UKDW</span>
+            <h1>Teknologi dipahami dengan <span>praktik.</span></h1>
+            <p class="hero-copy">Ruang belajar Praktikum Teknologi Komputer. Jelajahi materi interaktif, ikuti latihan, dan bangun keterampilan digital—dari command line hingga website.</p>
+            <div class="hero-actions">
+              <a class="button button-primary" href="#materi">Jelajahi materi <span aria-hidden="true">↓</span></a>
+              <a class="button button-quiet" href="#tentang">Kenali perkuliahan</a>
+            </div>
+            <p class="hero-note">Materi slide interaktif akan diperbarui secara bertahap sepanjang perkuliahan.</p>
           </div>
-          <ol class="steps"><li>Deklarasikan variabel sesuai tabel IPO.</li><li>Tulis input: 4 pasang <code>printf</code> + <code>scanf</code>.</li><li>Hitung <code>akhir</code> dan simpan <code>akhir &gt;= 60</code> ke <code>int lulus</code>.</li><li>Uji dengan (Dida, 80, 75, 90) dan (Budi, 50, 55, 60).</li></ol>
-          <details class="key"><summary>Kunci jawaban Latihan 6</summary><div data-demo="nilai"></div>
-            <p>Dida: 24 + 22,5 + 36 = <b>82,50</b> (lulus 1). Budi: 15 + 16,5 + 24 = <b>55,50</b> (lulus 0). Pada Pertemuan 22, <code>if-else</code> akan mengubah 1/0 menjadi teks "LULUS"/"TIDAK LULUS".</p></details>
+          <div class="hero-art" aria-label="Ilustrasi kode program C">
+            <div class="code-window" aria-hidden="true">
+              <div class="window-bar"><i class="window-dot"></i><i class="window-dot"></i><i class="window-dot"></i> hello.c</div>
+              <pre><span class="code-green">#include</span> &lt;stdio.h&gt;
+
+<span class="code-orange">int</span> main() {
+  printf(<span class="code-green">"Hello, UKDW!"</span>);
+  <span class="code-orange">return</span> 0;
+}</pre>
+            </div>
+            <span class="art-label"><strong>01</strong> · BELAJAR DENGAN MEMBUAT</span>
+          </div>
+        </div>
+        <div class="facts" aria-label="Ringkasan mata kuliah">
+          <div class="fact"><strong>IT0022</strong><span>Kode mata kuliah</span></div>
+          <div class="fact"><strong>2 SKS</strong><span>Praktikum</span></div>
+          <div class="fact"><strong>14 topik</strong><span>Sesuai RPS</span></div>
+          <div class="fact"><strong>Gasal 2026</strong><span>Tahun akademik</span></div>
         </div>
       </div>
     </section>
 
-    <!-- RANGKUMAN -->
-    <section class="sec" id="rangkuman">
-      <p class="eyebrow">Bagian 3</p>
-      <h2>Rangkuman</h2>
-      <ul class="summary prose">
-        <li>GCC dipasang lewat <b>MSYS2</b>: installer → terminal UCRT64 → <code>pacman -S mingw-w64-ucrt-x86_64-gcc</code> → tambahkan <code>C:\msys64\ucrt64\bin</code> ke PATH.</li>
-        <li>Program C harus <b>dikompilasi</b>: preprocessing → compilation → assembly → linking, menghasilkan <code>.exe</code>.</li>
-        <li>Siklus: tulis → simpan → <code>gcc -Wall file.c -o file</code> → <code>.\file</code>. Setiap perubahan butuh kompilasi ulang.</li>
-        <li>Struktur: <code>#include</code>, <code>main()</code>, blok <code>{ }</code>, statement diakhiri <code>;</code>, komentar, <code>return 0;</code>.</li>
-        <li>Tipe dasar: <code>char</code> 1 byte, <code>int</code> 4, <code>float</code> 4, <code>double</code> 8; string adalah array <code>char</code>.</li>
-        <li>Pembagian dua bilangan bulat menghasilkan bilangan bulat; pakai literal desimal atau casting.</li>
-        <li>Relasional dan logika menghasilkan 1 (benar) atau 0 (salah).</li>
-        <li><code>scanf</code> perlu <code>&amp;</code> kecuali string; <code>double</code> dibaca dengan <code>%lf</code>.</li>
-      </ul>
-    </section>
-
-    <!-- KUIS -->
-    <section class="sec" id="kuis">
-      <p class="eyebrow">Bagian 4 · menit 85–90</p>
-      <h2>Kuis pemahaman</h2>
-      <p class="prose">10 soal pilihan ganda. Pilih jawaban lalu tekan <b>Periksa jawaban</b>.</p>
-      <form id="quiz"></form>
-      <div class="btn-row"><button class="btn" id="quiz-check" type="button">Periksa jawaban</button><button class="btn ghost" id="quiz-reset" type="button">Ulangi</button><span class="score" id="quiz-score" aria-live="polite"></span></div>
-    </section>
-
-    <!-- TANTANGAN -->
-    <section class="sec" id="tantangan">
-      <p class="eyebrow">Bagian 5 · opsional</p>
-      <h2>Tantangan pengayaan</h2>
-      <div class="grid2">
-        <div class="card"><h4>Tantangan 1 · Konversi durasi</h4><p>Buat <code>durasi.c</code>: input total detik, tampilkan jam, menit, detik. Petunjuk: pakai <code>/</code> dan <code>%</code>. Contoh: 3725 → 1 jam 2 menit 5 detik.</p></div>
-        <div class="card"><h4>Tantangan 2 · Lingkaran</h4><p>Buat <code>lingkaran.c</code>: input jari-jari (double), tampilkan luas dan keliling 2 desimal dengan <code>const double PI = 3.14159;</code>.</p></div>
+    <section class="section" id="tentang">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">Belajar bertahap</span>
+            <h2>Dari fondasi digital<br>hingga karya di web.</h2>
+          </div>
+          <p>Ikuti alur perkuliahan yang dirancang di RPS: kenali alatnya, latih cara berpikir komputasional, lalu terapkan keterampilan lewat proyek praktik.</p>
+        </div>
+        <article class="featured">
+          <div>
+            <span class="featured-label"><i class="live-dot" aria-hidden="true"></i> Materi interaktif tersedia</span>
+            <h3>VS Code, GCC &amp; Introduction to C</h3>
+            <p>Kenali alur kompilasi, struktur program C, variabel, tipe data, operator, serta input dan output. Coba demo dan latihan interaktif di modul.</p>
+          </div>
+          <a class="button" href="./intro-c.html">Buka materi <span aria-hidden="true">↗</span></a>
+        </article>
       </div>
-      <details class="key"><summary>Kunci tantangan</summary><div data-demo="durasi"></div><div data-demo="lingkaran"></div></details>
     </section>
 
-    <!-- TROUBLESHOOT -->
-    <section class="sec" id="troubleshooting">
-      <p class="eyebrow">Lampiran</p>
-      <h2>Panduan troubleshooting</h2>
-      <p class="prose">Untuk sesi coding lanjutan di luar 90 menit. Ketik sebagian pesan error atau gejala untuk menyaring.</p>
-      <input class="search" id="ts-search" type="search" placeholder="mis. not recognized, undeclared, %lf" aria-label="Cari pesan error">
-      <div class="tbl-wrap"><table><thead><tr><th>Gejala / pesan error</th><th>Penyebab umum</th><th>Solusi</th></tr></thead><tbody id="ts-body"></tbody></table></div>
-      <h3>Ringkasan perintah</h3>
-      <div class="tbl-wrap"><table><thead><tr><th>Kebutuhan</th><th>Perintah / sintaks</th></tr></thead><tbody>
-        <tr><td>Pasang GCC (terminal UCRT64)</td><td><code>pacman -S mingw-w64-ucrt-x86_64-gcc</code></td></tr>
-        <tr><td>Cek GCC</td><td><code>gcc --version</code> · <code>where.exe gcc</code></td></tr>
-        <tr><td>Kompilasi &amp; jalankan</td><td><code>gcc -Wall nama.c -o nama</code> lalu <code>.\nama</code></td></tr>
-        <tr><td>Hentikan program macet</td><td><kbd>Ctrl</kbd> + <kbd>C</kbd></td></tr>
-        <tr><td>Baca int / float / double</td><td><code>scanf("%d", &amp;n);</code> <code>scanf("%f", &amp;f);</code> <code>scanf("%lf", &amp;d);</code></td></tr>
-        <tr><td>Baca char / string</td><td><code>scanf(" %c", &amp;c);</code> <code>scanf("%49s", nama);</code></td></tr>
-      </tbody></table></div>
+    <section class="section catalog" id="materi">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">Peta pembelajaran</span>
+            <h2>Jelajahi materi kuliah.</h2>
+          </div>
+          <p>Pilih topik untuk melihat ringkasannya. Slide interaktif akan ditambahkan di sini secara bertahap.</p>
+        </div>
+        <div class="catalog-controls">
+          <div class="filters" role="group" aria-label="Filter materi">
+            <button class="filter" type="button" data-filter="semua" aria-pressed="true">Semua topik</button>
+            <button class="filter" type="button" data-filter="tersedia" aria-pressed="false">Tersedia</button>
+            <button class="filter" type="button" data-filter="segera" aria-pressed="false">Segera hadir</button>
+          </div>
+          <label>
+            <span class="sr-only">Cari materi</span>
+            <input class="search" id="search" type="search" placeholder="Cari topik..." autocomplete="off">
+          </label>
+        </div>
+        <div class="catalog-meta">
+          <span id="result-count" aria-live="polite"></span>
+          <span><strong>1 dari 14</strong> materi interaktif tersedia</span>
+        </div>
+        <div class="cards" id="cards"></div>
+        <p class="empty-state" id="empty-state" hidden>Tidak ada topik yang cocok. Coba kata kunci atau filter lain.</p>
+      </div>
     </section>
 
-    <section class="sec" id="referensi">
-      <p class="eyebrow">Referensi</p>
-      <h2>Bacaan lanjut</h2>
-      <ul class="refs prose">
-        <li>Nendya, M. B., &amp; Senapartha, I. K. D. (2026). <i>Dasar-Dasar Komputasi dan Pemrograman: Dari Logika Visual hingga Aplikasi Web</i>, Bab Pengantar Bahasa C. Duta Wacana University Press.</li>
-        <li>Gustedt, J. (2025). <i>Modern C</i> (3rd ed.). Manning Publications.</li>
-        <li>Kernighan, B. W., &amp; Ritchie, D. M. (1988). <i>The C Programming Language</i> (2nd ed.). Prentice Hall.</li>
-        <li>MSYS2 Project. <i>Getting Started: Installation</i>. <a href="https://www.msys2.org/" target="_blank" rel="noopener">https://www.msys2.org/</a></li>
-        <li>Free Software Foundation. <i>Using the GNU Compiler Collection</i>. <a href="https://gcc.gnu.org/onlinedocs/" target="_blank" rel="noopener">gcc.gnu.org/onlinedocs</a></li>
-        <li>Microsoft. <i>Using GCC with MinGW in VS Code</i>. <a href="https://code.visualstudio.com/docs/cpp/config-mingw" target="_blank" rel="noopener">code.visualstudio.com/docs/cpp/config-mingw</a></li>
-      </ul>
-      <footer>Praktikum Teknologi Komputer · Program Studi Sarjana Informatika · Universitas Kristen Duta Wacana · Semester Gasal 2026/2027. Output program di halaman ini disimulasikan dengan JavaScript mengikuti aturan C (GCC, 64-bit); jalankan juga di komputer Anda.</footer>
+    <section class="bottom">
+      <div class="container">
+        <div class="bottom-panel">
+          <div>
+            <h2>Ingin melihat rancangan lengkapnya?</h2>
+            <p>Buka Rencana Pembelajaran Semester untuk melihat capaian, materi, dan penilaian mata kuliah.</p>
+          </div>
+          <a class="button" href="./RPS-PrTekkom.pdf" target="_blank" rel="noopener">Baca RPS <span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
     </section>
   </main>
-</div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script>
-(function(){
-"use strict";
-const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
-const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-const store={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const themeSelect=$("#theme-select");
-themeSelect.value=store.get("intro-c-theme","system");
-themeSelect.addEventListener("change",()=>{
-  const theme=themeSelect.value;
-  if(theme==="system")delete document.documentElement.dataset.theme;
-  else document.documentElement.dataset.theme=theme;
-  try{localStorage.setItem("intro-c-theme",JSON.stringify(theme))}
-  catch(e){console.warn("Preferensi tema tidak dapat disimpan.",e)}
-});
-const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
-
-/* ---------- C emulation helpers ---------- */
-const F32=Math.fround;
-const i32=x=>x|0;
-function cdiv(a,b){return b===0?null:i32(Math.trunc(a/b))}
-function cmod(a,b){return b===0?null:i32(a%b)}
-function fixed(v,p){if(!isFinite(v))return v>0?"inf":v<0?"-inf":"nan";let s=Math.abs(v).toFixed(p);if(v<0&&Number(s)!==0)s="-"+s;else if(Object.is(v,-0)||v<0)s="-"+s;return s}
-function cf(fmt,...args){let i=0;return fmt.replace(/%(-?)(\d*)(?:\.(\d+))?(ll|l|z)?([dufcs%])/g,(m,fl,w,p,len,t)=>{
-  if(t==="%")return"%";let a=args[i++],s;
-  if(t==="d"||t==="u")s=String(Math.trunc(a));
-  else if(t==="f")s=fixed(a,p===undefined?6:+p);
-  else if(t==="c")s=typeof a==="number"?String.fromCharCode(a):String(a)[0]||"";
-  else s=p!==undefined?String(a).slice(0,+p):String(a);
-  w=+w||0;if(s.length<w)s=fl?s.padEnd(w):s.padStart(w);return s})}
-function readInt(s){const m=String(s).trim().match(/^[+-]?\d+/);return m?i32(parseInt(m[0],10)):null}
-function readNum(s){const m=String(s).trim().match(/^[+-]?(\d+\.?\d*|\.\d+)([eE][+-]?\d+)?/);return m?parseFloat(m[0]):null}
-function readWord(s){const m=String(s).trim().match(/^\S+/);return m?m[0].slice(0,49):null}
-function readChar(s){const t=String(s).replace(/^\s+/,"");return t?t[0]:null}
-
-/* ---------- syntax highlight ---------- */
-const TYPES=new Set(["int","float","double","char","void","unsigned","long","short","const"]);
-const KWS=new Set(["return","if","else","for","while","do","sizeof"]);
-const FUNCS=new Set(["printf","scanf","main","fflush"]);
-const TOK=/(\/\/[^\n]*)|(\/\*[\s\S]*?\*\/)|("(?:\\.|[^"\\\n])*")|('(?:\\.|[^'\\\n])*')|(#\s*\w+)|(<[a-z]+\.h>)|(\b\d+(?:\.\d+)?f?\b)|(\b[A-Za-z_]\w*\b)|(\u0001\d+\u0002)|([\s\S])/g;
-function hl(code,params){
-  let out="";code.replace(TOK,(m,com,bcom,str,chr,pre,hdr,num,id,ph,other)=>{
-    if(com||bcom)out+=`<span class="t-com">${esc(m)}</span>`;
-    else if(str||chr||hdr)out+=`<span class="t-str">${hlParams(esc(m),params)}</span>`;
-    else if(pre)out+=`<span class="t-pre">${esc(m)}</span>`;
-    else if(num)out+=`<span class="t-num">${esc(m)}</span>`;
-    else if(id)out+=TYPES.has(m)?`<span class="t-type">${m}</span>`:KWS.has(m)?`<span class="t-kw">${m}</span>`:FUNCS.has(m)?`<span class="t-fn">${m}</span>`:esc(m);
-    else if(ph)out+=hlParams(m,params);
-    else out+=esc(m);return m});
-  return out}
-function hlParams(s,params){return s.replace(/\u0001(\d+)\u0002/g,(m,k)=>`<span class="t-param">${esc(params[+k])}</span>`)}
-function codeHTML(code,params,hlLines){
-  const lines=hl(code,params).split("\n");
-  return lines.map((l,i)=>`<span class="line${hlLines&&hlLines.includes(i+1)?" hl":""}" data-l="${i+1}"><span class="ln">${i+1}</span>${l||" "}</span>`).join("")}
-
-/* ---------- demos ---------- */
-/* code template: {{key}} replaced with param value (shown highlighted). out(v) returns terminal lines: string or [cls,text] segments */
-const D={};
-D.halo={file:"halo.c",cmd:"gcc -Wall halo.c -o halo",run:".\\halo",
-  params:[{k:"nama",label:"Nama",v:"Dida Pratama"},{k:"nim",label:"NIM",v:"71260001"}],
-  code:`#include <stdio.h>
-
-int main(void) {
-    printf("Halo, C!\\n");
-    printf("Nama : {{nama}}\\n");
-    printf("NIM  : {{nim}}\\n");
-    return 0;
-}`,out:v=>["Halo, C!","Nama : "+v.nama,"NIM  : "+v.nim]};
-D.errmsg={file:"luas.c",cmd:"gcc -Wall luas.c -o luas",hlLines:[5],
-  code:`#include <stdio.h>
-
-int main(void) {
-    int sisi = 5;
-    int luas = sisi * sisi
-    printf("Luas = %d\\n", luas);
-    return 0;
-}`,out:()=>[["dim","luas.c: In function 'main':"],[["","luas.c:6:5: "],["err","error:"],[""," expected ',' or ';' before 'printf'"]],["dim","    6 |     printf(\"Luas = %d\\n\", luas);"],["err","      |     ^~~~~~"],["",""],["ok","→ ';' hilang di akhir baris 5, dilaporkan di baris 6"]],noRun:true};
-D.salahfix={file:"salah.c (setelah diperbaiki)",cmd:"gcc -Wall salah.c -o salah",run:".\\salah",
-  code:`#include <stdio.h>
-
-int main(void) {
-    int jumlah = 10;
-    printf("Jumlah = %d\\n", jumlah);
-    return 0;
-}`,out:()=>["Jumlah = 10"]};
-D.datavar={file:"data_var.c",cmd:"gcc -Wall data_var.c -o data_var",run:".\\data_var",
-  params:[{k:"nama",label:"nama",v:"Dida"},{k:"umur",label:"umur (int)",v:"20"},{k:"ipk",label:"ipk (float)",v:"3.75"},{k:"grade",label:"grade (char)",v:"A"}],
-  code:`#include <stdio.h>
-
-int main(void) {
-    int umur = {{umur}};
-    float ipk = {{ipk}}f;
-    double pi = 3.14159265;
-    char grade = '{{grade}}';
-    char nama[] = "{{nama}}";      // string = array of char
-    const int TAHUN_INI = 2026;
-
-    printf("Nama      : %s\\n", nama);
-    printf("Umur      : %d tahun\\n", umur);
-    printf("IPK       : %.2f\\n", ipk);
-    printf("Pi        : %.8f\\n", pi);
-    printf("Grade     : %c\\n", grade);
-    printf("Tahun ini : %d\\n", TAHUN_INI);
-    printf("\\nUkuran (byte): char=%zu int=%zu float=%zu double=%zu\\n",
-           sizeof(char), sizeof(int), sizeof(float), sizeof(double));
-    return 0;
-}`,out:v=>{const u=readInt(v.umur),f=readNum(v.ipk),g=readChar(v.grade);
-  if(u===null||f===null||g===null)return[["err","error: nilai literal tidak valid, periksa kolom kuning"]];
-  return[cf("Nama      : %s",v.nama),cf("Umur      : %d tahun",u),cf("IPK       : %.2f",F32(f)),cf("Pi        : %.8f",3.14159265),cf("Grade     : %c",g),cf("Tahun ini : %d",2026),"","Ukuran (byte): char=1 int=4 float=4 double=8"]}};
-D.casting={file:"casting.c",cmd:"gcc -Wall casting.c -o casting",run:".\\casting",
-  params:[{k:"x",label:"pembilang",v:"7"},{k:"y",label:"penyebut",v:"2"}],
-  code:`#include <stdio.h>
-
-int main(void) {
-    int x = {{x}}, y = {{y}};
-    printf("x / y           = %d\\n", x / y);
-    printf("x %% y           = %d\\n", x % y);
-    printf("(float) x / y   = %.2f\\n", (float) x / y);
-    printf("(float)(x / y)  = %.2f\\n", (float) (x / y));
-    printf("x * 1.0 / y     = %.2f\\n", x * 1.0 / y);
-    int potong = 3.99;
-    printf("int potong = 3.99 -> %d\\n", potong);
-    return 0;
-}`,out:v=>{const x=readInt(v.x),y=readInt(v.y);if(x===null||y===null)return[["err","error: isi dengan bilangan bulat"]];
-  if(y===0)return[["err","Program berhenti: pembagian integer dengan nol (crash / undefined behavior)"]];
-  return[cf("x / y           = %d",cdiv(x,y)),cf("x %% y           = %d",cmod(x,y)),cf("(float) x / y   = %.2f",F32(F32(x)/F32(y))),cf("(float)(x / y)  = %.2f",F32(cdiv(x,y))),cf("x * 1.0 / y     = %.2f",x*1.0/y),"int potong = 3.99 -> 3"]}};
-D.kartuskel={file:"kartu.c (kerangka)",noTerm:true,
-  code:`#include <stdio.h>
-
-int main(void) {
-    char nama[] = "Dida Pratama";
-    char nim[]  = "71260001";
-    /* ... */ angkatan = 2026;
-    /* ... */ kelas = 'A';
-    /* ... */ ipk = 3.85f;
-
-    printf("=============================\\n");
-    printf("      KARTU MAHASISWA\\n");
-    printf("=============================\\n");
-    printf("Nama     : %s\\n", nama);
-    printf("NIM      : %s\\n", nim);
-    printf("Angkatan : /* ... */\\n", angkatan);
-    printf("Kelas    : /* ... */\\n", kelas);
-    printf("IPK      : /* ... */\\n", ipk);  // 2 desimal
-    printf("=============================\\n");
-    return 0;
-}`};
-D.kartu={file:"kartu.c (kunci)",cmd:"gcc -Wall kartu.c -o kartu",run:".\\kartu",
-  params:[{k:"nama",label:"nama",v:"Dida Pratama"},{k:"nim",label:"nim",v:"71260001"},{k:"angkatan",label:"angkatan",v:"2026"},{k:"kelas",label:"kelas",v:"A"},{k:"ipk",label:"ipk",v:"3.85"}],
-  code:`#include <stdio.h>
-
-int main(void) {
-    char nama[] = "{{nama}}";
-    char nim[]  = "{{nim}}";
-    int angkatan = {{angkatan}};
-    char kelas = '{{kelas}}';
-    float ipk = {{ipk}}f;
-
-    printf("=============================\\n");
-    printf("      KARTU MAHASISWA\\n");
-    printf("=============================\\n");
-    printf("Nama     : %s\\n", nama);
-    printf("NIM      : %s\\n", nim);
-    printf("Angkatan : %d\\n", angkatan);
-    printf("Kelas    : %c\\n", kelas);
-    printf("IPK      : %.2f\\n", ipk);
-    printf("=============================\\n");
-    return 0;
-}`,out:v=>{const a=readInt(v.angkatan),k=readChar(v.kelas),f=readNum(v.ipk);if(a===null||k===null||f===null)return[["err","error: periksa nilai angkatan/kelas/ipk"]];
-  const L="=============================";return[L,"      KARTU MAHASISWA",L,"Nama     : "+v.nama,"NIM      : "+v.nim,cf("Angkatan : %d",a),cf("Kelas    : %c",k),cf("IPK      : %.2f",F32(f)),L]}};
-D.prediksicode={file:"prediksi.c (isi main)",noTerm:true,code:`int   a = 7 / 2;
-float b = 7 / 2;
-float c = 7.0 / 2;
-int   d = 9.99;
-char  e = 66;
-
-printf("%d\\n", a);        // (1)
-printf("%f\\n", b);        // (2)
-printf("%.1f\\n", c);      // (3)
-printf("%d\\n", d);        // (4)
-printf("%c %d\\n", e, e);  // (5)`};
-D.prediksi={file:"prediksi.c (kunci)",cmd:"gcc -Wall prediksi.c -o prediksi",run:".\\prediksi",code:D.prediksicode.code,out:()=>["3","3.000000","3.5","9","B 66"]};
-D.operator={file:"operator.c",cmd:"gcc -Wall operator.c -o operator",run:".\\operator",
-  params:[{k:"a",label:"a",v:"17"},{k:"b",label:"b",v:"5"}],
-  code:`#include <stdio.h>
-
-int main(void) {
-    int a = {{a}}, b = {{b}};
-
-    printf("a + b  = %d\\n", a + b);
-    printf("a / b  = %d\\n", a / b);
-    printf("a %% b  = %d\\n", a % b);       // %% mencetak tanda %
-    printf("(float)a / b = %.2f\\n", (float)a / b);
-
-    int x = 10;
-    x += 5;   printf("x += 5  -> %d\\n", x);
-    x *= 2;   printf("x *= 2  -> %d\\n", x);
-
-    int i = 5;
-    int j = i++;      // j = 5, lalu i = 6
-    int k = ++i;      // i = 7, lalu k = 7
-    printf("i = %d, j = %d, k = %d\\n", i, j, k);
-
-    printf("a > b              : %d\\n", a > b);
-    printf("(a > b) && (b > 10): %d\\n", (a > b) && (b > 10));
-    printf("(a > b) || (b > 10): %d\\n", (a > b) || (b > 10));
-    return 0;
-}`,out:v=>{const a=readInt(v.a),b=readInt(v.b);if(a===null||b===null)return[["err","error: isi a dan b dengan bilangan bulat"]];
-  const L=[cf("a + b  = %d",i32(a+b))];if(b===0)return L.concat([["err","Program crash: a / b dengan b = 0 (pembagian integer dengan nol)"]]);
-  return L.concat([cf("a / b  = %d",cdiv(a,b)),cf("a %% b  = %d",cmod(a,b)),cf("(float)a / b = %.2f",F32(F32(a)/F32(b))),"x += 5  -> 15","x *= 2  -> 30","i = 7, j = 5, k = 7",cf("a > b              : %d",+(a>b)),cf("(a > b) && (b > 10): %d",+(a>b&&b>10)),cf("(a > b) || (b > 10): %d",+(a>b||b>10))])}};
-D.tracing={file:"tracing.c (kunci)",cmd:"gcc -Wall tracing.c -o tracing",run:".\\tracing",
-  code:`#include <stdio.h>
-
-int main(void) {
-    int p = 23, q = 4;
-    printf("1. %d\\n", p + q * 3);
-    printf("2. %d\\n", (p + q) * 3);
-    printf("3. %d\\n", p / q);
-    printf("4. %d\\n", p % q);
-    printf("5. %.2f\\n", (double) p / q);
-    printf("6. %d\\n", p / q * q + p % q);
-    int r = 8;
-    r += 4; r *= 3; r -= 6; r /= 5; r %= 4;
-    printf("7. %d\\n", r);
-    int m = 3;
-    int n = m++ * 2;
-    int o = ++m * 2;
-    printf("8. m=%d n=%d o=%d\\n", m, n, o);
-    printf("9. %d\\n", (p > q) && (q > 5));
-    printf("10. %d\\n", (p < q) || (p % 2 == 1));
-    printf("11. %d\\n", !(p == 23));
-    printf("12. %d\\n", p > q > 1);
-    return 0;
-}`,warn:["tracing.c:22:26: warning: comparisons like 'X<=Y<=Z' do not have their mathematical meaning [-Wparentheses]"],
-  out:()=>["1. 35","2. 81","3. 5","4. 3","5. 5.75","6. 23","7. 2","8. m=5 n=6 o=10","9. 0","10. 1","11. 0","12. 0"]};
-D.io={file:"io_dasar.c",cmd:"gcc -Wall io_dasar.c -o io_dasar",run:".\\io_dasar",
-  stdin:[{k:"nama",label:"Nama",v:"Dida"},{k:"umur",label:"Umur",v:"19"},{k:"tinggi",label:"Tinggi",v:"165.5"},{k:"gol",label:"Gol. darah",v:"O"}],
-  code:`#include <stdio.h>
-
-int main(void) {
-    char nama[50];
-    int umur;
-    float tinggi;
-    char gol;
-
-    printf("Nama (satu kata) : ");
-    scanf("%49s", nama);       // string: TANPA &
-    printf("Umur             : ");
-    scanf("%d", &umur);
-    printf("Tinggi (cm)      : ");
-    scanf("%f", &tinggi);
-    printf("Golongan darah   : ");
-    scanf(" %c", &gol);        // spasi melewati Enter
-
-    printf("\\nHalo %s! Umurmu %d tahun, tinggi %.1f cm, golongan darah %c.\\n",
-           nama, umur, tinggi, gol);
-    return 0;
-}`,out:v=>{const n=readWord(v.nama),u=readInt(v.umur),t=readNum(v.tinggi),g=readChar(v.gol);
-  const L=[[["","Nama (satu kata) : "],["in",v.nama]],[["","Umur             : "],["in",v.umur]],[["","Tinggi (cm)      : "],["in",v.tinggi]],[["","Golongan darah   : "],["in",v.gol]],""];
-  if(n===null||u===null||t===null||g===null)return L.concat([["err","scanf gagal membaca salah satu input: variabel berisi nilai sampah."]]);
-  const extra=String(v.nama).trim().includes(" ")?[["dim","(catatan: %s berhenti di spasi, hanya \""+n+"\" yang terbaca)"]]:[];
-  return L.concat([cf("Halo %s! Umurmu %d tahun, tinggi %.1f cm, golongan darah %c.",n,u,F32(t),g)],extra)}};
-D.suhuskel={file:"suhu.c (kerangka)",noTerm:true,code:`#include <stdio.h>
-
-int main(void) {
-    double celcius, fahrenheit, kelvin, reamur;
-
-    printf("Masukkan suhu (Celcius): ");
-    // TODO 1: baca nilai celcius
-
-    // TODO 2: hitung fahrenheit, kelvin, dan reamur
-
-    printf("\\n%.2f C sama dengan:\\n", celcius);
-    // TODO 3: tampilkan ketiga hasil (2 angka desimal)
-
-    return 0;
-}`};
-D.suhu={file:"suhu.c (kunci)",cmd:"gcc -Wall suhu.c -o suhu",run:".\\suhu",
-  stdin:[{k:"c",label:"Celcius",v:"36.5"}],
-  code:`#include <stdio.h>
-
-int main(void) {
-    double celcius, fahrenheit, kelvin, reamur;
-
-    printf("Masukkan suhu (Celcius): ");
-    scanf("%lf", &celcius);                    // TODO 1
-
-    fahrenheit = celcius * 9.0 / 5.0 + 32.0;   // TODO 2
-    kelvin     = celcius + 273.15;
-    reamur     = celcius * 4.0 / 5.0;
-
-    printf("\\n%.2f C sama dengan:\\n", celcius);
-    printf("  Fahrenheit : %.2f F\\n", fahrenheit); // TODO 3
-    printf("  Kelvin     : %.2f K\\n", kelvin);
-    printf("  Reamur     : %.2f R\\n", reamur);
-    return 0;
-}`,out:v=>{const c=readNum(v.c);const L=[[["","Masukkan suhu (Celcius): "],["in",v.c]],""];if(c===null)return L.concat([["err","scanf gagal: masukkan angka, misalnya 36.5"]]);
-  return L.concat([cf("%.2f C sama dengan:",c),cf("  Fahrenheit : %.2f F",c*9.0/5.0+32.0),cf("  Kelvin     : %.2f K",c+273.15),cf("  Reamur     : %.2f R",c*4.0/5.0)])}};
-D.suhubug={file:"suhu_salah.c (memakai 9 / 5)",cmd:"gcc -Wall suhu_salah.c -o suhu_salah",run:".\\suhu_salah",
-  stdin:[{k:"c",label:"Celcius",v:"36.5"}],
-  code:`    fahrenheit = celcius * (9 / 5) + 32;   // 9 / 5 = 1 (integer!)
-    printf("  Fahrenheit : %.2f F\\n", fahrenheit);`,
-  out:v=>{const c=readNum(v.c);if(c===null)return[["err","masukkan angka"]];return[[["","Masukkan suhu (Celcius): "],["in",v.c]],cf("  Fahrenheit : %.2f F",c*1+32),["err","hasil salah karena 9 / 5 menghasilkan 1"]]}};
-D.nilai={file:"nilai_akhir.c (kunci)",cmd:"gcc -Wall nilai_akhir.c -o nilai_akhir",run:".\\nilai_akhir",
-  stdin:[{k:"nama",label:"Nama",v:"Dida"},{k:"t",label:"Tugas",v:"80"},{k:"u",label:"UTS",v:"75"},{k:"a",label:"UAS",v:"90"}],
-  code:`#include <stdio.h>
-
-int main(void) {
-    char nama[50];
-    float tugas, uts, uas, akhir;
-    int lulus;
-
-    printf("Nama        : ");
-    scanf("%49s", nama);
-    printf("Nilai Tugas : ");
-    scanf("%f", &tugas);
-    printf("Nilai UTS   : ");
-    scanf("%f", &uts);
-    printf("Nilai UAS   : ");
-    scanf("%f", &uas);
-
-    akhir = 0.3f * tugas + 0.3f * uts + 0.4f * uas;
-    lulus = akhir >= 60;        // 1 atau 0
-
-    printf("\\n--- HASIL ---\\n");
-    printf("Mahasiswa   : %s\\n", nama);
-    printf("Nilai Akhir : %.2f\\n", akhir);
-    printf("Lulus (1=ya, 0=tidak): %d\\n", lulus);
-    return 0;
-}`,out:v=>{const n=readWord(v.nama),t=readNum(v.t),u=readNum(v.u),a=readNum(v.a);
-  const L=[[["","Nama        : "],["in",v.nama]],[["","Nilai Tugas : "],["in",v.t]],[["","Nilai UTS   : "],["in",v.u]],[["","Nilai UAS   : "],["in",v.a]],""];
-  if(n===null||t===null||u===null||a===null)return L.concat([["err","scanf gagal membaca input"]]);
-  const ak=F32(F32(F32(F32(0.3)*F32(t))+F32(F32(0.3)*F32(u)))+F32(F32(0.4)*F32(a)));
-  return L.concat(["--- HASIL ---","Mahasiswa   : "+n,cf("Nilai Akhir : %.2f",ak),["ok",cf("Lulus (1=ya, 0=tidak): %d",+(ak>=60))]])}};
-D.durasi={file:"durasi.c",cmd:"gcc -Wall durasi.c -o durasi",run:".\\durasi",stdin:[{k:"s",label:"Total detik",v:"3725"}],
-  code:`#include <stdio.h>
-
-int main(void) {
-    int total, jam, menit, detik;
-
-    printf("Masukkan total detik: ");
-    scanf("%d", &total);
-
-    jam   = total / 3600;
-    menit = (total % 3600) / 60;
-    detik = total % 60;
-
-    printf("%d detik = %d jam %d menit %d detik\\n", total, jam, menit, detik);
-    return 0;
-}`,out:v=>{const t=readInt(v.s);const L=[[["","Masukkan total detik: "],["in",v.s]]];if(t===null)return L.concat([["err","masukkan bilangan bulat"]]);
-  return L.concat([cf("%d detik = %d jam %d menit %d detik",t,cdiv(t,3600),cdiv(cmod(t,3600),60),cmod(t,60))])}};
-D.lingkaran={file:"lingkaran.c",cmd:"gcc -Wall lingkaran.c -o lingkaran",run:".\\lingkaran",stdin:[{k:"r",label:"Jari-jari",v:"7"}],
-  code:`#include <stdio.h>
-
-int main(void) {
-    const double PI = 3.14159;
-    double r, luas, keliling;
-
-    printf("Jari-jari: ");
-    scanf("%lf", &r);
-
-    luas = PI * r * r;
-    keliling = 2 * PI * r;
-
-    printf("Luas     = %.2f\\n", luas);
-    printf("Keliling = %.2f\\n", keliling);
-    return 0;
-}`,out:v=>{const r=readNum(v.r);const L=[[["","Jari-jari: "],["in",v.r]]];if(r===null)return L.concat([["err","masukkan angka"]]);
-  return L.concat([cf("Luas     = %.2f",3.14159*r*r),cf("Keliling = %.2f",2*3.14159*r)])}};
-
-function seg(x){if(typeof x==="string")return esc(x);if(Array.isArray(x[0]))return x.map(([c,t])=>c?`<span class="${c}">${esc(t)}</span>`:esc(t)).join("");return`<span class="${x[0]}">${esc(x[1])}</span>`}
-function mountDemo(el){
-  const d=D[el.dataset.demo];if(!d)return;
-  const vals={};(d.params||[]).concat(d.stdin||[]).forEach(p=>vals[p.k]=p.v);
-  const box=document.createElement("div");box.className="demo";
-  const codePane=document.createElement("div");codePane.className="pane code-pane";
-  codePane.innerHTML=`<div class="pane-head"><span class="fname">${esc(d.file)}</span><span class="sp"></span><button class="mini-btn" type="button">Salin kode</button></div><pre class="code"></pre>`;
-  const pre=$("pre",codePane);
-  box.appendChild(codePane);
-  if(d.noTerm){box.style.gridTemplateColumns="minmax(0,1fr)"}
-  let term=null,termPre=null;
-  if(!d.noTerm){
-    term=document.createElement("div");term.className="pane term-pane";
-    term.innerHTML=`<div class="pane-head"><span class="dots"><i></i><i></i><i></i></span><span>Terminal · PowerShell</span><span class="sp"></span><button class="mini-btn" type="button" style="background:#1E2733;border-color:#334152;color:#D8DFE8">Jalankan ulang</button></div>`;
-    const inputs=(d.params||[]).length||(d.stdin||[]).length;
-    if(inputs){const st=document.createElement("div");st.className="stdin";
-      st.innerHTML=(d.params?`<span class="kind">Ubah nilai di kode</span>`:"")+(d.params||[]).map(p=>`<label>${esc(p.label)}<input data-k="${p.k}" value="${esc(p.v)}" aria-label="${esc(p.label)}" autocomplete="off" spellcheck="false"></label>`).join("")+
-        (d.stdin?`<span class="kind">Input keyboard (stdin)</span>`:"")+(d.stdin||[]).map(p=>`<label>${esc(p.label)}<input data-k="${p.k}" value="${esc(p.v)}" aria-label="Input ${esc(p.label)}" autocomplete="off" spellcheck="false"></label>`).join("");
-      term.appendChild(st);
-      $$("input",st).forEach(inp=>{inp.id="in-"+el.dataset.demo+"-"+inp.dataset.k;inp.addEventListener("input",()=>{vals[inp.dataset.k]=inp.value;render(false)})})}
-    termPre=document.createElement("pre");termPre.className="term";term.appendChild(termPre);box.appendChild(term);
-    $(".mini-btn",term).addEventListener("click",()=>render(true));
-  }
-  el.appendChild(box);
-  const keys=(d.params||[]).map(p=>p.k);
-  function src(){return d.code.replace(/\{\{(\w+)\}\}/g,(m,k)=>vals[k])}
-  function render(anim){
-    const list=[];const tmpl=d.code.replace(/\{\{(\w+)\}\}/g,(m,k)=>{list.push(vals[k]);return"\u0001"+(list.length-1)+"\u0002"});
-    pre.innerHTML=codeHTML(tmpl,list,d.hlLines);
-    if(!termPre)return;
-    let h=`<span class="p">PS D:\\PraktikumC\\P10&gt; </span><span class="c">${esc(d.cmd)}</span>\n`;
-    (d.warn||[]).forEach(w=>h+=`<span class="err">${esc(w)}</span>\n`);
-    if(!d.noRun&&d.run)h+=`<span class="p">PS D:\\PraktikumC\\P10&gt; </span><span class="c">${esc(d.run)}</span>\n`;
-    h+=d.out(vals).map(seg).join("\n");
-    termPre.innerHTML=h;
-    if(anim&&!reduce){termPre.classList.remove("run-flash");void termPre.offsetWidth;termPre.classList.add("run-flash")}
-  }
-  $(".mini-btn",codePane).addEventListener("click",e=>copy(src(),e.target));
-  render(false);
-}
-function copy(text,btn){const done=()=>{const o=btn.textContent;btn.textContent="Tersalin";setTimeout(()=>btn.textContent=o,1400)};
-  try{navigator.clipboard.writeText(text).then(done,()=>fallback())}catch(e){fallback()}
-  function fallback(){const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();try{document.execCommand("copy");done()}catch(e){}ta.remove()}}
-
-/* ---------- TOC + progress ---------- */
-const SECS=[["mulai","Mulai"],["identitas","1. Identitas & capaian"],["instalasi","Tahap 0. Instalasi"],["compiler","A. Compiler & VS Code"],["struktur","B. Struktur program"],["variabel","C. Variabel & tipe data"],["operator","D. Operator"],["io","E. Input/output"],["terpadu","F. Latihan terpadu"],["rangkuman","Rangkuman"],["kuis","Kuis"],["tantangan","Tantangan"],["troubleshooting","Troubleshooting"],["referensi","Referensi"]];
-$("#toc").innerHTML=SECS.map(([id,t])=>`<li><a href="#${id}" data-id="${id}">${t}</a></li>`).join("");
-$("#toc-m").innerHTML=SECS.map(([id,t])=>`<li><a href="#${id}">${t}</a></li>`).join("");
-const tocLinks=$$("#toc a");
-function onScroll(){const h=document.documentElement;const p=h.scrollTop/(h.scrollHeight-h.clientHeight||1);$("#progress").style.width=(p*100).toFixed(1)+"%";
-  let cur=SECS[0][0];for(const [id] of SECS){const s=document.getElementById(id);if(s&&s.getBoundingClientRect().top<120)cur=id}
-  tocLinks.forEach(a=>a.classList.toggle("active",a.dataset.id===cur))}
-window.addEventListener("scroll",onScroll,{passive:true});
-
-/* ---------- timeline ---------- */
-const TL=[["00–05",5,"Pembukaan & apersepsi","identitas","--surface-2"],["05–20",15,"Verifikasi Tahap 0 + A. Compiler + Latihan 1","compiler","--teal-soft"],["20–30",10,"B. Struktur program + Latihan 2","struktur","--violet-soft"],["30–45",15,"C. Variabel & tipe data + Latihan 3","variabel","--amber-soft"],["45–60",15,"D. Operator + Latihan 4","operator","--green-soft"],["60–75",15,"E. Input/output + Latihan 5","io","--teal-soft"],["75–85",10,"Latihan 6 terpadu","terpadu","--accent-soft"],["85–90",5,"Kuis & penutup","kuis","--surface-2"]];
-$("#timeline").innerHTML=TL.map(([t,m,l,id,c])=>`<a href="#${id}" style="flex:${m};background:var(${c})"><b>${t}</b>${m}'</a>`).join("");
-$("#tl-list").innerHTML=TL.map(([t,m,l,id])=>`<div class="tl-row"><span class="t">${t} · ${m}'</span><a href="#${id}" style="color:inherit;text-decoration:none">${l}</a></div>`).join("");
-
-/* ---------- install steps ---------- */
-const INST=[
- {t:"Unduh installer MSYS2",src:"msys2.org",c:"--ink",h:`<p>Buka <a href="https://www.msys2.org/" target="_blank" rel="noopener">www.msys2.org</a>, bagian <b>Installation</b>, unduh <code>msys2-x86_64-20260927.exe</code> (laptop Intel/AMD). Pilih <code>msys2-arm64-20260927</code> hanya untuk laptop ARM64. Jika versi di situs lebih baru, pakai yang terbaru; langkahnya sama.</p>`},
- {t:"Jalankan installer",src:"msys2.org",c:"--teal",h:`<p>Klik dua kali installer → <b>Next</b>. Pada <b>Installation Folder</b> gunakan default <code>C:\\msys64</code> (rekomendasi MSYS2; hindari spasi). Klik <b>Next</b> hingga selesai, lalu <b>Finish</b>.</p>`},
- {t:"Terminal UCRT64 terbuka",src:"msys2.org",c:"--teal",h:`<p>Setelah Finish, terminal untuk lingkungan <b>UCRT64</b> terbuka otomatis. Jika tertutup, buka Start → <b>MSYS2 UCRT64</b>. Jangan memakai terminal MSYS, CLANG64, atau MINGW64 untuk langkah berikutnya.</p>`},
- {t:"Pasang GCC dengan pacman",src:"msys2.org",c:"--accent",h:`<p>Di terminal UCRT64 ketik perintah ini, tekan <b>Enter</b>, lalu tekan <b>Enter</b> lagi (Y) saat ditanya <code>Proceed with installation? [Y/n]</code>.</p>
-   <div class="cmd"><span>pacman -S mingw-w64-ucrt-x86_64-gcc</span><button class="mini-btn" type="button" data-copy="pacman -S mingw-w64-ucrt-x86_64-gcc">Salin</button></div>
-   <pre class="excerpt">resolving dependencies...
-looking for conflicting packages...
-
-Packages (17) mingw-w64-ucrt-x86_64-binutils-2.47-3  ...
-              mingw-w64-ucrt-x86_64-gcc-16.2.0-3
-
-Total Download Size:    69.90 MiB
-Total Installed Size:  487.51 MiB
-
-:: Proceed with installation? [Y/n]
-[... proses unduh dan instalasi ...]
-
-$ gcc --version
-gcc.exe (Rev3, Built by MSYS2 project) 16.2.0</pre>
-   <p style="font-size:.88rem;color:var(--muted)">MSYS2 memperbarui dirinya lewat pacman (lihat <i>update guide</i> di msys2.org): <code>pacman -Suy</code>.</p>`},
- {t:"Tambahkan GCC ke PATH Windows",src:"integrasi",c:"--violet",h:`<p>Agar <code>gcc</code> dikenali di PowerShell dan terminal VS Code:</p>
-   <ul><li>Tekan <kbd>Win</kbd>, ketik <b>environment</b>, pilih <b>Edit environment variables for your account</b>.</li><li>Di <b>User variables</b> pilih <b>Path</b> → <b>Edit…</b> → <b>New</b> → ketik <code>C:\\msys64\\ucrt64\\bin</code> → <b>OK</b> di semua jendela.</li><li><b>Tutup dan buka ulang</b> VS Code.</li></ul>
-   <div class="path-mock" aria-hidden="true"><div class="tb">Edit environment variable</div><div class="row">%USERPROFILE%\\AppData\\Local\\Microsoft\\WindowsApps</div><div class="row">C:\\Users\\mahasiswa\\AppData\\Local\\Programs\\Microsoft VS Code\\bin</div><div class="row new">C:\\msys64\\ucrt64\\bin</div></div>`},
- {t:"Siapkan VS Code",src:"integrasi",c:"--violet",h:`<p>Tekan <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>X</kbd>, cari <b>C/C++</b> (Microsoft), klik <b>Install</b>. Buat folder kerja <code>D:\\PraktikumC\\P10</code> lalu buka lewat <b>File → Open Folder</b>.</p>`},
- {t:"Verifikasi akhir",src:"di kelas",c:"--green",h:`<p>Di terminal VS Code jalankan:</p>
-   <pre class="excerpt">PS&gt; gcc --version
-gcc.exe (Rev3, Built by MSYS2 project) 16.2.0
-PS&gt; where.exe gcc
-C:\\msys64\\ucrt64\\bin\\gcc.exe</pre><p>Versi boleh lebih baru; yang penting perintah dikenali. Jika gagal, lihat <a href="#troubleshooting">Troubleshooting</a>.</p>`}];
-const instDone=store.get("p20-install",[]);
-$("#install-steps").innerHTML=INST.map((s,i)=>`<div class="istep" style="--c:var(${s.c})" id="istep-${i}"><span class="n">${i+1}</span><div style="min-width:0"><h4>${s.t}<span class="src">${s.src}</span></h4>${s.h}<label class="chk"><input type="checkbox" id="inst-chk-${i}" data-i="${i}"> Sudah selesai</label></div></div>`).join("");
-function instUpdate(){let n=0;INST.forEach((s,i)=>{const c=$("#inst-chk-"+i);$("#istep-"+i).classList.toggle("done",c.checked);if(c.checked)n++});$("#inst-bar").style.width=(n/INST.length*100)+"%";$("#inst-count").textContent=`${n}/${INST.length} selesai`}
-INST.forEach((s,i)=>{const c=$("#inst-chk-"+i);c.checked=instDone.includes(i);c.addEventListener("change",()=>{store.set("p20-install",INST.map((_,j)=>j).filter(j=>$("#inst-chk-"+j).checked));instUpdate()})});
-instUpdate();
-$$("[data-copy]").forEach(b=>b.addEventListener("click",()=>copy(b.dataset.copy,b)));
-
-/* ---------- compile stages (shared with 3D) ---------- */
-const STAGES=[
- {n:"Preprocessor",cmd:"gcc -E halo.c -o halo.i",from:"halo.c",to:"halo.i",c:"--teal",d:"Baris berawalan <code>#</code> diproses: isi <code>stdio.h</code> disalin ke dalam kode dan komentar dibuang.",ex:`# 1 "halo.c"
-# 1 "C:/msys64/ucrt64/include/stdio.h" 1 3
-...  (ratusan baris deklarasi)
-int __cdecl printf(const char * __restrict__ _Format, ...);
-...
-# 3 "halo.c"
-int main(void) {
-    printf("Halo, C!\\n");
-    return 0;
-}`},
- {n:"Compiler",cmd:"gcc -S halo.c",from:"halo.i",to:"halo.s",c:"--accent",d:"Kode diperiksa sintaksnya lalu diterjemahkan ke bahasa assembly. <b>Sebagian besar error muncul di tahap ini.</b>",ex:`.LC0:
-        .ascii "Halo, C!\\0"
-main:
-        pushq   %rbp
-        movq    %rsp, %rbp
-        subq    $32, %rsp
-        call    __main
-        leaq    .LC0(%rip), %rax
-        movq    %rax, %rcx
-        call    puts
-        movl    $0, %eax
-        leave
-        ret`},
- {n:"Assembler",cmd:"gcc -c halo.c",from:"halo.s",to:"halo.o",c:"--violet",d:"Assembly diubah menjadi kode mesin biner (object file). Belum bisa dijalankan karena <code>printf</code>/<code>puts</code> belum disambungkan.",ex:`0000  64 86 07 00 00 00 00 00  d.......
-0010  2e 74 65 78 74 00 00 00  .text...
-0020  55 48 89 e5 48 83 ec 20  UH..H..
-0030  e8 00 00 00 00 48 8d 05  .....H..
-0040  48 61 6c 6f 2c 20 43 21  Halo, C!`},
- {n:"Linker",cmd:"gcc halo.c -o halo",from:"halo.o",to:"halo.exe",c:"--green",d:"Object file digabung dengan library standar (kode <code>printf</code>) menjadi program utuh <code>halo.exe</code>.",ex:`PS> gcc halo.c -o halo
-PS> dir halo.*
-    halo.c      112 byte
-    halo.exe  ~ 260 KB
-PS> .\\halo
-Halo, C!`}];
-let stageSel=0;
-$("#stage-tabs").innerHTML=STAGES.map((s,i)=>`<button class="pill-btn" role="tab" type="button" data-i="${i}"><span class="dot" style="background:var(${s.c})"></span>${i+1}. ${s.n}</button>`).join("");
-function showStage(i){stageSel=i;$$("#stage-tabs button").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.i===i));const s=STAGES[i];
-  $("#stage-panel").innerHTML=`<div class="card"><div class="file-flow"><span class="f">${s.from}</span>→<span class="f" style="border-color:var(${s.c})">${s.to}</span></div><p>${s.d}</p><p style="margin:0"><code>${s.cmd}</code></p></div><pre class="excerpt" aria-label="Contoh isi ${s.to}">${esc(s.ex)}</pre>`}
-$$("#stage-tabs button").forEach(b=>b.addEventListener("click",()=>showStage(+b.dataset.i)));showStage(0);
-
-/* hero chips */
-const HSTEP=[{n:"halo.c",d:"<b>Source code</b> yang Anda tulis di VS Code. Masih berupa teks dan belum bisa dijalankan komputer."}].concat(STAGES.map(s=>({n:s.n,d:`<b>${s.n}</b> (${s.from} → ${s.to}): ${s.d} <code>${s.cmd}</code>`})));
-let pipe=null;
-$("#pipe-controls").innerHTML=`<button class="pill-btn" type="button" id="pipe-play" aria-pressed="false">${reduce?"▶ Putar":"❚❚ Jeda"}</button>`+HSTEP.map((s,i)=>`<button class="pill-btn" type="button" data-i="${i}">${i===0?"":i+". "}${s.n}</button>`).join("");
-function caption(i){$("#pipe-caption").innerHTML=HSTEP[i].d;$$("#pipe-controls [data-i]").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.i===i))}
-caption(0);
-$$("#pipe-controls [data-i]").forEach(b=>b.addEventListener("click",()=>{const i=+b.dataset.i;caption(i);if(pipe)pipe.focus(i);if(i>0)showStage(i-1)}));
-$("#pipe-play").addEventListener("click",()=>{if(pipe)pipe.toggle()});
-
-/* ---------- anatomy ---------- */
-const ANCODE=`#include <stdio.h>
-
-/* Program menghitung luas persegi */
-int main(void) {
-    int sisi = 5;
-    int luas = sisi * sisi;
-    printf("Luas = %d\\n", luas);
-    return 0;
-}`;
-const ANNOTES=[{l:[1],t:"Preprocessor directive",d:"Memuat header stdio.h yang berisi printf dan scanf.",c:"--teal"},{l:[3],t:"Komentar",d:"Diabaikan compiler; untuk dibaca manusia. Bisa // satu baris atau /* ... */.",c:"--green"},{l:[4,9],t:"Fungsi main()",d:"Titik awal eksekusi. { dan } membuka dan menutup blok.",c:"--ink"},{l:[5,6],t:"Deklarasi & statement",d:"Setiap statement diakhiri titik koma ;",c:"--accent"},{l:[7],t:"Output",d:"printf mencetak ke layar; \\n membuat baris baru.",c:"--violet"},{l:[8],t:"return 0;",d:"Program selesai dengan status sukses.",c:"--red"}];
-(function(){const box=$("#anatomy");box.innerHTML=`<div class="demo" style="margin:0;grid-template-columns:minmax(0,1fr)"><div class="pane code-pane"><div class="pane-head"><span class="fname">luas.c</span><span class="sp"></span><span>output: <b style="color:var(--green)">Luas = 25</b></span></div><pre class="code">${codeHTML(ANCODE)}</pre></div></div><div class="anat-notes">${ANNOTES.map((n,i)=>`<div class="anat-note" tabindex="0" data-i="${i}" style="--c:var(${n.c})"><b>${n.t}</b><br>${esc(n.d)}</div>`).join("")}</div>`;
-  const lines=$$(".line",box),notes=$$(".anat-note",box);
-  function on(i){notes.forEach((n,j)=>n.classList.toggle("on",j===i));lines.forEach(l=>l.classList.toggle("hl",i!=null&&ANNOTES[i].l.includes(+l.dataset.l)))}
-  notes.forEach((n,i)=>{n.addEventListener("mouseenter",()=>on(i));n.addEventListener("focus",()=>on(i));n.addEventListener("click",()=>on(i))});
-  lines.forEach(l=>{const f=()=>{const i=ANNOTES.findIndex(a=>a.l.includes(+l.dataset.l));on(i<0?null:i)};l.addEventListener("mouseenter",f);l.addEventListener("click",f)});
-  box.addEventListener("mouseleave",()=>on(null));
-})();
-
-/* ---------- detective ---------- */
-const DET=[{t:"⋯ (sesuatu yang seharusnya ada di atas baris 1)",g:true,err:"Tidak ada #include <stdio.h>"},{t:"int Main(void) {",err:"Main harus ditulis main (huruf kecil)"},{t:"    int jumlah = 10",err:"Titik koma ; hilang"},{t:'    printf("Jumlah = %d\\n", Jumlah);',err:"Jumlah (J besar) belum dideklarasikan, seharusnya jumlah"},{t:"    return 0;"},{t:"}"}];
-const detBox=$("#detective");
-detBox.innerHTML=DET.map((d,i)=>`<button type="button" class="det-line${d.g?" ghost":""}" data-i="${i}" aria-pressed="false"><span class="ln">${d.g?"":i}</span>${esc(d.t)}</button>`).join("");
-$$(".det-line",detBox).forEach(b=>b.addEventListener("click",()=>{b.classList.remove("found","wrong");b.classList.toggle("marked");b.setAttribute("aria-pressed",b.classList.contains("marked"))}));
-$("#det-check").addEventListener("click",()=>{let hit=0,fp=0;$$(".det-line",detBox).forEach(b=>{const d=DET[+b.dataset.i],m=b.classList.contains("marked");b.classList.remove("found","wrong");
-  if(d.err&&m){hit++;b.classList.add("found");b.title=d.err}else if(!d.err&&m){fp++;b.classList.add("wrong")}});
-  const missed=DET.filter((d,i)=>d.err&&!$$(".det-line",detBox)[i].classList.contains("marked")).length;
-  $("#det-score").textContent=`${hit}/4 kesalahan ditemukan`+(fp?` · ${fp} baris sebenarnya benar`:"")+(missed?` · masih ada ${missed} yang terlewat`:" · lengkap! Buka kunci untuk detailnya")});
-$("#det-reset").addEventListener("click",()=>{$$(".det-line",detBox).forEach(b=>{b.className="det-line"+(DET[+b.dataset.i].g?" ghost":"");b.setAttribute("aria-pressed","false")});$("#det-score").textContent=""});
-
-/* ---------- answer grids ---------- */
-function nums(s){return(String(s).replace(/,/g,".").match(/-?\d+(\.\d+)?/g)||[]).map(Number)}
-function mkGrid(sel,items,btn,scoreSel){
-  $(sel).innerHTML=items.map((it,i)=>`<div class="ans-row" id="${sel.slice(1)}-${i}"><span class="mark" style="text-align:left;color:var(--muted)">${it.no}</span><code>${esc(it.q)}</code><input id="${sel.slice(1)}-in-${i}" aria-label="Prediksi ${it.no}" placeholder="prediksi" autocomplete="off"><span class="mark" aria-live="polite"></span><span class="why" hidden>${esc(it.why)}</span></div>`).join("");
-  $(btn).addEventListener("click",()=>{let ok=0;items.forEach((it,i)=>{const row=$(`#${sel.slice(1)}-${i}`),v=$(`#${sel.slice(1)}-in-${i}`).value,marks=$$(".mark",row);
-    if(!v.trim()){row.className="ans-row";marks[1].textContent="";$(".why",row).hidden=true;return}
-    const good=it.check(v);if(good)ok++;row.className="ans-row "+(good?"ok":"no");marks[1].textContent=good?"✓":"✗";$(".why",row).hidden=false;$(".why",row).textContent=(good?"Benar. ":"Jawaban: "+it.a+". ")+it.why});
-    $(scoreSel).textContent=`Skor ${ok}/${items.length}`})}
-const eqNums=(a)=>v=>{const x=nums(v),y=nums(a);return x.length===y.length&&x.every((n,i)=>Math.abs(n-y[i])<1e-9)};
-mkGrid("#pred-grid",[
- {no:"(1)",q:'int a = 7 / 2;  printf("%d", a)',a:"3",check:eqNums("3"),why:"7 / 2 pembagian integer, desimal dibuang."},
- {no:"(2)",q:'float b = 7 / 2;  printf("%f", b)',a:"3.000000",check:eqNums("3"),why:"7 / 2 = 3 dihitung sebagai int dulu, baru disimpan ke float; %f menampilkan 6 desimal."},
- {no:"(3)",q:'float c = 7.0 / 2;  printf("%.1f", c)',a:"3.5",check:eqNums("3.5"),why:"7.0 bertipe double sehingga hasilnya 3.5."},
- {no:"(4)",q:'int d = 9.99;  printf("%d", d)',a:"9",check:eqNums("9"),why:"Nilai pecahan yang disimpan ke int dipotong, tidak dibulatkan."},
- {no:"(5)",q:'char e = 66;  printf("%c %d", e, e)',a:"B 66",check:v=>/^\s*'?b'?\s*[, ]\s*66\s*$/i.test(v),why:"char menyimpan kode ASCII; 66 adalah 'B'."}],"#pred-check","#pred-score");
-mkGrid("#trace-grid",[
- {no:"1",q:"p + q * 3",a:"35",check:eqNums("35"),why:"* lebih dulu: 23 + 12."},
- {no:"2",q:"(p + q) * 3",a:"81",check:eqNums("81"),why:"Kurung lebih dulu: 27 × 3."},
- {no:"3",q:"p / q",a:"5",check:eqNums("5"),why:"23 / 4 = 5,75 dipotong menjadi 5."},
- {no:"4",q:"p % q",a:"3",check:eqNums("3"),why:"23 = 5 × 4 + 3."},
- {no:"5",q:"(double) p / q   → %.2f",a:"5.75",check:eqNums("5.75"),why:"p diubah ke double dulu."},
- {no:"6",q:"p / q * q + p % q",a:"23",check:eqNums("23"),why:"5 × 4 + 3 = 23."},
- {no:"7",q:"r = 8; r += 4; r *= 3; r -= 6; r /= 5; r %= 4;",a:"2",check:eqNums("2"),why:"12 → 36 → 30 → 6 → 2."},
- {no:"8",q:"m = 3; n = m++ * 2; o = ++m * 2;  → m n o",a:"5 6 10",check:eqNums("5 6 10"),why:"n = 3×2 (m jadi 4); m jadi 5, o = 5×2."},
- {no:"9",q:"(p > q) && (q > 5)",a:"0",check:eqNums("0"),why:"1 && 0 = 0."},
- {no:"10",q:"(p < q) || (p % 2 == 1)",a:"1",check:eqNums("1"),why:"0 || 1 = 1 (23 ganjil)."},
- {no:"11",q:"!(p == 23)",a:"0",check:eqNums("0"),why:"!1 = 0."},
- {no:"12",q:"p > q > 1",a:"0",check:eqNums("0"),why:"(23 > 4) = 1, lalu 1 > 1 = 0."}],"#trace-check","#trace-score");
-
-/* ---------- operator playground ---------- */
-function opRender(){const a=readInt($("#op-a").value),b=readInt($("#op-b").value);const out=$("#op-out");
-  if(a===null||b===null){out.innerHTML=`<p class="note warn">Isi a dan b dengan bilangan bulat.</p>`;return}
-  const z=b===0,crash=`<span class="val warn">crash: bagi nol</span>`;
-  const cell=(ex,v,cls="")=>`<div class="op-cell"><div class="ex">${esc(ex)}</div>${typeof v==="string"&&v.startsWith("<")?v:`<div class="val ${cls}">${esc(v)}</div>`}</div>`;
-  const tf=x=>[String(+x),x?"t":"f"];
-  const groups=[["Aritmatika",[["a + b",String(i32(a+b))],["a - b",String(i32(a-b))],["a * b",String(Math.imul(a,b))],["a / b",z?crash:String(cdiv(a,b))],["a % b",z?crash:String(cmod(a,b))],["(float) a / b  %.2f",z?(a===0?"nan":a>0?"inf":"-inf"):fixed(F32(F32(a)/F32(b)),2)]]],
-   ["Relasional",[["a == b",...tf(a===b)],["a != b",...tf(a!==b)],["a > b",...tf(a>b)],["a <= b",...tf(a<=b)]]],
-   ["Logika",[["(a > 0) && (b > 0)",...tf(a>0&&b>0)],["(a > 0) || (b > 0)",...tf(a>0||b>0)],["!a",...tf(!a)],["a % 2 == 0  (a genap?)",...tf(a%2===0)]]],
-   ["Penugasan (mulai x = a)",[["x += b",String(i32(a+b))],["x -= b",String(i32(a-b))],["x *= b",String(Math.imul(a,b))],["x %= b",z?crash:String(cmod(a,b))]]]];
-  out.innerHTML=groups.map(([g,cs])=>`<div class="op-cat">${g}</div><div class="op-grid">${cs.map(c=>cell(c[0],c[1],c[2]||"")).join("")}</div>`).join("")+
-   (Math.abs(a)>2147483647||Math.abs(b)>2147483647?`<p class="note warn">Nilai di luar jangkauan int 32-bit; hasil "melingkar" (overflow).</p>`:"")}
-["#op-a","#op-b"].forEach(s=>$(s).addEventListener("input",opRender));opRender();
-
-/* ---------- printf playground ---------- */
-function fmtRender(){const sp=$("#fmt-spec").value,fl=$("#fmt-flag").value,w=$("#fmt-w").value,p=$("#fmt-p").value,raw=$("#fmt-v").value;
-  const usesP=sp==="f"||sp==="s";$("#fmt-p").disabled=!usesP;
-  const fmt="%"+fl+(w&&+w>0?w:"")+(usesP&&p!==""?"."+p:"")+sp;let val,lit;
-  if(sp==="d"){val=readInt(raw);lit=val}else if(sp==="f"){val=readNum(raw);lit=raw}else if(sp==="c"){val=readChar(raw);lit="'"+val+"'"}else{val=raw;lit='"'+raw+'"'}
-  if(val===null||val===undefined){$("#fmt-out").innerHTML=`<span class="ruler">printf("[${esc(fmt)}]", ...)</span>nilai tidak cocok dengan specifier`;return}
-  const s=cf(fmt,val);const rul=Array.from({length:Math.max(s.length,1)},(_,i)=>(i+1)%10).join("");
-  $("#fmt-out").innerHTML=`<span class="ruler">printf("[${esc(fmt)}]", ${esc(String(lit))});</span>[${esc(s)}]\n<span class="ruler"> ${rul}</span>`}
-["#fmt-spec","#fmt-flag","#fmt-w","#fmt-p","#fmt-v"].forEach(s=>$(s).addEventListener("input",fmtRender));
-$("#fmt-spec").addEventListener("change",()=>{const v={d:"42",f:"3.14159",c:"A",s:"Dida"}[$("#fmt-spec").value];$("#fmt-v").value=v;fmtRender()});fmtRender();
-
-/* ---------- quiz ---------- */
-const QZ=[
- ["Fungsi utama compiler GCC adalah ...",["Menjalankan kode C baris per baris","Menerjemahkan source code C menjadi program executable","Menyunting kode program","Mengunduh library dari internet"],1,"Compiler menerjemahkan seluruh source code menjadi file executable."],
- ["Perintah yang benar untuk mengompilasi nilai.c menjadi nilai.exe adalah ...",["gcc -o nilai.c nilai","run nilai.c","gcc nilai.c -o nilai","compile nilai.c"],2,"Format: gcc file.c -o nama_output."],
- ["Baris #include <stdio.h> diproses pada tahap ...",["Preprocessing","Compilation","Assembly","Linking"],0,"Semua baris berawalan # ditangani preprocessor."],
- ["Nama variabel yang valid adalah ...",["2nilai","total nilai","float","total_nilai"],3,"Huruf/angka/underscore, tidak diawali angka, bukan keyword."],
- ["Nilai hasil setelah int hasil = 19 / 4 * 4; adalah ...",["19","16","4","19.0"],1,"19 / 4 = 4 (integer), lalu 4 * 4 = 16."],
- ["Format specifier untuk membaca double dengan scanf adalah ...",["%d","%f","%lf","%c"],2,"scanf membedakan float (%f) dan double (%lf)."],
- ["Mengapa scanf(\"%d\", &x); memakai tanda &?",["Agar input menjadi bilangan bulat","Memberikan alamat memori x agar scanf bisa menyimpan nilai ke x","Untuk mencetak nilai x","Karena x bertipe string"],1,"& adalah operator alamat."],
- ["Output dari printf(\"%d\", (10 > 3) && (2 > 5)); adalah ...",["1","0","true","Error"],1,"1 && 0 = 0."],
- ["Setelah int a = 5; int b = a++ + 2; nilai a dan b adalah ...",["a = 5, b = 7","a = 6, b = 8","a = 6, b = 7","a = 5, b = 8"],2,"a++ memakai nilai lama 5 (b = 7), lalu a menjadi 6."],
- ["Setelah float h = 7 / 2;, printf(\"%.1f\", h); menampilkan ...",["3.5","3.0","4.0","3"],1,"7 / 2 dihitung sebagai int (3) sebelum disimpan ke float."]];
-const qf=$("#quiz");
-qf.innerHTML=QZ.map(([q,o],i)=>`<fieldset class="q" style="border:1px solid var(--line)"><legend class="sr">Soal ${i+1}</legend><h4><b>${i+1}</b>${esc(q)}</h4>${o.map((t,j)=>`<label><input type="radio" name="q${i}" id="q${i}-${j}" value="${j}"> <span>${"abcd"[j]}. ${esc(t)}</span></label>`).join("")}<p class="exp" hidden></p></fieldset>`).join("");
-qf.addEventListener("submit",e=>e.preventDefault());
-$("#quiz-check").addEventListener("click",()=>{let s=0,ans=0;QZ.forEach(([q,o,k,ex],i)=>{const f=$$("fieldset",qf)[i],pick=$(`input[name=q${i}]:checked`,f);$$("label",f).forEach(l=>l.className="");
-  const e=$(".exp",f);if(!pick){e.hidden=true;return}ans++;const p=+pick.value;if(p===k)s++;else $$("label",f)[p].className="wrongpick";$$("label",f)[k].className="right";e.hidden=false;e.textContent=(p===k?"Benar. ":"Kunci: "+"abcd"[k]+". ")+ex});
-  $("#quiz-score").textContent=`Skor ${s}/${QZ.length}`+(ans<QZ.length?` · ${QZ.length-ans} soal belum dijawab`:"")});
-$("#quiz-reset").addEventListener("click",()=>{qf.reset();$$("label",qf).forEach(l=>l.className="");$$(".exp",qf).forEach(e=>e.hidden=true);$("#quiz-score").textContent=""});
-
-/* ---------- troubleshooting ---------- */
-const TS=[["'gcc' is not recognized as the name of a cmdlet","C:\\msys64\\ucrt64\\bin belum ada di PATH, atau VS Code dibuka sebelum PATH diubah","Tambahkan ke PATH (Tahap 0 langkah 5), lalu tutup dan buka ulang VS Code"],
- ["gcc: command not found (di terminal MSYS2)","Terminal yang dibuka MSYS (ungu), bukan UCRT64, atau GCC belum dipasang","Buka MSYS2 UCRT64 lalu jalankan pacman -S mingw-w64-ucrt-x86_64-gcc"],
- ["error: target not found (pacman)","Nama paket salah ketik","Salin persis: mingw-w64-ucrt-x86_64-gcc"],
- ["Installer MSYS2 menolak berjalan","Windows 32-bit atau lebih lama dari Windows 10 1809","Cek Settings → System → About; sementara pakai komputer lab atau compiler daring"],
- ["gcc: error: halo.c: No such file or directory","Terminal tidak di folder file, nama salah, atau belum disimpan","Cek dengan dir, pindah dengan cd, pastikan ekstensi .c"],
- ["expected ';' before ...","Titik koma hilang di baris sebelum baris yang dilaporkan","Tambahkan ;"],
- ["'x' undeclared (first use in this function)","Variabel belum dideklarasikan atau beda huruf besar/kecil","Deklarasikan atau samakan nama"],
- ["implicit declaration of function 'printf'","Lupa #include <stdio.h> atau salah ketik nama fungsi","Tambahkan include / perbaiki nama"],
- ["undefined reference to 'main' / 'WinMain'","Fungsi main tidak ada atau salah tulis (Main, mian)","Tulis int main(void)"],
- ["expected declaration or statement at end of input","Kurung kurawal } kurang","Periksa pasangan { }"],
- ["missing terminating \" character","Kutip penutup string hilang","Tutup string dengan \""],
- ["Program tidak berubah setelah diedit","File belum disimpan atau belum dikompilasi ulang","Ctrl+S lalu kompilasi ulang"],
- ["cannot open output file halo.exe: Permission denied","halo.exe masih berjalan atau dikunci antivirus","Ctrl+C, tutup program, kompilasi ulang"],
- ["Input char terlewati","Enter dari input sebelumnya terbaca oleh %c","Pakai scanf(\" %c\", &c);"],
- ["Nilai double yang dibaca aneh / 0","Membaca double dengan %f","Pakai %lf"],
- ["Hasil pembagian selalu bulat","Pembagian integer","Pakai 7.0 atau casting (float)"],
- ["warning: format '%d' expects argument of type 'int'","Specifier tidak sesuai tipe data","Samakan specifier dengan tipe"],
- ["Teks prompt tidak muncul sebelum input","Program dijalankan di tab OUTPUT (Code Runner), bukan TERMINAL","Jalankan dari TERMINAL; bila perlu fflush(stdout);"]];
-function tsRender(){const q=$("#ts-search").value.toLowerCase().trim();const rows=TS.filter(r=>!q||r.join(" ").toLowerCase().includes(q));
-  $("#ts-body").innerHTML=rows.length?rows.map(r=>`<tr><td><code style="white-space:normal">${esc(r[0])}</code></td><td>${esc(r[1])}</td><td>${esc(r[2])}</td></tr>`).join(""):`<tr><td colspan="3">Tidak ada yang cocok. Coba kata kunci lain dari pesan error.</td></tr>`}
-$("#ts-search").addEventListener("input",tsRender);tsRender();
-
-/* ---------- memory lab state ---------- */
-const TYPE_INFO={char:{size:1,spec:"%c",color:"--green"},int:{size:4,spec:"%d",color:"--teal"},float:{size:4,spec:"%f",color:"--accent"},double:{size:8,spec:"%lf",color:"--violet"}};
-const VDEF=[{type:"char",name:"grade",val:"A"},{type:"int",name:"umur",val:"20"},{type:"float",name:"ipk",val:"3.75"},{type:"double",name:"pi",val:"3.14159265"}];
-let vars=store.get("p20-vars",null);if(!Array.isArray(vars)||!vars.length)vars=JSON.parse(JSON.stringify(VDEF));
-function varBytes(v){const n=TYPE_INFO[v.type].size,buf=new DataView(new ArrayBuffer(8));
-  if(v.type==="char"){const c=readChar(v.val);if(c===null)return null;const code=c.charCodeAt(0);if(code>127)return null;buf.setUint8(0,code)}
-  else if(v.type==="int"){const x=String(v.val).trim();if(!/^[+-]?\d+$/.test(x))return null;const k=Number(x);if(k>2147483647||k<-2147483648)return null;buf.setInt32(0,k,true)}
-  else{const x=Number(String(v.val).trim());if(String(v.val).trim()===""||!isFinite(x))return null;v.type==="float"?buf.setFloat32(0,x,true):buf.setFloat64(0,x,true)}
-  return Array.from({length:n},(_,i)=>buf.getUint8(i))}
-function validName(n){return/^[A-Za-z_]\w*$/.test(n)&&!TYPES.has(n)&&!KWS.has(n)&&!["while","for","if","else","return","main","printf","scanf"].includes(n)}
-function varRowsRender(){const box=$("#var-rows");box.innerHTML=vars.map((v,i)=>`<div class="var-row" id="vr-${i}"><select id="vt-${i}" aria-label="Tipe variabel ${i+1}">${Object.keys(TYPE_INFO).map(t=>`<option${t===v.type?" selected":""}>${t}</option>`).join("")}</select><input id="vn-${i}" value="${esc(v.name)}" aria-label="Nama variabel ${i+1}" spellcheck="false"><input id="vv-${i}" value="${esc(v.val)}" aria-label="Nilai variabel ${i+1}" spellcheck="false"><button class="rm" type="button" aria-label="Hapus variabel ${i+1}" data-i="${i}">✕</button></div>`).join("");
-  vars.forEach((v,i)=>{$("#vt-"+i).addEventListener("change",e=>{v.type=e.target.value;v.val={char:"A",int:"0",float:"1.5",double:"2.5"}[v.type];$("#vv-"+i).value=v.val;varsChanged()});
-    $("#vn-"+i).addEventListener("input",e=>{v.name=e.target.value.trim();varsChanged()});$("#vv-"+i).addEventListener("input",e=>{v.val=e.target.value;varsChanged()})});
-  $$(".rm",box).forEach(b=>b.addEventListener("click",()=>{if(vars.length>1){vars.splice(+b.dataset.i,1);varRowsRender();varsChanged()}}))}
-$("#var-add").addEventListener("click",()=>{if(vars.length>=6)return;const used=new Set(vars.map(v=>v.name));let n="nilai",k=1;while(used.has(n))n="nilai"+(++k);vars.push({type:"int",name:n,val:"100"});varRowsRender();varsChanged()});
-$("#var-reset").addEventListener("click",()=>{vars=JSON.parse(JSON.stringify(VDEF));varRowsRender();varsChanged()});
-const memDemo={file:"memori.c",cmd:"gcc -Wall memori.c -o memori",run:".\\memori",code:"",out:()=>[]};D.memlab=memDemo;
-function cLit(v){return v.type==="char"?`'${(readChar(v.val)||"?")}'`:v.type==="float"?`${String(v.val).trim()}f`:String(v.val).trim()}
-function buildMemDemo(){const ok=vars.map(v=>varBytes(v)!==null&&validName(v.name));const dup=new Set();vars.forEach((v,i)=>{if(dup.has(v.name))ok[i]=false;dup.add(v.name)});
-  vars.forEach((v,i)=>$("#vr-"+i)&&$("#vr-"+i).classList.toggle("bad",!ok[i]));
-  const decl=vars.map(v=>`    ${v.type} ${v.name||"?"} = ${cLit(v)};`).join("\n");
-  const pr=vars.map(v=>{const sp=v.type==="double"?"%f":v.type==="float"?"%.2f":TYPE_INFO[v.type].spec;return`    printf("${v.name} = ${sp.replace(/%/g,"%")}  (%zu byte)\\n", ${v.name}, sizeof(${v.name}));`}).join("\n");
-  memDemo.code=`#include <stdio.h>\n\nint main(void) {\n${decl}\n\n${pr}\n    return 0;\n}`;
-  memDemo.out=()=>{if(ok.includes(false)){const i=ok.indexOf(false);return[["err",`memori.c: error pada variabel ke-${i+1} ("${vars[i].name}"): nama tidak valid/duplikat atau nilai tidak sesuai tipe ${vars[i].type}`]]}
-    return vars.map(v=>{const b=varBytes(v),dv=new DataView(new Uint8Array(8).buffer);b.forEach((x,i)=>dv.setUint8(i,x));
-      let s;if(v.type==="char")s=cf("%c",String.fromCharCode(b[0]));else if(v.type==="int")s=cf("%d",dv.getInt32(0,true));else if(v.type==="float")s=cf("%.2f",dv.getFloat32(0,true));else s=cf("%f",dv.getFloat64(0,true));
-      return `${v.name} = ${s}  (${TYPE_INFO[v.type].size} byte)`})};
-  const total=vars.reduce((a,v)=>a+TYPE_INFO[v.type].size,0);$("#var-size").textContent=`Total: ${total} byte`;
-  return ok}
-let memDemoEl=null;
-function varsChanged(){store.set("p20-vars",vars);const ok=buildMemDemo();if(memDemoEl){memDemoEl.innerHTML="";mountDemo(memDemoEl)}if(mem)mem.update(vars,ok)}
-$("#mem-legend").innerHTML=Object.entries(TYPE_INFO).map(([t,i])=>`<span><i style="background:var(${i.color})"></i>${t} · ${i.size} byte</span>`).join("");
-varRowsRender();buildMemDemo();
-
-/* mount all demos */
-$$("[data-demo]").forEach(el=>{if(el.dataset.demo==="memlab")memDemoEl=el;mountDemo(el)});
-
-/* ---------- three.js scenes ---------- */
-let mem=null;
-function hasGL(){try{const c=document.createElement("canvas");return!!(window.WebGLRenderingContext&&(c.getContext("webgl")||c.getContext("experimental-webgl")))}catch(e){return false}}
-const GL=typeof THREE!=="undefined"&&hasGL();
-function col(n){return new THREE.Color(css(n)||"#888")}
-function labelTex(text,{fg="#fff",bg=null,font="600 56px 'JetBrains Mono', monospace",w=512,h=128,radius=24}={}){
-  const c=document.createElement("canvas");c.width=w;c.height=h;const g=c.getContext("2d");
-  if(bg){g.fillStyle=bg;g.beginPath();if(g.roundRect)g.roundRect(0,0,w,h,radius);else g.rect(0,0,w,h);g.fill()}
-  g.fillStyle=fg;g.font=font;g.textAlign="center";g.textBaseline="middle";g.fillText(text,w/2,h/2+2);
-  const t=new THREE.CanvasTexture(c);t.anisotropy=4;return t}
-function sprite(text,opts,scale){const m=new THREE.SpriteMaterial({map:labelTex(text,opts),transparent:true,depthWrite:false});const s=new THREE.Sprite(m);s.scale.set(scale[0],scale[1],1);return s}
-function makeRenderer(host){const r=new THREE.WebGLRenderer({antialias:true,alpha:true});r.setPixelRatio(Math.min(2,window.devicePixelRatio||1));host.appendChild(r.domElement);return r}
-function dragRotate(dom,obj,limit=0.7){let down=false,x0=0,r0=0;dom.style.cursor="grab";dom.style.touchAction="pan-y";
-  dom.addEventListener("pointerdown",e=>{down=true;x0=e.clientX;r0=obj.rotation.y;dom.setPointerCapture(e.pointerId);dom.style.cursor="grabbing"});
-  dom.addEventListener("pointermove",e=>{if(!down)return;obj.rotation.y=Math.max(-limit,Math.min(limit,r0+(e.clientX-x0)*0.006));obj.userData.dirty=true});
-  const up=()=>{down=false;dom.style.cursor="grab"};dom.addEventListener("pointerup",up);dom.addEventListener("pointercancel",up)}
-
-function initPipe(){
-  const host=$("#pipe3d");const renderer=makeRenderer(host);const scene=new THREE.Scene();
-  const cam=new THREE.PerspectiveCamera(32,2,0.1,100);cam.position.set(0,2.6,13.5);cam.lookAt(0,0.1,0);
-  scene.add(new THREE.AmbientLight(0xffffff,0.75));const dl=new THREE.DirectionalLight(0xffffff,0.7);dl.position.set(3,6,8);scene.add(dl);
-  const root=new THREE.Group();scene.add(root);
-  const names=["halo.c","halo.i","halo.s","halo.o","halo.exe"],gap=3.1,x0=-2*gap;
-  let files=[],gates=[],packet,trail;
-  function build(){root.clear();files=[];gates=[];
-    const paper=col("--surface"),ink=css("--ink"),line=col("--line");
-    names.forEach((n,i)=>{const g=new THREE.Group();g.position.x=x0+i*gap;
-      const slab=new THREE.Mesh(new THREE.BoxGeometry(1.5,1.9,0.14),new THREE.MeshStandardMaterial({color:paper,roughness:.8}));g.add(slab);
-      const edge=new THREE.LineSegments(new THREE.EdgesGeometry(slab.geometry),new THREE.LineBasicMaterial({color:i===4?col("--green"):line}));g.add(edge);
-      for(let k=0;k<4;k++){const bar=new THREE.Mesh(new THREE.PlaneGeometry(k%2?0.8:1.05,0.07),new THREE.MeshBasicMaterial({color:line}));bar.position.set(-0.08,0.5-k*0.22,0.075);g.add(bar)}
-      const lab=sprite(n,{fg:ink,font:"600 64px 'JetBrains Mono', monospace"},[1.9,0.48]);lab.position.set(0,-1.35,0);g.add(lab);
-      root.add(g);files.push(g)});
-    STAGES.forEach((s,i)=>{const c=col(s.c);const g=new THREE.Group();g.position.x=x0+i*gap+gap/2;
-      const ring=new THREE.Mesh(new THREE.TorusGeometry(0.62,0.07,16,48),new THREE.MeshStandardMaterial({color:c,emissive:c,emissiveIntensity:.25}));ring.rotation.y=Math.PI/2;g.add(ring);
-      const lab=sprite(s.n,{fg:"#fff",bg:css(s.c),font:"600 54px 'IBM Plex Sans', sans-serif"},[1.75,0.44]);lab.position.set(0,1.3,0);g.add(lab);
-      root.add(g);gates.push({g,ring,c})});
-    const track=new THREE.Mesh(new THREE.CylinderGeometry(0.025,0.025,4*gap+1.5,8),new THREE.MeshBasicMaterial({color:line}));track.rotation.z=Math.PI/2;root.add(track);
-    packet=new THREE.Mesh(new THREE.IcosahedronGeometry(0.26,1),new THREE.MeshStandardMaterial({color:col("--accent"),emissive:col("--accent"),emissiveIntensity:.5,flatShading:true}));root.add(packet);
-    root.userData.dirty=true}
-  build();
-  let t=0.18,playing=!reduce,target=null,last=performance.now(),narrow=false;
-  function place(){const x=x0+t*4*gap;packet.position.set(x,0,0.0);packet.rotation.x=t*12;packet.rotation.y=t*9;
-    const gi=Math.min(3,Math.max(0,Math.floor(t*4)));const c=t<0.02?col("--accent"):gates[gi].c;packet.material.color.copy(c);packet.material.emissive.copy(c);
-    gates.forEach((g,i)=>{const gx=x0+i*gap+gap/2,d=Math.abs(x-gx);const s=1+Math.max(0,0.35-d*0.35);g.ring.scale.setScalar(s);g.ring.material.emissiveIntensity=.25+Math.max(0,.9-d)})}
-  function resize(){const w=host.clientWidth,h=host.clientHeight;renderer.setSize(w,h,false);cam.aspect=w/h;narrow=w<700;cam.fov=narrow?40:32;cam.position.set(narrow?cam.position.x:0,2.6,narrow?10:13.5);cam.lookAt(cam.position.x,0.1,0);cam.updateProjectionMatrix();root.userData.dirty=true}
-  new ResizeObserver(resize).observe(host);resize();
-  dragRotate(renderer.domElement,root,0.6);
-  function frame(now){const dt=Math.min(0.05,(now-last)/1000);last=now;
-    if(target!==null){t+=(target-t)*Math.min(1,dt*4);if(Math.abs(target-t)<0.002){t=target}root.userData.dirty=true}
-    else if(playing){t+=dt/9;if(t>1.04)t=-0.02;root.userData.dirty=true}
-    if(narrow){const tx=Math.max(x0+gap*0.9,Math.min(-x0-gap*0.9,x0+t*4*gap));if(Math.abs(cam.position.x-tx)>0.001){cam.position.x+=(tx-cam.position.x)*Math.min(1,dt*3);cam.lookAt(cam.position.x,0.1,0);root.userData.dirty=true}}
-    if(root.userData.dirty){place();renderer.render(scene,cam);root.userData.dirty=false}
-    requestAnimationFrame(frame)}
-  place();renderer.render(scene,cam);requestAnimationFrame(frame);
-  return{focus(i){playing=false;target=i===0?0:(i-0.5)/4+0.0;if(i===0)target=0;$("#pipe-play").textContent="▶ Putar";$("#pipe-play").setAttribute("aria-pressed","false")},
-    toggle(){playing=!playing;target=null;$("#pipe-play").textContent=playing?"❚❚ Jeda":"▶ Putar"},rebuild(){build()}}
-}
-
-function initMem(){
-  const host=$("#mem3d");const renderer=makeRenderer(host);const scene=new THREE.Scene();
-  const cam=new THREE.PerspectiveCamera(35,2,0.1,200);
-  scene.add(new THREE.AmbientLight(0xffffff,0.7));const dl=new THREE.DirectionalLight(0xffffff,0.75);dl.position.set(4,8,10);scene.add(dl);
-  const root=new THREE.Group();scene.add(root);let lastVars=vars,lastOk=vars.map(()=>true),lastPER=12;
-  function build(vs,ok){root.clear();lastVars=vs;lastOk=ok;
-    const PER=host.clientWidth<600?6:12,S=1.0;lastPER=PER;let addr=0;const total=vs.reduce((a,v)=>a+TYPE_INFO[v.type].size,0);const rows=Math.ceil(total/PER)||1;
-    const width=Math.min(total,PER)*S;const ink=css("--ink"),muted=css("--muted");
-    vs.forEach((v,vi)=>{const n=TYPE_INFO[v.type].size,c=col(TYPE_INFO[v.type].color),bytes=ok[vi]?varBytes(v):null;
-      for(let k=0;k<n;k++){const idx=addr+k,r=Math.floor(idx/PER),cI=idx%PER;
-        const hex=bytes?bytes[k].toString(16).toUpperCase().padStart(2,"0"):"??";
-        const tex=labelTex(hex,{fg:"#ffffff",bg:"#"+c.getHexString(),font:"700 150px 'JetBrains Mono', monospace",w:256,h:256,radius:28});
-        const mats=[new THREE.MeshStandardMaterial({color:c.clone().multiplyScalar(.8)}),new THREE.MeshStandardMaterial({color:c.clone().multiplyScalar(.8)}),new THREE.MeshStandardMaterial({color:c}),new THREE.MeshStandardMaterial({color:c.clone().multiplyScalar(.7)}),new THREE.MeshStandardMaterial({map:tex}),new THREE.MeshStandardMaterial({color:c.clone().multiplyScalar(.7)})];
-        const cube=new THREE.Mesh(new THREE.BoxGeometry(.86,.86,.86),mats);
-        cube.position.set(cI*S-width/2+S/2,-r*2.4,0);root.add(cube);
-        if(idx%4===0){const a=sprite("0x"+(0x1000+idx).toString(16).toUpperCase(),{fg:muted,font:"500 60px 'JetBrains Mono', monospace"},[1.6,0.4]);a.position.set(cube.position.x+0.3,cube.position.y-0.78,0.45);root.add(a)}
-        if(k===0){const lab=sprite(`${v.type} ${v.name}`,{fg:ink,font:"600 62px 'JetBrains Mono', monospace",w:768},[3.4,0.56]);lab.position.set(cube.position.x+Math.min(n,PER-cI)*S/2-S/2,cube.position.y+0.82,0.2);root.add(lab)}}
-      addr+=n});
-    const h=rows*2.4;cam.userData.fit={w:Math.max(width,6),h};resize()}
-  function resize(){const w=host.clientWidth,h=host.clientHeight;renderer.setSize(w,h,false);cam.aspect=w/h;const f=cam.userData.fit||{w:12,h:2.4};
-    const rows=f.h/2.4;const needW=(f.w+1.5)/2/Math.tan(cam.fov*Math.PI/360)/cam.aspect,needH=(f.h+0.8)/2/Math.tan(cam.fov*Math.PI/360);
-    const dist=Math.max(needW,needH,6);cam.position.set(0,2.2-(rows-1)*1.2,dist);cam.lookAt(0,-(rows-1)*1.2+0.2,0);cam.updateProjectionMatrix();draw()}
-  function draw(){renderer.render(scene,cam)}
-  new ResizeObserver(()=>{const p=host.clientWidth<600?6:12;if(p!==lastPER)build(lastVars,lastOk);else resize()}).observe(host);
-  dragRotate(renderer.domElement,root,0.7);
-  (function loop(){if(root.userData.dirty){draw();root.userData.dirty=false}requestAnimationFrame(loop)})();
-  build(vars,buildMemDemo());
-  return{update(vs,ok){build(vs,ok)},rebuild(){build(lastVars,lastOk)}}
-}
-
-if(GL){try{pipe=initPipe()}catch(e){$("#pipe-fb").hidden=false;console.warn(e)}try{mem=initMem()}catch(e){$("#mem-fb").hidden=false;console.warn(e)}}
-else{$("#pipe-fb").hidden=false;$("#mem-fb").hidden=false}
-if(!pipe)$("#pipe-play").hidden=true;
-const rebuildAll=()=>{if(pipe)pipe.rebuild();if(mem)mem.rebuild()};
-window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",()=>setTimeout(rebuildAll,30));
-new MutationObserver(()=>setTimeout(rebuildAll,30)).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
-if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>setTimeout(rebuildAll,50));
-onScroll();
-})();
-</script>
+  <footer>
+    <div class="footer-in container">
+      <span><strong>Praktikum Teknologi Komputer</strong> · Informatika UKDW</span>
+      <span>Materi belajar yang tumbuh bersama praktik.</span>
+    </div>
+  </footer>
+
+  <script>
+    const topics = [
+      { title: "Pengenalan Praktikum & Persiapan Lingkungan Kerja", group: "Fondasi digital", description: "Kenali alur perkuliahan, capaian, aturan praktikum, dan perangkat kerja." },
+      { title: "Microsoft Word & Mendeley", group: "Fondasi digital", description: "Susun dokumen akademik, kelola referensi, dan gunakan sitasi dengan rapi." },
+      { title: "Dasar Pengolahan Data dengan Excel", group: "Fondasi digital", description: "Latih formula, fungsi, cell reference, sorting, dan filtering." },
+      { title: "Analisis & Visualisasi Data dengan Excel", group: "Fondasi digital", description: "Bersihkan dan analisis data, lalu sajikan temuan dalam visualisasi." },
+      { title: "Command Line & Manajemen File", group: "Perangkat pengembangan", description: "Navigasi direktori dan kelola file melalui terminal atau PowerShell." },
+      { title: "Version Control dengan Git", group: "Perangkat pengembangan", description: "Kelola perubahan kode dengan repository, commit, log, dan branch." },
+      { title: "GitHub & Collaborative Development", group: "Perangkat pengembangan", description: "Hubungkan repository lokal ke GitHub dan berkolaborasi melalui remote." },
+      { title: "Computational Thinking & Scratch", group: "Berpikir komputasional", description: "Pecah masalah menjadi algoritma dengan sequence, kondisi, loop, dan variabel." },
+      { title: "Prompt Engineering & Generative AI", group: "Berpikir komputasional", description: "Rancang prompt, uji hasil AI generatif, dan verifikasi jawabannya." },
+      { title: "Dasar Pemrograman C dengan VS Code & GCC", group: "Pemrograman", description: "Pelajari compiler, struktur program, tipe data, operator, dan input/output.", available: true, href: "./intro-c.html" },
+      { title: "Pemrograman Terstruktur dengan Bahasa C", group: "Pemrograman", description: "Terapkan percabangan, perulangan, fungsi, dan array untuk memecahkan masalah." },
+      { title: "Dasar Pengembangan Web dengan HTML", group: "Pengembangan web", description: "Bangun struktur halaman dengan elemen HTML semantik dan formulir." },
+      { title: "Web Styling dengan CSS", group: "Pengembangan web", description: "Atur tipografi, box model, spacing, layout, dan desain responsif." },
+      { title: "Deployment Website dengan GitHub Pages", group: "Pengembangan web", description: "Publikasikan website dan perbarui hasilnya melalui GitHub Pages." }
+    ];
+
+    const cards = document.querySelector("#cards");
+    const search = document.querySelector("#search");
+    const emptyState = document.querySelector("#empty-state");
+    const resultCount = document.querySelector("#result-count");
+    const filterButtons = [...document.querySelectorAll(".filter")];
+    let activeFilter = "semua";
+
+    function renderTopics() {
+      const query = search.value.trim().toLocaleLowerCase("id");
+      const visibleTopics = topics.filter((topic) => {
+        const matchesFilter = activeFilter === "semua"
+          || (activeFilter === "tersedia" && topic.available)
+          || (activeFilter === "segera" && !topic.available);
+        const matchesSearch = `${topic.title} ${topic.group} ${topic.description}`.toLocaleLowerCase("id").includes(query);
+        return matchesFilter && matchesSearch;
+      });
+
+      cards.replaceChildren();
+      visibleTopics.forEach((topic) => {
+        const article = document.createElement("article");
+        article.className = "topic-card";
+
+        const top = document.createElement("div");
+        top.className = "card-top";
+        const number = document.createElement("span");
+        number.className = "topic-number";
+        number.textContent = `TOPIK ${String(topics.indexOf(topic) + 1).padStart(2, "0")} · ${topic.group.toUpperCase()}`;
+        const status = document.createElement("span");
+        status.className = `status${topic.available ? " status-ready" : ""}`;
+        status.textContent = topic.available ? "Tersedia" : "Segera hadir";
+        top.append(number, status);
+
+        const title = document.createElement("h3");
+        title.textContent = topic.title;
+        const description = document.createElement("p");
+        description.textContent = topic.description;
+        article.append(top, title, description);
+
+        if (topic.available) {
+          const link = document.createElement("a");
+          link.className = "card-link";
+          link.href = topic.href;
+          link.textContent = "Buka materi interaktif ↗";
+          article.append(link);
+        } else {
+          const comingSoon = document.createElement("span");
+          comingSoon.className = "card-soon";
+          comingSoon.textContent = "Slide interaktif akan ditambahkan bertahap";
+          article.append(comingSoon);
+        }
+        cards.append(article);
+      });
+
+      resultCount.textContent = `Menampilkan ${visibleTopics.length} dari ${topics.length} topik`;
+      emptyState.hidden = visibleTopics.length > 0;
+    }
+
+    filterButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        activeFilter = button.dataset.filter;
+        filterButtons.forEach((filter) => {
+          filter.setAttribute("aria-pressed", String(filter === button));
+        });
+        renderTopics();
+      });
+    });
+
+    search.addEventListener("input", renderTopics);
+    renderTopics();
+  </script>
 </body>
 </html>
