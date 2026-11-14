@@ -1,0 +1,1662 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>[hidden]{display:none!important}body{margin:0}img{max-width:100%}</style>
+<title>Structured Programming in C · P11</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&family=Sora:wght@600;700&display=swap">
+<script>
+try{
+  const savedTheme=JSON.parse(localStorage.getItem("intro-c-theme"));
+  if(savedTheme==="light"||savedTheme==="dark")document.documentElement.dataset.theme=savedTheme;
+}catch(e){console.warn("Preferensi tema tidak dapat dibaca.",e)}
+</script>
+<style>
+/* Layout: sticky progress header · sticky table of contents on the left (desktop) · one reading column whose demos break out into code | terminal pairs */
+:root{
+  --bg:#F4F6F9; --surface:#FFFFFF; --surface-2:#EAEFF5; --ink:#152132; --muted:#566476; --line:#D3DBE5;
+  --accent:#C9581A; --accent-soft:#FBE9DD; --teal:#13797F; --teal-soft:#DDF1F1; --violet:#5745B0; --violet-soft:#ECE8FA;
+  --green:#2C7A33; --green-soft:#E1F2E2; --red:#B8352A; --red-soft:#FBE3E0; --amber:#9A6510; --amber-soft:#FBF0D9;
+  --code-bg:#F8FAFC; --kw:#0B57D0; --type:#0A7480; --str:#A82A1F; --num:#0B7A3E; --com:#6B7785; --pre:#8A35B0; --fn:#7A4B00; --ln:#A3AEBB;
+  --term-bg:#11161D; --term-head:#1B222C; --term-fg:#D8DFE8; --term-dim:#7F8B9A; --term-ok:#5FD3C4; --term-in:#F2C14E; --term-prompt:#86C98A; --term-err:#FF8A7A;
+  --f-display:"Sora","Segoe UI",system-ui,sans-serif; --f-body:"IBM Plex Sans","Segoe UI",system-ui,sans-serif; --f-mono:"JetBrains Mono",Consolas,"Courier New",monospace;
+  --radius:10px; --shadow:0 1px 2px rgba(21,33,50,.06),0 4px 14px rgba(21,33,50,.06);
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0D131A; --surface:#141C26; --surface-2:#1A2430; --ink:#E3E9F0; --muted:#9BA8B8; --line:#283442;
+  --accent:#F08A4B; --accent-soft:#3A2416; --teal:#4CC3C9; --teal-soft:#132E31; --violet:#A797F3; --violet-soft:#241F3D;
+  --green:#6CCB73; --green-soft:#16301A; --red:#F07468; --red-soft:#3A1C19; --amber:#E3B341; --amber-soft:#33280F;
+  --code-bg:#101821; --kw:#7AB7FF; --type:#4FD1C5; --str:#F3A08F; --num:#9BDB9E; --com:#7D8A9A; --pre:#D5A2F0; --fn:#E8C97A; --ln:#55626F;
+  --term-bg:#080C11; --term-head:#121921; --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.25); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0D131A; --surface:#141C26; --surface-2:#1A2430; --ink:#E3E9F0; --muted:#9BA8B8; --line:#283442;
+  --accent:#F08A4B; --accent-soft:#3A2416; --teal:#4CC3C9; --teal-soft:#132E31; --violet:#A797F3; --violet-soft:#241F3D;
+  --green:#6CCB73; --green-soft:#16301A; --red:#F07468; --red-soft:#3A1C19; --amber:#E3B341; --amber-soft:#33280F;
+  --code-bg:#101821; --kw:#7AB7FF; --type:#4FD1C5; --str:#F3A08F; --num:#9BDB9E; --com:#7D8A9A; --pre:#D5A2F0; --fn:#E8C97A; --ln:#55626F;
+  --term-bg:#080C11; --term-head:#121921; --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.25); color-scheme:dark}
+
+*{box-sizing:border-box;font-variant-ligatures:none;font-feature-settings:"liga" 0,"calt" 0}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+body{background:var(--bg);color:var(--ink);font:16px/1.65 var(--f-body);-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+a{color:var(--teal)}
+h1,h2,h3,h4{font-family:var(--f-display);line-height:1.2;text-wrap:balance;margin:0}
+h2{font-size:1.75rem;letter-spacing:-.01em}
+h3{font-size:1.2rem;margin-top:2rem}
+h4{font-size:1rem;font-family:var(--f-body);font-weight:600}
+p{margin:.6rem 0;text-wrap:pretty;overflow-wrap:break-word}
+code,kbd{font-family:var(--f-mono);font-size:.88em}
+:not(pre)>code{background:var(--surface-2);padding:.08em .35em;border-radius:5px;color:var(--accent)}
+kbd{border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 .35em;background:var(--surface)}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* header */
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.topbar-in{max-width:1240px;margin:0 auto;display:flex;align-items:center;gap:14px;height:56px}
+.brand{font-family:var(--f-display);font-weight:700;font-size:1rem;white-space:nowrap}
+.brand b{color:var(--accent)}
+.topbar .meta{color:var(--muted);font-size:.85rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.theme-control{margin-left:auto;display:flex;align-items:center;gap:8px;color:var(--muted);font-size:.84rem;white-space:nowrap}
+.theme-control select{border:1px solid var(--line);border-radius:7px;background:var(--surface);padding:5px 8px}
+@media (max-width:420px){.brand{font-size:.82rem}.theme-control .theme-label{display:none}.theme-control select{padding-inline:5px}}
+@media (max-width:360px){.brand{font-size:.78rem}}
+.progress{position:absolute;left:0;bottom:-1px;height:3px;background:var(--accent);width:0}
+
+.wrap{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:230px minmax(0,1fr);gap:40px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 80px}
+nav.toc{position:sticky;top:84px;align-self:start;max-height:calc(100vh - 100px);overflow:auto;font-size:.88rem}
+nav.toc ol{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+nav.toc a{display:block;padding:5px 10px;border-radius:7px;color:var(--muted);text-decoration:none;border-left:2px solid transparent}
+nav.toc a:hover{background:var(--surface-2);color:var(--ink)}
+nav.toc a.active{color:var(--ink);border-left-color:var(--accent);background:var(--surface);font-weight:600}
+nav.toc .sub a{padding-left:22px;font-size:.84rem}
+.toc-label{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 8px 10px}
+.mobile-toc{display:none}
+main{min-width:0}
+section.sec{padding-top:12px;margin-top:56px}
+section.sec:first-of-type{margin-top:0}
+.eyebrow{font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:6px}
+.lead{font-size:1.08rem;color:var(--muted);max-width:68ch}
+.prose{max-width:72ch}
+.prose a,.refs a{overflow-wrap:anywhere}
+
+@media (max-width:1000px){
+  .wrap{grid-template-columns:minmax(0,1fr)}
+  nav.toc{display:none}
+  .mobile-toc{display:block;margin-bottom:20px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:10px 14px}
+  .mobile-toc summary{cursor:pointer;font-weight:600}
+  .mobile-toc ol{margin:.5rem 0 0;padding-left:1.2rem;columns:2;font-size:.9rem}
+  .topbar .meta{display:none}
+}
+
+/* hero */
+.hero{display:grid;gap:18px}
+.hero h1{font-size:clamp(2rem,4.6vw,3.2rem);letter-spacing:-.02em}
+.hero h1 span{color:var(--accent)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:3px 12px;font-size:.82rem;color:var(--muted)}
+.chip b{color:var(--ink);font-weight:600}
+.stage3d{position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:var(--surface)}
+.stage3d canvas{display:block;width:100%;height:100%}
+.stage3d .fallback{position:absolute;inset:0;display:grid;place-items:center;color:var(--muted);font-size:.9rem;padding:20px;text-align:center}
+.pipe{height:300px}
+.pipe-controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.pill-btn{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 14px;cursor:pointer;font-size:.88rem;display:inline-flex;gap:6px;align-items:center}
+.pill-btn:hover{border-color:var(--accent)}
+.pill-btn[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.pill-btn .dot{width:9px;height:9px;border-radius:50%}
+.pipe-caption{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:12px 16px;font-size:.95rem;min-height:3.4em}
+.pipe-caption code{color:var(--teal)}
+
+/* cards & grids */
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.grid2>*,.grid3>*{min-width:0}
+@media (max-width:720px){.grid2,.grid3{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;min-width:0}
+.card h4{margin-bottom:4px}
+ol.goals{counter-reset:g;list-style:none;padding:0;margin:0;display:grid;gap:8px}
+ol.goals li{counter-increment:g;display:grid;grid-template-columns:28px minmax(0,1fr);gap:8px;align-items:start}
+ol.goals li::before{content:counter(g);font-family:var(--f-display);font-weight:700;color:var(--accent)}
+dl.ident{display:grid;grid-template-columns:max-content 1fr;gap:6px 18px;margin:0;font-size:.93rem}
+dl.ident dt{color:var(--muted)}
+dl.ident dd{margin:0}
+@media (max-width:560px){dl.ident{grid-template-columns:1fr}dl.ident dd{margin-bottom:6px}}
+
+/* timeline */
+.timeline{display:flex;border-radius:10px;overflow:hidden;border:1px solid var(--line);margin-top:12px}
+.timeline a{display:block;padding:10px 8px;text-decoration:none;color:var(--ink);font-size:.78rem;line-height:1.3;border-right:1px solid var(--bg);min-width:0}
+.timeline a:last-child{border-right:0}
+.timeline a b{display:block;font-family:var(--f-mono);font-size:.72rem;color:var(--muted);font-weight:400}
+.timeline a:hover{filter:brightness(.96)}
+@media (max-width:720px){.timeline{flex-direction:column}.timeline a{flex:none!important;border-right:0;border-bottom:1px solid var(--bg)}}
+.tl-list{display:grid;gap:6px;margin-top:14px;font-size:.92rem}
+.tl-row{display:grid;grid-template-columns:96px 1fr;gap:12px;padding:8px 12px;background:var(--surface);border:1px solid var(--line);border-radius:8px}
+.tl-row .t{font-family:var(--f-mono);font-size:.82rem;color:var(--muted)}
+
+/* tables */
+.tbl-wrap{overflow-x:auto;margin:14px 0;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th{background:var(--surface-2);text-align:left;font-weight:600;padding:9px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+td code{white-space:nowrap}
+.num{font-variant-numeric:tabular-nums}
+
+/* callouts */
+.note{border-radius:var(--radius);padding:12px 16px;margin:16px 0;font-size:.94rem;border:1px solid transparent}
+.note .lbl{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;display:block;margin-bottom:2px}
+.note.tip{background:var(--teal-soft);border-color:color-mix(in srgb,var(--teal) 30%,transparent)} .note.tip .lbl{color:var(--teal)}
+.note.warn{background:var(--red-soft);border-color:color-mix(in srgb,var(--red) 30%,transparent)} .note.warn .lbl{color:var(--red)}
+.note.info{background:var(--violet-soft);border-color:color-mix(in srgb,var(--violet) 30%,transparent)} .note.info .lbl{color:var(--violet)}
+.note.check{background:var(--amber-soft);border-color:color-mix(in srgb,var(--amber) 30%,transparent)} .note.check .lbl{color:var(--amber)}
+.note p{margin:.25rem 0}
+
+/* demo: code | terminal */
+.demo{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:0;margin:18px 0;border-radius:12px;overflow:hidden;border:1px solid var(--line);box-shadow:var(--shadow)}
+@media (max-width:820px){.demo{grid-template-columns:minmax(0,1fr)}}
+.pane{min-width:0;display:flex;flex-direction:column}
+.pane-head{display:flex;align-items:center;gap:8px;padding:7px 12px;font-size:.78rem;font-family:var(--f-mono)}
+.code-pane{background:var(--code-bg)}
+.code-pane .pane-head{border-bottom:1px solid var(--line);color:var(--muted)}
+.code-pane .pane-head .fname{color:var(--ink);font-weight:600}
+.pane-head .sp{flex:1}
+.mini-btn{border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:2px 8px;font-size:.74rem;cursor:pointer;font-family:var(--f-body)}
+.mini-btn:hover{border-color:var(--accent)}
+pre{margin:0}
+pre.code{font:13.5px/1.6 var(--f-mono);padding:12px 0;overflow-x:auto;flex:1;tab-size:4}
+pre.code .line{display:block;padding:0 14px 0 0;white-space:pre}
+pre.code .line .ln{display:inline-block;width:2.6em;padding-right:.9em;text-align:right;color:var(--ln);user-select:none}
+pre.code .line.hl{background:color-mix(in srgb,var(--accent) 14%,transparent)}
+.t-kw{color:var(--kw)} .t-type{color:var(--type)} .t-str{color:var(--str)} .t-num{color:var(--num)} .t-com{color:var(--com);font-style:italic} .t-pre{color:var(--pre)} .t-fn{color:var(--fn)} .t-param{background:color-mix(in srgb,var(--amber) 22%,transparent);border-radius:3px;outline:1px dashed color-mix(in srgb,var(--amber) 60%,transparent)}
+.term-pane{background:var(--term-bg);color:var(--term-fg)}
+.term-pane .pane-head{background:var(--term-head);color:var(--term-dim)}
+.term-pane .pane-head .dots{display:flex;gap:5px}
+.term-pane .pane-head .dots i{width:9px;height:9px;border-radius:50%;background:#3A4350;display:block}
+pre.term{font:13.5px/1.6 var(--f-mono);padding:12px 14px;white-space:pre-wrap;word-break:break-word;flex:1;min-height:120px}
+pre.term .p{color:var(--term-prompt)} pre.term .c{color:#E8D58A} pre.term .in{color:var(--term-in);font-weight:600} pre.term .ok{color:var(--term-ok)} pre.term .dim{color:var(--term-dim)} pre.term .err{color:var(--term-err)}
+.stdin{display:flex;flex-wrap:wrap;gap:8px 12px;padding:10px 14px;border-bottom:1px solid #263040;background:color-mix(in srgb,var(--term-head) 70%,var(--term-bg))}
+.stdin label{display:flex;flex-direction:column;font-size:.7rem;color:var(--term-dim);gap:2px;font-family:var(--f-mono)}
+.stdin input,.stdin select{background:#0B1016;border:1px solid #2C3746;border-radius:6px;color:var(--term-in);padding:3px 8px;width:9.5em;font-family:var(--f-mono);font-size:.85rem}
+.stdin input:focus{outline:1px solid var(--term-in)}
+.stdin .kind{width:100%;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--term-dim)}
+.run-flash{animation:flash .5s ease}
+@keyframes flash{from{background:color-mix(in srgb,var(--term-ok) 18%,transparent)}to{background:transparent}}
+
+/* latihan */
+.lt{border:1px solid color-mix(in srgb,var(--accent) 45%,var(--line));border-radius:14px;margin:28px 0;background:var(--surface);overflow:hidden}
+.lt-head{display:grid;grid-template-columns:88px 1fr;background:var(--accent-soft)}
+.lt-num{background:var(--accent);color:#fff;display:grid;place-items:center;text-align:center;font-family:var(--f-display);line-height:1}
+.lt-num small{display:block;font-size:.6rem;letter-spacing:.12em;font-family:var(--f-body);font-weight:600;margin-bottom:4px}
+.lt-num span{font-size:2rem;font-weight:700}
+.lt-meta{padding:12px 16px;font-size:.9rem}
+.lt-meta h4{font-family:var(--f-display);font-size:1.12rem;margin-bottom:4px}
+.lt-body{padding:6px 18px 18px}
+ol.steps{padding-left:1.3rem;margin:.6rem 0}
+ol.steps li{margin:.3rem 0}
+details.key{margin-top:14px;border:1px dashed var(--line);border-radius:10px;padding:10px 14px;background:var(--bg)}
+details.key>summary{cursor:pointer;font-weight:600;color:var(--green)}
+details.key[open]>summary{margin-bottom:6px}
+
+/* forms in exercises */
+.answer-grid{display:grid;gap:6px}
+.ans-row{display:grid;grid-template-columns:34px minmax(0,1fr) 150px 32px;gap:10px;align-items:center;padding:6px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+.ans-row code{white-space:normal}
+.ans-row input{border:1px solid var(--line);border-radius:6px;padding:4px 8px;background:var(--bg);width:100%;font-family:var(--f-mono);font-size:.88rem}
+.ans-row .mark{font-weight:700;text-align:center}
+.ans-row.ok{border-color:var(--green);background:var(--green-soft)} .ans-row.ok .mark{color:var(--green)}
+.ans-row.no{border-color:var(--red);background:var(--red-soft)} .ans-row.no .mark{color:var(--red)}
+.ans-row .why{grid-column:2/-1;font-size:.84rem;color:var(--muted)}
+@media (max-width:560px){.ans-row{grid-template-columns:28px minmax(0,1fr) 30px}.ans-row input{grid-column:2}.ans-row .mark{grid-row:1;grid-column:3}}
+.btn{border:0;background:var(--ink);color:var(--bg);border-radius:8px;padding:8px 16px;cursor:pointer;font-weight:600}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px}
+.score{font-weight:600}
+
+/* detective */
+.det-code{font:13.5px/1.6 var(--f-mono);background:var(--code-bg);border:1px solid var(--line);border-radius:10px;padding:10px 0;overflow-x:auto}
+.det-line{display:flex;gap:0;width:100%;text-align:left;border:0;background:transparent;padding:1px 14px 1px 0;cursor:pointer;white-space:pre;font:inherit}
+.det-line .ln{display:inline-block;width:2.6em;padding-right:.9em;text-align:right;color:var(--ln)}
+.det-line:hover{background:var(--surface-2)}
+.det-line.marked{background:var(--amber-soft);box-shadow:inset 3px 0 0 var(--amber)}
+.det-line.ghost{color:var(--muted);font-style:italic}
+.det-line.found{background:var(--green-soft);box-shadow:inset 3px 0 0 var(--green)}
+.det-line.wrong{background:var(--red-soft);box-shadow:inset 3px 0 0 var(--red)}
+
+/* anatomy */
+.anat{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:820px){.anat{grid-template-columns:minmax(0,1fr)}}
+.anat-notes{display:grid;gap:8px}
+.anat-note{border:1px solid var(--line);border-left:4px solid var(--c);border-radius:8px;padding:8px 12px;background:var(--surface);cursor:default;font-size:.9rem}
+.anat-note b{color:var(--c)}
+.anat-note.on{background:color-mix(in srgb,var(--c) 12%,var(--surface))}
+.anat pre.code .line{cursor:default}
+
+/* stage explorer */
+.stage-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.stage-panel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:14px}
+@media (max-width:720px){.stage-panel{grid-template-columns:minmax(0,1fr)}}
+.file-flow{display:flex;align-items:center;gap:10px;font-family:var(--f-mono);font-size:.95rem;flex-wrap:wrap}
+.file-flow .f{border:1px solid var(--line);border-radius:6px;padding:4px 10px;background:var(--surface-2)}
+.excerpt{background:var(--term-bg);color:var(--term-fg);border-radius:10px;padding:12px 14px;font:12.5px/1.55 var(--f-mono);white-space:pre;overflow-x:auto}
+
+/* install */
+.install-steps{display:grid;gap:12px;counter-reset:s}
+.install-overview{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;max-width:800px;margin:14px 0 18px}
+.install-overview>div{min-width:0;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.install-overview b{display:block;color:var(--teal);font-family:var(--f-display);font-size:.92rem}
+.install-overview p{margin:4px 0 0;color:var(--muted);font-size:.9rem}
+@media (max-width:560px){.install-overview{grid-template-columns:minmax(0,1fr)}}
+.istep{display:grid;grid-template-columns:44px minmax(0,1fr);gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.istep .n{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-family:var(--f-display);font-weight:700;color:#fff;background:var(--c,var(--ink))}
+.istep h4{font-family:var(--f-display);font-size:1.02rem}
+.istep .src{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-left:6px;font-weight:600}
+.istep ul{margin:.4rem 0;padding-left:1.1rem}
+.istep.done{border-color:var(--green);background:color-mix(in srgb,var(--green) 6%,var(--surface))}
+.istep.done .n{background:var(--green)}
+.istep label.chk{display:inline-flex;gap:8px;align-items:center;font-size:.88rem;color:var(--muted);cursor:pointer;margin-top:6px}
+.cmd{display:flex;align-items:center;gap:8px;background:var(--term-bg);color:var(--term-fg);border-radius:8px;padding:8px 10px 8px 14px;font:13.5px var(--f-mono);margin:8px 0;overflow-x:auto}
+.cmd span{flex:1;white-space:nowrap}
+.cmd .mini-btn{background:#1E2733;border-color:#334152;color:#D8DFE8}
+.prog-wrap{display:flex;align-items:center;gap:12px;margin:12px 0}
+.prog{flex:1;height:8px;background:var(--surface-2);border-radius:99px;overflow:hidden}
+.prog i{display:block;height:100%;background:var(--green);width:0;transition:width .3s}
+.path-mock{border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:.85rem;background:var(--surface);max-width:520px}
+.path-mock .tb{background:var(--surface-2);padding:6px 12px;border-bottom:1px solid var(--line)}
+.path-mock .row{padding:4px 12px;font-family:var(--f-mono);font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.path-mock .row.new{background:color-mix(in srgb,var(--teal) 18%,transparent);font-weight:600;color:var(--teal)}
+
+/* memory lab */
+.mem3d{height:300px}
+.memlab{display:grid;gap:12px;margin-top:12px}
+.var-row{display:grid;grid-template-columns:110px minmax(0,1fr) minmax(0,1fr) 34px;gap:8px;align-items:center}
+.var-row select,.var-row input{border:1px solid var(--line);border-radius:7px;padding:6px 8px;background:var(--surface);width:100%;font-family:var(--f-mono);font-size:.86rem}
+.var-row .rm{border:1px solid var(--line);background:var(--surface);border-radius:7px;cursor:pointer;height:34px}
+.var-row.bad input{border-color:var(--red)}
+.var-head{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.mem-legend{display:flex;flex-wrap:wrap;gap:14px;font-size:.82rem;color:var(--muted)}
+.mem-legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+
+/* playground */
+.play{display:grid;gap:12px}
+.play-inputs{display:flex;flex-wrap:wrap;gap:14px;align-items:end}
+.play-inputs label{display:flex;flex-direction:column;font-size:.8rem;color:var(--muted);gap:3px}
+.play-inputs input,.play-inputs select{border:1px solid var(--line);border-radius:7px;padding:6px 10px;background:var(--surface);font-family:var(--f-mono);width:9em}
+.op-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:8px}
+.op-cell{border:1px solid var(--line);border-radius:9px;padding:8px 12px;background:var(--surface);font-family:var(--f-mono);font-size:.86rem;min-width:0}
+.op-cell .ex{color:var(--muted)}
+.op-cell .val{font-size:1.15rem;font-weight:600;color:var(--ink)}
+.op-cell .val.t{color:var(--green)} .op-cell .val.f{color:var(--red)}
+.op-cell .val.warn{color:var(--red);font-size:.85rem}
+.op-cat{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:10px 0 2px;font-weight:600}
+.fmt-out{font-family:var(--f-mono);font-size:1.3rem;background:var(--term-bg);color:var(--term-ok);border-radius:8px;padding:10px 14px;white-space:pre;overflow-x:auto}
+.fmt-out .ruler{color:var(--term-dim);font-size:.8rem;display:block}
+
+/* quiz */
+.q{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:12px 0}
+.q h4{font-weight:500;margin-bottom:8px;font-size:.98rem}
+.q h4 b{font-family:var(--f-display);color:var(--accent);margin-right:6px}
+.q label{display:flex;gap:10px;align-items:flex-start;padding:6px 10px;border-radius:8px;cursor:pointer;font-size:.94rem}
+.q label:hover{background:var(--surface-2)}
+.q label.right{background:var(--green-soft)} .q label.wrongpick{background:var(--red-soft)}
+.q .exp{font-size:.86rem;color:var(--muted);margin-top:6px}
+
+/* misc */
+.search{border:1px solid var(--line);border-radius:8px;padding:8px 12px;background:var(--surface);width:100%;max-width:420px}
+ul.summary{display:grid;gap:8px;padding-left:1.2rem}
+.refs li{margin:.35rem 0;font-size:.92rem}
+footer{color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);margin-top:60px;padding-top:18px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+<style>
+/* P11 additions: bubble-sort hero lab, branch explorer, loop tracer, matrix lab */
+.brand{min-width:0;overflow:hidden;text-overflow:ellipsis}
+@media (max-width:520px){.brand .long{display:none}}
+.lab{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:0;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--surface);box-shadow:var(--shadow)}
+@media (max-width:900px){.lab{grid-template-columns:minmax(0,1fr)}}
+.lab .stage3d{border:0;border-radius:0;min-height:320px}
+.lab-side{border-left:1px solid var(--line);display:flex;flex-direction:column;min-width:0;background:var(--code-bg)}
+@media (max-width:900px){.lab-side{border-left:0;border-top:1px solid var(--line)}}
+.lab-side pre.code{font-size:12.5px;padding:10px 0;flex:none}
+.state{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;padding:10px 12px;border-top:1px solid var(--line)}
+.state div{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:5px 8px;font-family:var(--f-mono);font-size:.78rem;min-width:0}
+.state div b{display:block;font-size:1.02rem;color:var(--ink)}
+.state div span{color:var(--muted)}
+.lab-msg{padding:10px 12px;border-top:1px solid var(--line);font-size:.9rem;min-height:3.2em}
+.lab-controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px}
+.lab-controls input[type=text]{border:1px solid var(--line);border-radius:999px;padding:6px 12px;background:var(--surface);font-family:var(--f-mono);font-size:.85rem;width:15em}
+.lab-controls select{border:1px solid var(--line);border-radius:999px;padding:6px 10px;background:var(--surface)}
+.arr-row{display:flex;flex-wrap:wrap;gap:6px;padding:10px 12px;border-top:1px solid var(--line);background:var(--surface)}
+.arr-cell{min-width:44px;text-align:center;border:2px solid var(--line);border-radius:8px;padding:2px 6px;font-family:var(--f-mono);font-weight:600;background:var(--surface)}
+.arr-cell small{display:block;font-size:.66rem;color:var(--muted);font-weight:400}
+.arr-cell.cmp{border-color:var(--amber);background:var(--amber-soft)}
+.arr-cell.swap{border-color:var(--accent);background:var(--accent-soft)}
+.arr-cell.done{border-color:var(--green);background:var(--green-soft)}
+/* branch explorer */
+.branch{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:820px){.branch{grid-template-columns:minmax(0,1fr)}}
+.cond-chain{display:grid;gap:8px}
+.cond{display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface);font-family:var(--f-mono);font-size:.88rem}
+.cond .res{font-weight:700;font-family:var(--f-body);font-size:.8rem;border-radius:999px;padding:2px 10px}
+.cond.true{border-color:var(--green);background:var(--green-soft)} .cond.true .res{background:var(--green);color:#fff}
+.cond.false{opacity:.85} .cond.false .res{background:var(--red-soft);color:var(--red)}
+.cond.skip{opacity:.45} .cond.skip .res{background:var(--surface-2);color:var(--muted)}
+.cond .ix{font-family:var(--f-display);font-weight:700;color:var(--muted)}
+.big-out{font-family:var(--f-display);font-size:2.6rem;font-weight:700;color:var(--accent);line-height:1}
+.slider-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:8px 0 14px}
+.slider-row input[type=range]{flex:1;min-width:180px;accent-color:var(--accent)}
+.slider-row input[type=number]{width:6em;border:1px solid var(--line);border-radius:7px;padding:5px 8px;background:var(--surface);font-family:var(--f-mono)}
+/* tracer */
+.trace-tbl td,.trace-tbl th{text-align:center;font-family:var(--f-mono)}
+.trace-tbl tr.new td{background:var(--accent-soft)}
+.matrix3d{height:300px}
+.mx-term{background:var(--term-bg);color:var(--term-fg);font:13px/1.55 var(--f-mono);padding:10px 12px;white-space:pre;overflow-x:auto;min-height:90px}
+.mx-term .ok{color:var(--term-ok)}
+</style>
+
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-in">
+    <div class="brand">P11 · <b>Structured<span class="long"> Programming</span> in C</b></div>
+    <div class="meta">Praktikum Teknologi Komputer (IT0022) · Percabangan, perulangan, fungsi, dan array</div>
+    <label class="theme-control" for="theme-select"><span class="theme-label">Tema</span>
+      <select id="theme-select" aria-label="Pilih tema tampilan">
+        <option value="system">Sesuai sistem</option>
+        <option value="light">Terang (Light)</option>
+        <option value="dark">Gelap (Dark)</option>
+      </select>
+    </label>
+  </div>
+  <div class="progress" id="progress"></div>
+</header>
+
+<div class="wrap">
+  <nav class="toc" aria-label="Daftar isi">
+    <p class="toc-label">Daftar isi</p>
+    <ol id="toc"></ol>
+  </nav>
+
+  <main>
+    <details class="mobile-toc"><summary>Daftar isi</summary><ol id="toc-m"></ol></details>
+
+    <!-- HERO -->
+    <section class="sec hero" id="mulai">
+      <div>
+        <p class="eyebrow">Modul Perkuliahan · Pertemuan 11</p>
+        <h1>Structured Programming in C</h1>
+      </div>
+      <p class="lead">Modul interaktif percabangan, perulangan, fungsi, dan array, dilengkapi troubleshooting. Setiap contoh kode menampilkan hasilnya langsung di sebelahnya, dan sebagian besar bisa Anda ubah nilainya. Lab di bawah ini memadukan keempat konsep sekaligus: fungsi <code>bubbleSort</code> mengurutkan <b>array</b> dengan dua <b>perulangan</b> dan satu <b>percabangan</b>.</p>
+      <div class="chips">
+        <span class="chip"><b>IT0022</b> Praktikum Teknologi Komputer</span>
+        <span class="chip"><b>Rabu, 18-11-2026</b> · Luring</span>
+        <span class="chip"><b>100 menit</b> materi + latihan + troubleshooting</span>
+        <span class="chip"><b>CPMK-IT0022-04</b> · IKCP-71-09, 71-25, 71-27</span>
+      </div>
+      <div class="lab">
+        <div class="stage3d" id="bubble3d" aria-label="Visualisasi tiga dimensi bubble sort: tiap batang adalah satu elemen array"><div class="fallback" id="bubble-fb" hidden>Visualisasi 3D tidak dapat dimuat. Deretan kotak di bawah tetap menunjukkan isi array.</div></div>
+        <div class="lab-side">
+          <div class="pane-head" style="border-bottom:1px solid var(--line);color:var(--muted)"><span class="fname" style="color:var(--ink);font-weight:600">bubbleSort()</span><span class="sp"></span><span id="bs-pass"></span></div>
+          <pre class="code" id="bs-code"></pre>
+          <div class="state" id="bs-state"></div>
+          <div class="lab-msg" id="bs-msg" aria-live="polite"></div>
+        </div>
+      </div>
+      <div class="arr-row" id="bs-row" style="border:1px solid var(--line);border-radius:10px" aria-label="Isi array saat ini"></div>
+      <div class="lab-controls">
+        <button class="pill-btn" type="button" id="bs-play">▶ Putar</button>
+        <button class="pill-btn" type="button" id="bs-step">Langkah ›</button>
+        <button class="pill-btn" type="button" id="bs-reset">↺ Ulang</button>
+        <button class="pill-btn" type="button" id="bs-shuffle">Acak</button>
+        <label class="sr" for="bs-input">Isi array</label>
+        <input type="text" id="bs-input" value="5, 1, 4, 2, 8" spellcheck="false" aria-label="Isi array, pisahkan dengan koma">
+        <button class="pill-btn" type="button" id="bs-load">Pakai array ini</button>
+      </div>
+    </section>
+
+    <!-- 1 IDENTITAS -->
+    <section class="sec" id="identitas">
+      <p class="eyebrow">Bagian 1</p>
+      <h2>Identitas dan capaian pembelajaran</h2>
+      <div class="grid2" style="margin-top:16px">
+        <div class="card">
+          <h4>Identitas modul</h4>
+          <dl class="ident">
+            <dt>Mata kuliah</dt><dd>Praktikum Teknologi Komputer (IT0022), 2 SKS</dd>
+            <dt>Pertemuan</dt><dd>11 · Rabu, 18-11-2026 · Luring</dd>
+            <dt>CPMK</dt><dd>CPMK-IT0022-04: mengimplementasikan solusi pemrograman menggunakan bahasa C</dd>
+            <dt>IKCP</dt><dd>IKCP-71-09, IKCP-71-25, IKCP-71-27</dd>
+            <dt>Indikator</dt><dd>Mahasiswa mampu <b>mengimplementasikan algoritma</b> menggunakan percabangan, perulangan, fungsi, dan array</dd>
+            <dt>Metode</dt><dd>Discovery Learning, Problem Based Learning</dd>
+            <dt>Dosen</dt><dd>Matahari Bhakti Nendya, S.Kom., M.T<br>Maria Nila Anggia Rini, S.T., M.T.I</dd>
+            <dt>Sebelumnya</dt><dd><a href="https://didanendya-tiukdw.github.io/praktekkom/intro-c.html" target="_blank" rel="noopener">P10 · Introduction to C</a></dd>
+          </dl>
+        </div>
+        <div class="card">
+          <h4>Setelah pertemuan ini Anda mampu</h4>
+          <ol class="goals">
+            <li>Mengambil keputusan dengan <code>if</code>, <code>else if</code>, <code>switch</code>, dan ternary.</li>
+            <li>Mengulang proses dengan <code>for</code>, <code>while</code>, <code>do-while</code>, <code>break</code>, dan <code>continue</code>.</li>
+            <li>Membuat <b>fungsi</b> dengan prototype, parameter, dan nilai kembali; membedakan variabel lokal dan global.</li>
+            <li>Mengolah <b>array</b> 1D dan 2D serta mengirim array ke fungsi.</li>
+            <li>Memadukan keempat konsep untuk masalah statistik nilai kelas.</li>
+            <li>Menemukan dan memperbaiki error sintaks dan error logika secara sistematis.</li>
+          </ol>
+        </div>
+      </div>
+      <h3 id="rencana">Rencana kegiatan 100 menit</h3>
+      <p class="prose">Setiap bagian berpola demo singkat lalu latihan terbimbing. Bagian D sekaligus sesi problem solving, dan 10 menit sebelum penutup dipakai untuk troubleshooting. Klik segmen untuk melompat ke bagiannya. Siapkan folder <code>D:\PraktikumC\P11</code> dan kompilasi dengan <code>gcc -Wall -Wextra</code>.</p>
+      <div class="timeline" id="timeline"></div>
+      <div class="tl-list" id="tl-list"></div>
+    </section>
+
+    <!-- A PERCABANGAN -->
+    <section class="sec" id="percabangan">
+      <p class="eyebrow">Bagian A · menit 05–25</p>
+      <h2>Percabangan</h2>
+      <p class="prose">Percabangan membuat program <b>mengambil keputusan</b>. Kondisinya adalah ekspresi relasional atau logika yang bernilai <b>1 (benar)</b> atau <b>0 (salah)</b>, seperti operator di P10.</p>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>Bentuk</th><th>Sintaks</th><th>Dipakai ketika</th></tr></thead>
+        <tbody>
+          <tr><td><code>if</code></td><td><code>if (kondisi) { ... }</code></td><td>Aksi tambahan hanya jika kondisi benar</td></tr>
+          <tr><td><code>if-else</code></td><td><code>if (k) { ... } else { ... }</code></td><td>Dua kemungkinan, tepat satu dijalankan</td></tr>
+          <tr><td><code>else if</code></td><td><code>if (k1) {...} else if (k2) {...} else {...}</code></td><td>Lebih dari dua kemungkinan berupa rentang</td></tr>
+          <tr><td><code>switch</code></td><td><code>switch (x) { case 1: ... break; default: ... }</code></td><td>Memilih berdasarkan nilai tepat (int/char)</td></tr>
+          <tr><td>ternary</td><td><code>v = (k) ? a : b;</code></td><td>Memilih satu dari dua nilai dalam satu baris</td></tr>
+        </tbody></table></div>
+
+      <h3>Penjelajah else-if</h3>
+      <p class="prose">Geser nilai dan amati: kondisi diperiksa <b>dari atas</b>, dan pemeriksaan <b>berhenti</b> di kondisi pertama yang benar. Karena itu <code>nilai &gt;= 70</code> tidak perlu ditulis <code>nilai &gt;= 70 &amp;&amp; nilai &lt; 85</code>.</p>
+      <div class="slider-row"><label for="br-range" class="sr">Nilai</label><input type="range" id="br-range" min="-10" max="110" value="78"><input type="number" id="br-num" value="78" aria-label="Nilai"></div>
+      <div class="branch"><div class="cond-chain" id="br-chain"></div><div class="card"><h4>Hasil</h4><div class="big-out" id="br-out">B</div><p id="br-note" style="color:var(--muted);font-size:.9rem"></p></div></div>
+      <div data-demo="grade"></div>
+
+      <h3>Kondisi majemuk</h3>
+      <p class="prose">Tahun kabisat: habis dibagi 4 <b>dan</b> tidak habis dibagi 100, <b>atau</b> habis dibagi 400. Coba 2024, 1900, dan 2000.</p>
+      <div data-demo="kabisat"></div>
+
+      <h3>switch dan ternary</h3>
+      <p class="prose">Setiap <code>case</code> diakhiri <code>break</code>. Tanpa <code>break</code>, eksekusi <b>jatuh</b> (fall through) ke case berikutnya. Case 6 dan 7 di bawah sengaja digabung memakai sifat ini.</p>
+      <div data-demo="hari"></div>
+      <div class="note warn"><span class="lbl">Jebakan</span><p><code>if (x = 5)</code> menyimpan 5 ke x sehingga kondisi selalu benar; gunakan <code>==</code>. Titik koma setelah kondisi, <code>if (x &gt; 0);</code>, membuat if tidak mengatur apa pun.</p></div>
+
+      <div class="lt" id="lt1">
+        <div class="lt-head"><div class="lt-num"><div><small>LATIHAN</small><span>1</span></div></div>
+          <div class="lt-meta"><h4>Kalkulator dengan switch</h4>± 8 menit · file <code>kalkulator.c</code> · Tujuan: memilih aksi dengan switch dan menangani kasus khusus dengan if.</div></div>
+        <div class="lt-body">
+          <p>Program membaca ekspresi seperti <code>12 / 5</code> dan menampilkan hasil 2 desimal untuk operator <code>+ - * /</code>. Pembagian dengan nol ditolak, operator lain dinyatakan tidak dikenal.</p>
+          <ol class="steps"><li>Lengkapi <b>TODO 1</b>: case <code>-</code> dan <code>*</code>.</li><li><b>TODO 2</b>: pada case <code>/</code>, tolak <code>b == 0</code> dengan if.</li><li><b>TODO 3</b>: <code>default</code> mencetak <code>Operator '?' tidak dikenal</code>.</li><li>Uji: <code>12 / 5</code>, <code>7 * 3</code>, <code>9 / 0</code>, <code>4 % 2</code>.</li></ol>
+          <div data-demo="kalkskel"></div>
+          <details class="key"><summary>Kunci jawaban Latihan 1</summary><p>Ketik ekspresi lain di kolom kuning untuk menguji kunci.</p><div data-demo="kalk"></div></details>
+        </div>
+      </div>
+    </section>
+
+    <!-- B PERULANGAN -->
+    <section class="sec" id="perulangan">
+      <p class="eyebrow">Bagian B · menit 25–45</p>
+      <h2>Perulangan</h2>
+      <p class="prose">Perbedaan utama ketiga perulangan adalah <b>kapan kondisi diperiksa</b>.</p>
+      <div class="tbl-wrap"><table><thead><tr><th>Jenis</th><th>Kondisi diperiksa</th><th>Minimal jalan</th><th>Paling cocok untuk</th></tr></thead><tbody>
+        <tr><td><code>for</code></td><td>Awal</td><td>0 kali</td><td>Jumlah ulangan diketahui (1 sampai n, indeks array)</td></tr>
+        <tr><td><code>while</code></td><td>Awal</td><td>0 kali</td><td>Ulangi selama syarat terpenuhi (memproses digit)</td></tr>
+        <tr><td><code>do-while</code></td><td>Akhir</td><td>1 kali</td><td>Menu dan validasi input</td></tr>
+      </tbody></table></div>
+      <h3>for: pola akumulator</h3>
+      <div data-demo="jumlah"></div>
+
+      <h3>while dan tabel tracing</h3>
+      <p class="prose">Tabel tracing mencatat nilai setiap variabel per putaran; teknik ini sangat berguna saat troubleshooting. Ubah angka lalu tekan <b>Putaran berikutnya</b>.</p>
+      <div data-demo="balik"></div>
+      <div class="slider-row" style="margin:4px 0"><label for="tr-in" style="font-size:.9rem;color:var(--muted)">angka</label><input type="number" id="tr-in" value="1234" min="0" style="width:9em"><button class="pill-btn" type="button" id="tr-step">Putaran berikutnya ›</button><button class="pill-btn" type="button" id="tr-all">Tampilkan semua</button><button class="pill-btn" type="button" id="tr-reset">↺ Ulang</button></div>
+      <div class="tbl-wrap"><table class="trace-tbl"><thead><tr><th>Putaran</th><th>angka (awal)</th><th>digit = angka % 10</th><th>balik = balik*10 + digit</th><th>angka = angka / 10</th><th>angka &gt; 0 ?</th></tr></thead><tbody id="tr-body"></tbody></table></div>
+
+      <h3>do-while untuk validasi input</h3>
+      <p class="prose">Masukkan beberapa input berurutan (pisahkan dengan spasi). Program terus meminta ulang sampai nilainya 0–100.</p>
+      <div data-demo="validasi"></div>
+
+      <h3>break, continue, dan perulangan bersarang</h3>
+      <div data-demo="pola"></div>
+      <div class="note warn"><span class="lbl">Perhatian</span><p><b>Infinite loop</b> terjadi jika kondisi tidak pernah salah, misalnya lupa <code>i++</code>; hentikan dengan <kbd>Ctrl</kbd>+<kbd>C</kbd>. <b>Off-by-one</b>: <code>i &lt;= n</code> versus <code>i &lt; n</code> menentukan apakah putaran terakhir dijalankan.</p></div>
+
+      <h3>Tebak output</h3>
+      <p class="prose">Tulis tebakan Anda, lalu periksa.</p>
+      <div class="answer-grid" id="guess-grid"></div>
+      <div class="btn-row"><button class="btn" id="guess-check">Periksa tebakan</button><span class="score" id="guess-score" aria-live="polite"></span></div>
+
+      <div class="lt" id="lt2">
+        <div class="lt-head"><div class="lt-num"><div><small>LATIHAN</small><span>2</span></div></div>
+          <div class="lt-meta"><h4>Tabel perkalian</h4>± 8 menit · file <code>perkalian.c</code> · Tujuan: perulangan bersarang dan format lebar printf.</div></div>
+        <div class="lt-body">
+          <p><b>A.</b> Baca <code>n</code>, cetak tabel perkalian <code>n × n</code> dengan <code>printf("%4d", i * j)</code>. <b>B.</b> Hitung berapa hasil kali yang <b>genap</b> dan tampilkan di bawah tabel. Untuk n = 5, tebak dulu jumlahnya sebelum menjalankan.</p>
+          <ol class="steps"><li>Loop luar <code>i</code> = baris, loop dalam <code>j</code> = kolom.</li><li>Cetak <code>\n</code> setelah loop dalam selesai.</li><li>Bagian B: <code>if ((i * j) % 2 == 0) genap++;</code></li></ol>
+          <details class="key"><summary>Kunci jawaban Latihan 2</summary><div data-demo="kali"></div>
+            <p>Hasil kali ganjil hanya jika kedua faktor ganjil. Untuk n = 5 ada 3 bilangan ganjil, jadi 3 × 3 = 9 hasil ganjil dan 25 − 9 = <b>16</b> hasil genap.</p></details>
+        </div>
+      </div>
+    </section>
+
+    <!-- C FUNGSI -->
+    <section class="sec" id="fungsi">
+      <p class="eyebrow">Bagian C · menit 45–65</p>
+      <h2>Fungsi</h2>
+      <p class="prose">Fungsi adalah <b>kotak hitam</b>: menerima masukan, memprosesnya, lalu menghasilkan keluaran. Fungsi membuat program <b>terorganisasi</b>, <b>mudah diuji</b>, dan <b>dapat dipakai ulang</b>.</p>
+      <div class="tbl-wrap"><table><thead><tr><th>Istilah</th><th>Contoh</th><th>Keterangan</th></tr></thead><tbody>
+        <tr><td>Prototype</td><td><code>int kuadrat(int x);</code></td><td>Ditulis sebelum <code>main</code> agar compiler mengenal fungsi yang didefinisikan di bawah</td></tr>
+        <tr><td>Definisi</td><td><code>int kuadrat(int x) { return x * x; }</code></td><td>Isi fungsi</td></tr>
+        <tr><td>Pemanggilan</td><td><code>kuadrat(3)</code></td><td>Argumen 3 disalin ke parameter <code>x</code></td></tr>
+        <tr><td><code>return</code></td><td><code>return x * x;</code></td><td>Mengirim hasil ke pemanggil</td></tr>
+        <tr><td><code>void</code></td><td><code>void garis(int panjang)</code></td><td>Tidak mengembalikan nilai, hanya melakukan aksi</td></tr>
+      </tbody></table></div>
+      <p class="prose">Ubah argumen di kolom kuning; hasil tiap pemanggilan ikut berubah.</p>
+      <div data-demo="fungsi"></div>
+      <h3>Pass by value dan scope</h3>
+      <p class="prose">Argumen dikirim sebagai <b>salinan</b>. Mengubah <code>x</code> di dalam fungsi tidak mengubah <code>nilai</code> di <code>main</code>. Variabel di dalam fungsi bersifat <b>lokal</b>; yang dideklarasikan di luar semua fungsi bersifat <b>global</b>.</p>
+      <div data-demo="scope"></div>
+      <div class="note tip"><span class="lbl">Tips</span><p>Kirim data lewat parameter dan <code>return</code>, bukan variabel global, agar alur data jelas dan fungsi mudah diuji.</p></div>
+
+      <div class="lt" id="lt3">
+        <div class="lt-head"><div class="lt-num"><div><small>LATIHAN</small><span>3</span></div></div>
+          <div class="lt-meta"><h4>Fungsi validasi segitiga</h4>± 10 menit · file <code>segitiga.c</code> · Tujuan: merancang fungsi dengan parameter dan nilai kembali.</div></div>
+        <div class="lt-body">
+          <p>Tiga sisi membentuk segitiga jika semua <b>positif</b> dan <b>jumlah dua sisi mana pun lebih besar</b> dari sisi ketiga. Buat <code>bool validSegitiga(float a, float b, float c)</code> dan <code>void cetakJenis(float a, float b, float c)</code> (sama sisi, sama kaki, sembarang).</p>
+          <div data-demo="segskel"></div>
+          <div class="tbl-wrap"><table><thead><tr><th>Uji</th><th>Input</th><th>Output yang diharapkan</th></tr></thead><tbody>
+            <tr><td>1</td><td><code>3 4 5</code></td><td>Segitiga valid · Jenis: sembarang</td></tr><tr><td>2</td><td><code>5 5 5</code></td><td>Segitiga valid · Jenis: sama sisi</td></tr>
+            <tr><td>3</td><td><code>5 5 8</code></td><td>Segitiga valid · Jenis: sama kaki</td></tr><tr><td>4</td><td><code>1 2 3</code></td><td>Bukan segitiga</td></tr><tr><td>5</td><td><code>-3 4 5</code></td><td>Bukan segitiga</td></tr></tbody></table></div>
+          <details class="key"><summary>Kunci jawaban Latihan 3</summary><div data-demo="seg"></div>
+            <p>(1, 2, 3) bukan segitiga karena 1 + 2 = 3 tidak <b>lebih besar</b> dari 3. Membandingkan <code>float</code> dengan <code>==</code> aman untuk input bilangan bulat; untuk hasil perhitungan desimal, bandingkan selisihnya dengan toleransi kecil.</p></details>
+        </div>
+      </div>
+    </section>
+
+    <!-- D ARRAY -->
+    <section class="sec" id="array">
+      <p class="eyebrow">Bagian D · menit 65–85</p>
+      <h2>Array</h2>
+      <p class="prose"><b>Array</b> menyimpan data <b>bertipe sama</b> di memori yang <b>berurutan</b>. Indeks dimulai dari <b>0</b> sampai <b>n − 1</b>. Jumlah elemen dihitung dengan <code>sizeof(arr) / sizeof(arr[0])</code>. Ubah isi array di kolom kuning.</p>
+      <div data-demo="arr"></div>
+      <h3>Pencarian linear</h3>
+      <div data-demo="cari"></div>
+      <h3>Mengirim array ke fungsi</h3>
+      <p class="prose">Array <b>tidak disalin</b> saat dikirim ke fungsi: fungsi bekerja pada array asli. Karena fungsi tidak tahu ukurannya, kirim juga <code>n</code>. Bandingkan dengan <code>scope.c</code> di Bagian C.</p>
+      <div data-demo="arrfn"></div>
+
+      <h3 id="lab-matriks">Lab array 2 dimensi 3D</h3>
+      <p class="prose">Setiap kubus adalah satu elemen <code>m[r][c]</code>. Pilih urutan perulangan lalu tekan <b>Telusuri</b> untuk melihat urutan kunjungan dan output-nya. Di memori, elemen 2D tetap disimpan berderet <b>baris demi baris</b> (row-major), sehingga alamatnya <code>&amp;m[0][0] + (r × kolom + c) × 4</code>. Seret untuk memutar.</p>
+      <div class="lab">
+        <div class="stage3d matrix3d" id="mx3d" aria-label="Visualisasi tiga dimensi array dua dimensi"><div class="fallback" id="mx-fb" hidden>Visualisasi 3D tidak dapat dimuat. Kode dan output di samping tetap berfungsi.</div></div>
+        <div class="lab-side">
+          <div class="pane-head" style="border-bottom:1px solid var(--line);color:var(--muted)"><span class="fname" style="color:var(--ink);font-weight:600">matriks.c</span></div>
+          <pre class="code" id="mx-code"></pre>
+          <div class="state" id="mx-state"></div>
+          <div class="mx-term" id="mx-term" aria-live="polite"></div>
+        </div>
+      </div>
+      <div class="lab-controls">
+        <label class="sr" for="mx-r">Jumlah baris</label><select id="mx-r"><option>2</option><option selected>3</option><option>4</option></select>
+        <label class="sr" for="mx-c">Jumlah kolom</label><select id="mx-c"><option>2</option><option>3</option><option selected>4</option><option>5</option></select>
+        <label class="sr" for="mx-order">Urutan perulangan</label><select id="mx-order"><option value="rc">r di luar, c di dalam (baris dulu)</option><option value="cr">c di luar, r di dalam (kolom dulu)</option></select>
+        <button class="pill-btn" type="button" id="mx-play">▶ Telusuri</button>
+        <button class="pill-btn" type="button" id="mx-step">Langkah ›</button>
+        <button class="pill-btn" type="button" id="mx-reset">↺ Ulang</button>
+      </div>
+      <div class="note warn"><span class="lbl">Perhatian</span><p>C <b>tidak memeriksa batas array</b>. <code>nilai[5]</code> pada array berukuran 5 tidak menimbulkan error kompilasi tetapi membaca memori lain. Gunakan <code>i &lt; n</code>, bukan <code>i &lt;= n</code>.</p></div>
+
+      <div class="lt" id="lt4">
+        <div class="lt-head"><div class="lt-num"><div><small>LATIHAN</small><span>4</span></div></div>
+          <div class="lt-meta"><h4>Statistik nilai kelas (problem solving)</h4>± 12 menit · file <code>statistik.c</code> · Tujuan: memadukan perulangan, percabangan, fungsi, dan array.</div></div>
+        <div class="lt-body">
+          <p>Program membaca jumlah mahasiswa <code>n</code> (1–50, minta ulang jika di luar rentang), lalu <code>n</code> nilai bulat, dan menampilkan rata-rata, nilai tertinggi, terendah, serta jumlah yang lulus (≥ 60).</p>
+          <div class="grid3">
+            <div class="card"><h4>Input</h4><code>int n</code> (1–50)<br><code>int nilai[50]</code></div>
+            <div class="card"><h4>Fungsi</h4><code>double rataRata(int arr[], int n)</code><br><code>int nilaiMaks(...)</code>, <code>int nilaiMin(...)</code><br><code>int hitungLulus(int arr[], int n, int batas)</code></div>
+            <div class="card"><h4>Output</h4>Rata-rata (2 desimal), tertinggi, terendah, jumlah lulus</div>
+          </div>
+          <ol class="steps"><li>Tulis empat prototype di atas <code>main</code>.</li><li>Validasi <code>n</code> dengan do-while; isi array dengan for + <code>scanf("%d", &amp;nilai[i])</code>.</li><li>Maks/min: mulai dari <code>arr[0]</code>, bandingkan mulai indeks 1.</li><li>Rata-rata: <code>(double) total / n</code>.</li><li>Uji: n = 6, nilai <code>78 92 55 64 88 47</code>. Hitung manual dulu.</li></ol>
+          <details class="key"><summary>Kunci jawaban Latihan 4</summary><div data-demo="stat"></div>
+            <p>Manual: total 424, rata-rata 424 / 6 = 70,666… → <b>70.67</b>, tertinggi <b>92</b>, terendah <b>47</b>, lulus <b>4</b>.</p></details>
+        </div>
+      </div>
+    </section>
+
+    <!-- E DEBUG -->
+    <section class="sec" id="debug">
+      <p class="eyebrow">Bagian E · menit 85–95</p>
+      <h2>Troubleshooting terbimbing</h2>
+      <p class="prose"><b>Error sintaks</b> ditolak compiler dan pesannya menunjuk baris. <b>Error logika</b> lolos kompilasi tetapi hasilnya salah; inilah yang paling sering muncul pada percabangan, perulangan, dan array.</p>
+      <div class="grid3">
+        <div class="card"><h4>1. Kompilasi dengan warning</h4><code>gcc -Wall -Wextra</code>, baca pesan pertama, lihat juga baris sebelumnya.</div>
+        <div class="card"><h4>2. Telusuri</h4>Cetak nilai variabel penting (<code>printf("[debug] ...")</code>) atau isi tabel tracing untuk input kecil.</div>
+        <div class="card"><h4>3. Perbaiki satu hal</h4>Ubah satu hal, kompilasi, uji kasus normal dan kasus batas (0, 1, n maksimum).</div>
+      </div>
+      <div class="lt" id="lt5">
+        <div class="lt-head"><div class="lt-num"><div><small>LATIHAN</small><span>5</span></div></div>
+          <div class="lt-meta"><h4>Berburu bug pada rata.c</h4>10 menit · file <code>rata.c</code> · Tujuan: menemukan error logika dengan warning, tracing, dan printf-debugging.</div></div>
+        <div class="lt-body">
+          <p>Seharusnya tercetak <b>Rata-rata 70.20</b> dan <b>Jumlah lulus 4</b>. Program berhasil dikompilasi, tetapi ada <b>4 bug logika</b>. Klik baris yang mengandung bug, lalu periksa.</p>
+          <div class="det-code" id="bug-code"></div>
+          <div class="btn-row"><button class="btn" id="bug-check">Periksa</button><button class="btn ghost" id="bug-reset">Ulangi</button><span class="score" id="bug-score" aria-live="polite"></span></div>
+          <div data-demo="ratabug"></div>
+          <details class="key"><summary>Kunci jawaban Latihan 5</summary>
+            <div class="tbl-wrap"><table><thead><tr><th>Baris</th><th>Bug</th><th>Cara menemukan</th><th>Perbaikan</th></tr></thead><tbody>
+              <tr><td>9</td><td><code>i = 1; i &lt;= 5</code> melewatkan <code>nilai[0]</code> dan mengakses <code>nilai[5]</code> (off-by-one)</td><td>printf-debugging menampilkan i = 1…5</td><td><code>for (int i = 0; i &lt; 5; i++)</code></td></tr>
+              <tr><td>10</td><td>Titik koma setelah <code>if</code>: <code>lulus++</code> selalu dijalankan</td><td>Warning <code>-Wempty-body</code></td><td>Hapus <code>;</code>, beri <code>{ }</code></td></tr>
+              <tr><td>14</td><td><code>lulus = 0</code> menimpa lulus dan kondisi selalu salah</td><td>Warning <code>-Wparentheses</code></td><td><code>if (lulus == 0)</code></td></tr>
+              <tr><td>26</td><td><code>total / n</code> pembagian integer: 351 / 5 = 70</td><td>Hitung manual 351 / 5 = 70,2</td><td><code>(float) total / n</code></td></tr>
+            </tbody></table></div>
+            <div data-demo="ratafix"></div>
+            <p>Versi berbug mencetak lulus 0 karena <code>lulus++</code> berjalan 5 kali lalu ditimpa 0. Rata-rata 70.00 tampak wajar sehingga hanya ketahuan bila dihitung manual: <b>jangan hanya percaya output</b>.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec" id="rangkuman">
+      <p class="eyebrow">Bagian 3</p>
+      <h2>Rangkuman</h2>
+      <ul class="summary prose">
+        <li><b>Percabangan</b>: <code>if</code>, <code>if-else</code>, <code>else if</code> (berhenti di kondisi benar pertama), <code>switch</code> (jangan lupa <code>break</code>), ternary <code>?:</code>.</li>
+        <li><b>Perulangan</b>: <code>for</code> (jumlah ulangan diketahui), <code>while</code> (cek di awal), <code>do-while</code> (minimal sekali). <code>break</code> menghentikan, <code>continue</code> melompat.</li>
+        <li>Pola penting: akumulator, penghitung, pencarian dengan penanda <code>-1</code>, maks/min mulai dari elemen pertama.</li>
+        <li><b>Fungsi</b>: tipe kembalian, nama, parameter, badan; prototype sebelum <code>main</code>; argumen dikirim by value; variabel di dalam fungsi bersifat lokal.</li>
+        <li><b>Array</b>: indeks 0 sampai n − 1; dikirim ke fungsi tanpa disalin, jadi kirim juga ukurannya; array 2D disimpan baris demi baris.</li>
+        <li><b>Troubleshooting</b>: <code>-Wall -Wextra</code>, baca warning, telusuri dengan printf atau tabel tracing, perbaiki satu hal setiap kali.</li>
+      </ul>
+    </section>
+
+    <section class="sec" id="kuis">
+      <p class="eyebrow">Bagian 4 · menit 95–100</p>
+      <h2>Kuis pemahaman</h2>
+      <p class="prose">10 soal pilihan ganda. Pilih jawaban lalu tekan <b>Periksa jawaban</b>.</p>
+      <form id="quiz"></form>
+      <div class="btn-row"><button class="btn" id="quiz-check" type="button">Periksa jawaban</button><button class="btn ghost" id="quiz-reset" type="button">Ulangi</button><span class="score" id="quiz-score" aria-live="polite"></span></div>
+    </section>
+
+    <section class="sec" id="tantangan">
+      <p class="eyebrow">Bagian 5 · opsional</p>
+      <h2>Tantangan pengayaan</h2>
+      <div class="grid3">
+        <div class="card"><h4>1 · Bubble sort</h4><p><code>void bubbleSort(int arr[], int n)</code> dan <code>printArray</code>. Proses setiap pass terlihat pada lab di bagian atas halaman.</p></div>
+        <div class="card"><h4>2 · Bilangan prima</h4><p><code>bool isPrima(int n)</code> memeriksa pembagi 2 sampai <code>i * i &lt;= n</code>; cetak semua prima 1–50 dan jumlahnya.</p></div>
+        <div class="card"><h4>3 · Faktorial</h4><p><code>long long faktorial(int n)</code> dengan for; cetak 0! sampai 5! dengan <code>%lld</code>.</p></div>
+      </div>
+      <details class="key"><summary>Kunci tantangan</summary><div data-demo="sort"></div><div data-demo="prima"></div><div data-demo="fakt"></div></details>
+    </section>
+
+    <section class="sec" id="panduan">
+      <p class="eyebrow">Lampiran</p>
+      <h2>Panduan troubleshooting</h2>
+      <p class="prose">Ketik sebagian pesan error atau gejala untuk menyaring.</p>
+      <input class="search" id="ts-search" type="search" placeholder="mis. else, infinite, undeclared, array" aria-label="Cari pesan error">
+      <div class="tbl-wrap"><table><thead><tr><th>Gejala / pesan error</th><th>Penyebab umum</th><th>Solusi</th></tr></thead><tbody id="ts-body"></tbody></table></div>
+      <h3>Ringkasan sintaks</h3>
+      <div class="tbl-wrap"><table><thead><tr><th>Konstruksi</th><th>Sintaks</th></tr></thead><tbody>
+        <tr><td>if – else if – else</td><td><code>if (k1) { ... } else if (k2) { ... } else { ... }</code></td></tr>
+        <tr><td>switch</td><td><code>switch (x) { case 1: ...; break; default: ...; }</code></td></tr>
+        <tr><td>for / while / do-while</td><td><code>for (int i = 0; i &lt; n; i++) {}</code> · <code>while (k) {}</code> · <code>do {} while (k);</code></td></tr>
+        <tr><td>Fungsi</td><td><code>int f(int x);</code> · <code>int f(int x) { return ...; }</code></td></tr>
+        <tr><td>Array</td><td><code>int a[5] = {1, 2, 3, 4, 5};</code> · <code>sizeof(a) / sizeof(a[0])</code> · <code>int m[2][3];</code></td></tr>
+        <tr><td>Kompilasi aman</td><td><code>gcc -Wall -Wextra file.c -o file</code></td></tr>
+      </tbody></table></div>
+    </section>
+
+    <section class="sec" id="referensi">
+      <p class="eyebrow">Referensi</p>
+      <h2>Bacaan lanjut</h2>
+      <ul class="refs prose">
+        <li>Nendya, M. B., &amp; Senapartha, I. K. D. (2026). <i>Dasar-Dasar Komputasi dan Pemrograman: Dari Logika Visual hingga Aplikasi Web</i>, Bab Pengantar Bahasa C dan Bab Functions, Arrays dan Command-Line Arguments. Duta Wacana University Press.</li>
+        <li>Gustedt, J. (2025). <i>Modern C</i> (3rd ed.). Manning Publications.</li>
+        <li>Kernighan, B. W., &amp; Ritchie, D. M. (1988). <i>The C Programming Language</i> (2nd ed.). Prentice Hall.</li>
+        <li>Free Software Foundation. <i>GCC Warning Options</i>. <a href="https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html" target="_blank" rel="noopener">gcc.gnu.org/onlinedocs/gcc/Warning-Options.html</a></li>
+      </ul>
+      <footer>Praktikum Teknologi Komputer · Program Studi Sarjana Informatika · Universitas Kristen Duta Wacana · Semester Gasal 2026/2027. Output program di halaman ini disimulasikan dengan JavaScript mengikuti aturan C (GCC, 64-bit); jalankan juga di komputer Anda.</footer>
+    </section>
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+"use strict";
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const store={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const themeSelect=$("#theme-select");
+themeSelect.value=store.get("intro-c-theme","system");
+themeSelect.addEventListener("change",()=>{
+  const theme=themeSelect.value;
+  if(theme==="system")delete document.documentElement.dataset.theme;
+  else document.documentElement.dataset.theme=theme;
+  try{localStorage.setItem("intro-c-theme",JSON.stringify(theme))}
+  catch(e){console.warn("Preferensi tema tidak dapat disimpan.",e)}
+});
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+/* ---------- C emulation ---------- */
+const F32=Math.fround, i32=x=>x|0;
+const cdiv=(a,b)=>b===0?null:i32(Math.trunc(a/b)), cmod=(a,b)=>b===0?null:i32(a%b);
+function fixed(v,p){if(!isFinite(v))return v>0?"inf":v<0?"-inf":"nan";let s=Math.abs(v).toFixed(p);if(v<0&&Number(s)!==0)s="-"+s;return s}
+function cf(fmt,...args){let i=0;return fmt.replace(/%(-?)(\d*)(?:\.(\d+))?(ll|l|z)?([dufcs%])/g,(m,fl,w,p,len,t)=>{
+  if(t==="%")return"%";let a=args[i++],s;
+  if(t==="d"||t==="u")s=typeof a==="bigint"?a.toString():String(Math.trunc(a));
+  else if(t==="f")s=fixed(a,p===undefined?6:+p);
+  else if(t==="c")s=typeof a==="number"?String.fromCharCode(a):String(a)[0]||"";
+  else s=String(a);
+  w=+w||0;if(s.length<w)s=fl?s.padEnd(w):s.padStart(w);return s})}
+function readInt(s){const m=String(s).trim().match(/^[+-]?\d+/);return m?i32(parseInt(m[0],10)):null}
+function readNum(s){const m=String(s).trim().match(/^[+-]?(\d+\.?\d*|\.\d+)([eE][+-]?\d+)?/);return m?parseFloat(m[0]):null}
+function ints(s){return String(s).split(/[\s,;]+/).filter(Boolean).map(t=>/^[+-]?\d+$/.test(t)?i32(parseInt(t,10)):NaN)}
+function listOK(a,min=1,max=12){return a.length>=min&&a.length<=max&&a.every(x=>!isNaN(x))}
+
+/* ---------- highlighter ---------- */
+const TYPES=new Set(["int","float","double","char","void","unsigned","long","short","const","bool"]);
+const KWS=new Set(["return","if","else","for","while","do","sizeof","switch","case","break","continue","default","true","false"]);
+const FUNCS=new Set(["printf","scanf","main"]);
+const TOK=/(\/\/[^\n]*)|(\/\*[\s\S]*?\*\/)|("(?:\\.|[^"\\\n])*")|('(?:\\.|[^'\\\n])*')|(#\s*\w+)|(<[a-z]+\.h>)|(\b\d+(?:\.\d+)?f?\b)|(\b[A-Za-z_]\w*\b)|(\u0001\d+\u0002)|([\s\S])/g;
+function hlParams(s,params){return s.replace(/\u0001(\d+)\u0002/g,(m,k)=>`<span class="t-param">${esc(params[+k])}</span>`)}
+function hl(code,params){let out="";code.replace(TOK,(m,com,bcom,str,chr,pre,hdr,num,id,ph)=>{
+  if(com||bcom)out+=`<span class="t-com">${hlParams(esc(m),params)}</span>`;
+  else if(str||chr||hdr)out+=`<span class="t-str">${hlParams(esc(m),params)}</span>`;
+  else if(pre)out+=`<span class="t-pre">${esc(m)}</span>`;
+  else if(num)out+=`<span class="t-num">${esc(m)}</span>`;
+  else if(id)out+=TYPES.has(m)?`<span class="t-type">${m}</span>`:KWS.has(m)?`<span class="t-kw">${m}</span>`:FUNCS.has(m)?`<span class="t-fn">${m}</span>`:esc(m);
+  else if(ph)out+=hlParams(m,params);else out+=esc(m);return m});return out}
+function codeHTML(code,params,hlLines){return hl(code,params||[]).split("\n").map((l,i)=>`<span class="line${hlLines&&hlLines.includes(i+1)?" hl":""}" data-l="${i+1}"><span class="ln">${i+1}</span>${l||" "}</span>`).join("")}
+
+/* ---------- demos ---------- */
+const P=(prompt,input)=>[["",prompt],["in",input]];
+const D={};
+D.grade={file:"grade.c",run:".\\grade",stdin:[{k:"n",label:"nilai",v:"78"}],code:`#include <stdio.h>
+
+int main(void) {
+    int nilai;
+    char grade;
+
+    printf("Masukkan nilai (0-100): ");
+    scanf("%d", &nilai);
+
+    if (nilai < 0 || nilai > 100) {
+        printf("Nilai tidak valid!\\n");
+        return 1;
+    } else if (nilai >= 85) {
+        grade = 'A';
+    } else if (nilai >= 70) {
+        grade = 'B';
+    } else if (nilai >= 55) {
+        grade = 'C';
+    } else {
+        grade = 'D';
+    }
+
+    printf("Nilai %d mendapat grade %c\\n", nilai, grade);
+    return 0;
+}`,out:v=>{const n=readInt(v.n),L=[P("Masukkan nilai (0-100): ",v.n)];if(n===null)return L.concat([["err","scanf gagal membaca angka"]]);
+  if(n<0||n>100)return L.concat(["Nilai tidak valid!"]);return L.concat([cf("Nilai %d mendapat grade %c",n,n>=85?"A":n>=70?"B":n>=55?"C":"D")])}};
+D.kabisat={file:"kabisat.c",run:".\\kabisat",stdin:[{k:"t",label:"tahun",v:"2024"}],code:`#include <stdio.h>
+
+int main(void) {
+    int tahun;
+    printf("Masukkan tahun: ");
+    scanf("%d", &tahun);
+
+    if ((tahun % 4 == 0 && tahun % 100 != 0) || tahun % 400 == 0) {
+        printf("%d adalah tahun kabisat\\n", tahun);
+    } else {
+        printf("%d bukan tahun kabisat\\n", tahun);
+    }
+    return 0;
+}`,out:v=>{const t=readInt(v.t),L=[P("Masukkan tahun: ",v.t)];if(t===null)return L.concat([["err","scanf gagal membaca angka"]]);
+  const k=(t%4===0&&t%100!==0)||t%400===0;return L.concat([["ok",cf(k?"%d adalah tahun kabisat":"%d bukan tahun kabisat",t)]])}};
+const HARI=["Senin","Selasa","Rabu","Kamis","Jumat"];
+D.hari={file:"hari.c",run:".\\hari",params:[{k:"a",label:"a",v:"12"},{k:"b",label:"b",v:"9"}],stdin:[{k:"h",label:"hari",v:"3"}],code:`#include <stdio.h>
+
+int main(void) {
+    int hari, a = {{a}}, b = {{b}};
+    printf("Nomor hari (1-7): ");
+    scanf("%d", &hari);
+
+    switch (hari) {
+        case 1: printf("Senin\\n");  break;
+        case 2: printf("Selasa\\n"); break;
+        case 3: printf("Rabu\\n");   break;
+        case 4: printf("Kamis\\n");  break;
+        case 5: printf("Jumat\\n");  break;
+        case 6:
+        case 7: printf("Akhir pekan\\n"); break;  // 6 & 7 digabung
+        default: printf("Nomor hari tidak valid\\n");
+    }
+
+    int lebihBesar = (a > b) ? a : b;            // ternary
+    printf("Yang lebih besar: %d\\n", lebihBesar);
+    return 0;
+}`,out:v=>{const h=readInt(v.h),a=readInt(v.a),b=readInt(v.b),L=[P("Nomor hari (1-7): ",v.h)];if(a===null||b===null)return[["err","error: a dan b harus bilangan bulat"]];if(h===null)return L.concat([["err","scanf gagal membaca angka"]]);
+  return L.concat([h>=1&&h<=5?HARI[h-1]:h===6||h===7?"Akhir pekan":"Nomor hari tidak valid",cf("Yang lebih besar: %d",a>b?a:b)])}};
+D.kalkskel={file:"kalkulator.c (kerangka)",noTerm:true,code:`#include <stdio.h>
+
+int main(void) {
+    double a, b;
+    char op;
+
+    printf("Masukkan ekspresi (contoh 12 / 5): ");
+    scanf("%lf %c %lf", &a, &op, &b);
+
+    switch (op) {
+        case '+':
+            printf("%.2f + %.2f = %.2f\\n", a, b, a + b);
+            break;
+        // TODO 1: case '-' dan case '*'
+
+        case '/':
+            // TODO 2: tolak pembagian dengan nol
+            break;
+        // TODO 3: default
+    }
+    return 0;
+}`};
+D.kalk={file:"kalkulator.c (kunci)",run:".\\kalkulator",stdin:[{k:"e",label:"ekspresi",v:"12 / 5"}],code:`#include <stdio.h>
+
+int main(void) {
+    double a, b;
+    char op;
+
+    printf("Masukkan ekspresi (contoh 12 / 5): ");
+    scanf("%lf %c %lf", &a, &op, &b);
+
+    switch (op) {
+        case '+':
+            printf("%.2f + %.2f = %.2f\\n", a, b, a + b);
+            break;
+        case '-':
+            printf("%.2f - %.2f = %.2f\\n", a, b, a - b);
+            break;
+        case '*':
+            printf("%.2f * %.2f = %.2f\\n", a, b, a * b);
+            break;
+        case '/':
+            if (b == 0) {
+                printf("Error: pembagian dengan nol\\n");
+            } else {
+                printf("%.2f / %.2f = %.2f\\n", a, b, a / b);
+            }
+            break;
+        default:
+            printf("Operator '%c' tidak dikenal\\n", op);
+    }
+    return 0;
+}`,out:v=>{const L=[P("Masukkan ekspresi (contoh 12 / 5): ",v.e)];const m=String(v.e).match(/^\s*([+-]?(?:\d+\.?\d*|\.\d+))\s*(\S)\s*([+-]?(?:\d+\.?\d*|\.\d+))/);
+  if(!m)return L.concat([["err","scanf gagal membaca: tulis seperti 12 / 5"]]);const a=+m[1],op=m[2],b=+m[3],f=x=>fixed(x,2);
+  if(op==="+")return L.concat([`${f(a)} + ${f(b)} = ${f(a+b)}`]);if(op==="-")return L.concat([`${f(a)} - ${f(b)} = ${f(a-b)}`]);if(op==="*")return L.concat([`${f(a)} * ${f(b)} = ${f(a*b)}`]);
+  if(op==="/")return L.concat([b===0?["err","Error: pembagian dengan nol"]:`${f(a)} / ${f(b)} = ${f(a/b)}`]);return L.concat([`Operator '${op}' tidak dikenal`])}};
+D.jumlah={file:"jumlah.c",run:".\\jumlah",stdin:[{k:"n",label:"n",v:"10"}],code:`#include <stdio.h>
+
+int main(void) {
+    int n, jumlah = 0;          // akumulator diberi nilai awal 0
+    printf("n = ");
+    scanf("%d", &n);
+
+    for (int i = 1; i <= n; i++) {
+        jumlah += i;            // tambahkan i ke akumulator
+    }
+    printf("Jumlah 1 sampai %d = %d\\n", n, jumlah);
+    return 0;
+}`,out:v=>{const n=readInt(v.n),L=[P("n = ",v.n)];if(n===null)return L.concat([["err","scanf gagal membaca angka"]]);
+  let s=0n;if(n>0){s=BigInt(n)*BigInt(n+1)/2n}return L.concat([cf("Jumlah 1 sampai %d = %d",n,Number(BigInt.asIntN(32,s)))].concat(n<1?[["dim","(n < 1: badan loop tidak pernah dijalankan)"]]:[]))}};
+D.balik={file:"balik.c",run:".\\balik",stdin:[{k:"a",label:"angka",v:"1234"}],code:`#include <stdio.h>
+
+int main(void) {
+    int angka, balik = 0, digit;
+    printf("Masukkan bilangan bulat positif: ");
+    scanf("%d", &angka);
+    int asli = angka;
+
+    while (angka > 0) {
+        digit = angka % 10;           // ambil digit terakhir
+        balik = balik * 10 + digit;   // tempel ke belakang
+        angka = angka / 10;           // buang digit terakhir
+    }
+    printf("Kebalikan dari %d adalah %d\\n", asli, balik);
+    return 0;
+}`,out:v=>{let a=readInt(v.a);const L=[P("Masukkan bilangan bulat positif: ",v.a)];if(a===null)return L.concat([["err","scanf gagal membaca angka"]]);
+  const asli=a;let b=0;while(a>0){const d=a%10;b=i32(Math.imul(b,10)+d);a=cdiv(a,10)}return L.concat([cf("Kebalikan dari %d adalah %d",asli,b)])}};
+D.validasi={file:"validasi.c",run:".\\validasi",stdin:[{k:"xs",label:"input berurutan",v:"120 -5 88"}],code:`#include <stdio.h>
+
+int main(void) {
+    int nilai;
+    do {
+        printf("Masukkan nilai (0-100): ");
+        scanf("%d", &nilai);
+        if (nilai < 0 || nilai > 100) {
+            printf("Di luar rentang, coba lagi.\\n");
+        }
+    } while (nilai < 0 || nilai > 100);
+
+    printf("Nilai diterima: %d\\n", nilai);
+    return 0;
+}`,out:v=>{const xs=ints(v.xs),L=[];for(const x of xs){if(isNaN(x)){L.push(["err","input bukan angka: scanf gagal (pada program asli bisa terjadi infinite loop)"]);return L}
+    L.push(P("Masukkan nilai (0-100): ",String(x)));if(x<0||x>100)L.push("Di luar rentang, coba lagi.");else{L.push(["ok",cf("Nilai diterima: %d",x)]);return L}}
+  L.push([["","Masukkan nilai (0-100): "],["dim","_ (menunggu input berikutnya)"]]);return L}};
+D.pola={file:"pola.c",run:".\\pola",params:[{k:"n",label:"n (1-10)",v:"4"}],code:`#include <stdio.h>
+
+int main(void) {
+    for (int i = 1; i <= 10; i++) {
+        if (i % 3 == 0) continue;   // lewati kelipatan 3
+        if (i > 8) break;           // berhenti setelah 8
+        printf("%d ", i);
+    }
+    printf("\\n\\n");
+
+    int n = {{n}};
+    for (int baris = 1; baris <= n; baris++) {    // loop luar
+        for (int k = 1; k <= baris; k++) {        // loop dalam
+            printf("* ");
+        }
+        printf("\\n");
+    }
+    return 0;
+}`,out:v=>{const n=readInt(v.n);if(n===null)return[["err","error: n harus bilangan bulat"]];const L=["1 2 4 5 7 8 ",""];
+  const m=Math.min(n,10);for(let b=1;b<=m;b++)L.push("* ".repeat(b));if(n>10)L.push(["dim","(tampilan dibatasi 10 baris)"]);return L}};
+D.kali={file:"perkalian.c (kunci)",run:".\\perkalian",stdin:[{k:"n",label:"n",v:"5"}],code:`#include <stdio.h>
+
+int main(void) {
+    int n, genap = 0;
+    printf("Ukuran tabel: ");
+    scanf("%d", &n);
+
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= n; j++) {
+            printf("%4d", i * j);
+            if ((i * j) % 2 == 0) {
+                genap++;
+            }
+        }
+        printf("\\n");
+    }
+    printf("Bilangan genap dalam tabel: %d\\n", genap);
+    return 0;
+}`,out:v=>{const n=readInt(v.n),L=[P("Ukuran tabel: ",v.n)];if(n===null)return L.concat([["err","scanf gagal membaca angka"]]);
+  if(n>15)return L.concat([["dim","(isi n ≤ 15 agar tabel muat di layar)"]]);let g=0;for(let i=1;i<=n;i++){let row="";for(let j=1;j<=n;j++){row+=cf("%4d",i*j);if((i*j)%2===0)g++}L.push(row)}
+  return L.concat([["ok",cf("Bilangan genap dalam tabel: %d",g)]])}};
+D.fungsi={file:"fungsi.c",run:".\\fungsi",params:[{k:"x1",label:"kuadrat(...)",v:"3"},{k:"x2",label:"kuadrat(...)",v:"5"},{k:"r",label:"luasLingkaran(...)",v:"7"},{k:"p",label:"garis(...)",v:"20"}],code:`#include <stdio.h>
+
+int kuadrat(int x);                 // prototype
+double luasLingkaran(double r);
+void garis(int panjang);
+
+int main(void) {
+    printf("kuadrat({{x1}}) = %d\\n", kuadrat({{x1}}));
+    printf("kuadrat({{x2}}) = %d\\n", kuadrat({{x2}}));
+    garis({{p}});
+    printf("Luas lingkaran r={{r}} : %.2f\\n", luasLingkaran({{r}}));
+    garis({{p}});
+    return 0;
+}
+
+int kuadrat(int x) {
+    return x * x;
+}
+
+double luasLingkaran(double r) {
+    const double PI = 3.14159;
+    return PI * r * r;
+}
+
+void garis(int panjang) {
+    for (int i = 0; i < panjang; i++) {
+        printf("-");
+    }
+    printf("\\n");
+}`,out:v=>{const a=readInt(v.x1),b=readInt(v.x2),r=readNum(v.r),p=readInt(v.p);if(a===null||b===null||r===null||p===null)return[["err","error: argumen tidak valid"]];
+  const g="-".repeat(Math.max(0,Math.min(p,60)))+(p>60?"…":"");return[`kuadrat(${v.x1}) = ${Math.imul(a,a)}`,`kuadrat(${v.x2}) = ${Math.imul(b,b)}`,g,`Luas lingkaran r=${v.r} : ${fixed(3.14159*r*r,2)}`,g]}};
+D.scope={file:"scope.c",run:".\\scope",params:[{k:"n",label:"nilai",v:"10"}],code:`#include <stdio.h>
+
+int panggilan = 0;              // variabel global
+
+void tambahSatu(int x) {
+    x = x + 1;                  // hanya mengubah salinan
+    panggilan++;
+    printf("Di dalam fungsi : x = %d\\n", x);
+}
+
+int main(void) {
+    int nilai = {{n}};            // variabel lokal milik main
+    tambahSatu(nilai);
+    printf("Di main         : nilai = %d\\n", nilai);
+    printf("Fungsi dipanggil %d kali\\n", panggilan);
+    return 0;
+}`,out:v=>{const n=readInt(v.n);if(n===null)return[["err","error: nilai harus bilangan bulat"]];return[cf("Di dalam fungsi : x = %d",i32(n+1)),["ok",cf("Di main         : nilai = %d",n)],"Fungsi dipanggil 1 kali"]}};
+D.segskel={file:"segitiga.c (kerangka)",noTerm:true,code:`#include <stdio.h>
+#include <stdbool.h>
+
+bool validSegitiga(float a, float b, float c);
+void cetakJenis(float a, float b, float c);
+
+int main(void) {
+    float a, b, c;
+    printf("Masukkan tiga sisi: ");
+    scanf("%f %f %f", &a, &b, &c);
+
+    // TODO 1: panggil validSegitiga; jika valid cetak "Segitiga valid"
+    //         lalu cetakJenis, jika tidak cetak "Bukan segitiga"
+    return 0;
+}
+
+bool validSegitiga(float a, float b, float c) {
+    // TODO 2: return false jika ada sisi <= 0
+    // TODO 3: return hasil pengecekan jumlah dua sisi
+}
+
+void cetakJenis(float a, float b, float c) {
+    // TODO 4: sama sisi / sama kaki / sembarang
+}`};
+D.seg={file:"segitiga.c (kunci)",run:".\\segitiga",stdin:[{k:"s",label:"a b c",v:"3 4 5"}],code:`#include <stdio.h>
+#include <stdbool.h>
+
+bool validSegitiga(float a, float b, float c);
+void cetakJenis(float a, float b, float c);
+
+int main(void) {
+    float a, b, c;
+    printf("Masukkan tiga sisi: ");
+    scanf("%f %f %f", &a, &b, &c);
+
+    if (validSegitiga(a, b, c)) {
+        printf("Segitiga valid\\n");
+        cetakJenis(a, b, c);
+    } else {
+        printf("Bukan segitiga\\n");
+    }
+    return 0;
+}
+
+bool validSegitiga(float a, float b, float c) {
+    if (a <= 0 || b <= 0 || c <= 0) {
+        return false;
+    }
+    return (a + b > c) && (a + c > b) && (b + c > a);
+}
+
+void cetakJenis(float a, float b, float c) {
+    if (a == b && b == c) {
+        printf("Jenis: sama sisi\\n");
+    } else if (a == b || b == c || a == c) {
+        printf("Jenis: sama kaki\\n");
+    } else {
+        printf("Jenis: sembarang\\n");
+    }
+}`,out:v=>{const t=String(v.s).trim().split(/[\s,]+/).map(readNum),L=[P("Masukkan tiga sisi: ",v.s)];if(t.length<3||t.some(x=>x===null))return L.concat([["err","scanf gagal: masukkan tiga angka, misalnya 3 4 5"]]);
+  const [a,b,c]=t.map(F32);const ok=a>0&&b>0&&c>0&&F32(a+b)>c&&F32(a+c)>b&&F32(b+c)>a;if(!ok)return L.concat([["err","Bukan segitiga"]]);
+  return L.concat([["ok","Segitiga valid"],a===b&&b===c?"Jenis: sama sisi":(a===b||b===c||a===c)?"Jenis: sama kaki":"Jenis: sembarang"])}};
+D.arr={file:"array_dasar.c",run:".\\array_dasar",params:[{k:"isi",label:"isi array (1-10 bil. bulat)",v:"80, 75, 90, 60, 85",wide:true}],code:`#include <stdio.h>
+
+int main(void) {
+    int nilai[] = {{{isi}}};
+    int n = sizeof(nilai) / sizeof(nilai[0]);
+    int total = 0, maks = nilai[0], idxMaks = 0;
+
+    for (int i = 0; i < n; i++) {
+        printf("nilai[%d] = %d\\n", i, nilai[i]);
+        total += nilai[i];
+        if (nilai[i] > maks) {
+            maks = nilai[i];
+            idxMaks = i;
+        }
+    }
+    printf("Total     : %d\\n", total);
+    printf("Rata-rata : %.2f\\n", (double) total / n);
+    printf("Tertinggi : %d (indeks %d)\\n", maks, idxMaks);
+    return 0;
+}`,out:v=>{const a=ints(v.isi);if(!listOK(a,1,10))return[["err","error: isi 1-10 bilangan bulat dipisah koma"]];let t=0,mx=a[0],ix=0;const L=[];
+  a.forEach((x,i)=>{L.push(cf("nilai[%d] = %d",i,x));t=i32(t+x);if(x>mx){mx=x;ix=i}});return L.concat([cf("Total     : %d",t),cf("Rata-rata : %.2f",t/a.length),["ok",cf("Tertinggi : %d (indeks %d)",mx,ix)]])}};
+const CARI=[12,7,25,7,40,3];
+D.cari={file:"cari.c",run:".\\cari",stdin:[{k:"x",label:"cari",v:"7"}],code:`#include <stdio.h>
+
+int main(void) {
+    int data[6] = {12, 7, 25, 7, 40, 3};
+    int cari, posisi = -1;           // -1 = belum ditemukan
+
+    printf("Cari bilangan: ");
+    scanf("%d", &cari);
+
+    for (int i = 0; i < 6; i++) {
+        if (data[i] == cari) {
+            posisi = i;
+            break;                   // berhenti di temuan pertama
+        }
+    }
+
+    if (posisi != -1) {
+        printf("%d ditemukan di indeks %d\\n", cari, posisi);
+    } else {
+        printf("%d tidak ditemukan\\n", cari);
+    }
+    return 0;
+}`,out:v=>{const x=readInt(v.x),L=[P("Cari bilangan: ",v.x)];if(x===null)return L.concat([["err","scanf gagal membaca angka"]]);const p=CARI.indexOf(x);
+  return L.concat([p>=0?["ok",cf("%d ditemukan di indeks %d",x,p)]:cf("%d tidak ditemukan",x)])}};
+D.arrfn={file:"array_fungsi.c",run:".\\array_fungsi",params:[{k:"isi",label:"isi data",v:"1, 2, 3, 4",wide:true}],code:`#include <stdio.h>
+
+void cetakArray(int arr[], int n) {
+    for (int i = 0; i < n; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\\n");
+}
+
+void kaliDua(int arr[], int n) {
+    for (int i = 0; i < n; i++) {
+        arr[i] *= 2;                // mengubah array asli
+    }
+}
+
+int main(void) {
+    int data[] = {{{isi}}};
+    int n = sizeof(data) / sizeof(data[0]);
+    printf("Sebelum: ");
+    cetakArray(data, n);
+    kaliDua(data, n);
+    printf("Sesudah: ");
+    cetakArray(data, n);
+    return 0;
+}`,out:v=>{const a=ints(v.isi);if(!listOK(a,1,10))return[["err","error: isi 1-10 bilangan bulat dipisah koma"]];return["Sebelum: "+a.map(x=>x+" ").join(""),["ok","Sesudah: "+a.map(x=>i32(x*2)+" ").join("")]]}};
+D.stat={file:"statistik.c (kunci)",run:".\\statistik",stdin:[{k:"n",label:"n",v:"6"},{k:"xs",label:"nilai (berurutan)",v:"78 92 55 64 88 47",wide:true}],code:`#include <stdio.h>
+
+#define MAKS 50
+
+double rataRata(int arr[], int n);
+int nilaiMaks(int arr[], int n);
+int nilaiMin(int arr[], int n);
+int hitungLulus(int arr[], int n, int batas);
+
+int main(void) {
+    int nilai[MAKS];
+    int n;
+
+    do {
+        printf("Jumlah mahasiswa (1-%d): ", MAKS);
+        scanf("%d", &n);
+    } while (n < 1 || n > MAKS);
+
+    for (int i = 0; i < n; i++) {
+        printf("Nilai mahasiswa ke-%d: ", i + 1);
+        scanf("%d", &nilai[i]);
+    }
+
+    printf("\\n=== STATISTIK KELAS ===\\n");
+    printf("Rata-rata : %.2f\\n", rataRata(nilai, n));
+    printf("Tertinggi : %d\\n", nilaiMaks(nilai, n));
+    printf("Terendah  : %d\\n", nilaiMin(nilai, n));
+    printf("Lulus (>= 60): %d dari %d mahasiswa\\n", hitungLulus(nilai, n, 60), n);
+    return 0;
+}
+
+double rataRata(int arr[], int n) {
+    int total = 0;
+    for (int i = 0; i < n; i++) {
+        total += arr[i];
+    }
+    return (double) total / n;
+}
+
+int nilaiMaks(int arr[], int n) {
+    int maks = arr[0];
+    for (int i = 1; i < n; i++) {
+        if (arr[i] > maks) {
+            maks = arr[i];
+        }
+    }
+    return maks;
+}
+
+int nilaiMin(int arr[], int n) {
+    int min = arr[0];
+    for (int i = 1; i < n; i++) {
+        if (arr[i] < min) {
+            min = arr[i];
+        }
+    }
+    return min;
+}
+
+int hitungLulus(int arr[], int n, int batas) {
+    int jumlah = 0;
+    for (int i = 0; i < n; i++) {
+        if (arr[i] >= batas) {
+            jumlah++;
+        }
+    }
+    return jumlah;
+}`,out:v=>{const n=readInt(v.n),L=[P("Jumlah mahasiswa (1-50): ",v.n)];if(n===null)return L.concat([["err","scanf gagal membaca angka"]]);
+  if(n<1||n>50)return L.concat([[["","Jumlah mahasiswa (1-50): "],["dim","_ (diminta ulang karena di luar rentang)"]]]);
+  const xs=ints(v.xs);const a=[];for(let i=0;i<n;i++){if(i>=xs.length){L.push([["",cf("Nilai mahasiswa ke-%d: ",i+1)],["dim","_ (menunggu input)"]]);return L}if(isNaN(xs[i]))return L.concat([["err","input bukan angka"]]);a.push(xs[i]);L.push(P(cf("Nilai mahasiswa ke-%d: ",i+1),String(xs[i])))}
+  const t=a.reduce((s,x)=>i32(s+x),0);return L.concat(["","=== STATISTIK KELAS ===",cf("Rata-rata : %.2f",t/n),cf("Tertinggi : %d",Math.max(...a)),cf("Terendah  : %d",Math.min(...a)),["ok",cf("Lulus (>= 60): %d dari %d mahasiswa",a.filter(x=>x>=60).length,n)]])}};
+const RATABUG=`#include <stdio.h>
+
+float rataRata(int arr[], int n);
+
+int main(void) {
+    int nilai[5] = {70, 85, 40, 90, 66};
+    int lulus = 0;
+
+    for (int i = 1; i <= 5; i++) {
+        if (nilai[i] >= 60);
+            lulus++;
+    }
+
+    if (lulus = 0)
+        printf("Tidak ada yang lulus\\n");
+
+    printf("Rata-rata    : %.2f\\n", rataRata(nilai, 5));
+    printf("Jumlah lulus : %d\\n", lulus);
+    return 0;
+}
+
+float rataRata(int arr[], int n) {
+    int total = 0;
+    for (int i = 0; i < n; i++)
+        total += arr[i];
+    return total / n;
+}`;
+D.ratabug={file:"rata.c (mengandung bug)",cmd:"gcc -Wall -Wextra rata.c -o rata",run:".\\rata",code:RATABUG,warn:["rata.c:10:…: warning: suggest braces around empty body in an 'if' statement [-Wempty-body]","rata.c:14:…: warning: suggest parentheses around assignment used as truth value [-Wparentheses]"],out:()=>["Rata-rata    : 70.00","Jumlah lulus : 0",["err","(seharusnya 70.20 dan 4)"]]};
+D.ratafix={file:"rata.c (setelah diperbaiki)",cmd:"gcc -Wall -Wextra rata.c -o rata",run:".\\rata",code:`#include <stdio.h>
+
+float rataRata(int arr[], int n);
+
+int main(void) {
+    int nilai[5] = {70, 85, 40, 90, 66};
+    int lulus = 0;
+
+    for (int i = 0; i < 5; i++) {
+        if (nilai[i] >= 60) {
+            lulus++;
+        }
+    }
+
+    if (lulus == 0) {
+        printf("Tidak ada yang lulus\\n");
+    }
+
+    printf("Rata-rata    : %.2f\\n", rataRata(nilai, 5));
+    printf("Jumlah lulus : %d\\n", lulus);
+    return 0;
+}
+
+float rataRata(int arr[], int n) {
+    int total = 0;
+    for (int i = 0; i < n; i++) {
+        total += arr[i];
+    }
+    return (float) total / n;
+}`,out:()=>[["ok","Rata-rata    : 70.20"],["ok","Jumlah lulus : 4"]]};
+D.sort={file:"sort.c",run:".\\sort",params:[{k:"isi",label:"isi array",v:"5, 1, 4, 2, 8",wide:true}],code:`#include <stdio.h>
+
+void tukar(int arr[], int i, int j) {
+    int temp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = temp;
+}
+
+void bubbleSort(int arr[], int n) {
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+                tukar(arr, j, j + 1);
+            }
+        }
+    }
+}
+
+void printArray(int arr[], int n) {
+    for (int i = 0; i < n; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\\n");
+}
+
+int main(void) {
+    int arr[] = {{{isi}}};
+    int n = sizeof(arr) / sizeof(arr[0]);
+
+    printf("Array sebelum diurutkan: ");
+    printArray(arr, n);
+    bubbleSort(arr, n);
+    printf("Array sesudah diurutkan: ");
+    printArray(arr, n);
+    return 0;
+}`,out:v=>{const a=ints(v.isi);if(!listOK(a,1,12))return[["err","error: isi 1-12 bilangan bulat dipisah koma"]];return["Array sebelum diurutkan: "+a.map(x=>x+" ").join(""),["ok","Array sesudah diurutkan: "+a.slice().sort((x,y)=>x-y).map(x=>x+" ").join("")]]}};
+D.prima={file:"prima.c",run:".\\prima",params:[{k:"m",label:"batas (2-200)",v:"50"}],code:`#include <stdio.h>
+#include <stdbool.h>
+
+bool isPrima(int n) {
+    if (n < 2) {
+        return false;
+    }
+    for (int i = 2; i * i <= n; i++) {
+        if (n % i == 0) {
+            return false;           // punya pembagi lain
+        }
+    }
+    return true;
+}
+
+int main(void) {
+    int jumlah = 0;
+    printf("Bilangan prima 1-{{m}}:\\n");
+    for (int k = 1; k <= {{m}}; k++) {
+        if (isPrima(k)) {
+            printf("%d ", k);
+            jumlah++;
+        }
+    }
+    printf("\\nJumlah: %d\\n", jumlah);
+    return 0;
+}`,out:v=>{const m=readInt(v.m);if(m===null||m<2||m>200)return[["err","isi batas 2 sampai 200"]];const ps=[];for(let k=2;k<=m;k++){let p=true;for(let i=2;i*i<=k;i++)if(k%i===0){p=false;break}if(p)ps.push(k)}
+  return[`Bilangan prima 1-${m}:`,ps.map(x=>x+" ").join(""),["ok","Jumlah: "+ps.length]]}};
+D.fakt={file:"faktorial.c",run:".\\faktorial",params:[{k:"n",label:"sampai (0-20)",v:"5"}],code:`#include <stdio.h>
+
+long long faktorial(int n) {
+    long long hasil = 1;
+    for (int i = 2; i <= n; i++) {
+        hasil *= i;
+    }
+    return hasil;
+}
+
+int main(void) {
+    for (int k = 0; k <= {{n}}; k++) {
+        printf("%d! = %lld\\n", k, faktorial(k));
+    }
+    return 0;
+}`,out:v=>{const n=readInt(v.n);if(n===null||n<0||n>20)return[["err","isi 0 sampai 20 (21! melebihi long long)"]];const L=[];let f=1n;for(let k=0;k<=n;k++){if(k>=2)f*=BigInt(k);L.push(cf("%d! = %lld",k,f))}return L}};
+
+function seg(x){if(typeof x==="string")return esc(x);if(Array.isArray(x[0]))return x.map(([c,t])=>c?`<span class="${c}">${esc(t)}</span>`:esc(t)).join("");return`<span class="${x[0]}">${esc(x[1])}</span>`}
+function copy(text,btn){const done=()=>{const o=btn.textContent;btn.textContent="Tersalin";setTimeout(()=>btn.textContent=o,1400)};
+  const fallback=()=>{const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();try{document.execCommand("copy");done()}catch(e){}ta.remove()};
+  try{navigator.clipboard.writeText(text).then(done,fallback)}catch(e){fallback()}}
+function mountDemo(el){
+  const id=el.dataset.demo,d=D[id];if(!d)return;
+  const vals={};(d.params||[]).concat(d.stdin||[]).forEach(p=>vals[p.k]=p.v);
+  const box=document.createElement("div");box.className="demo";
+  const codePane=document.createElement("div");codePane.className="pane code-pane";
+  codePane.innerHTML=`<div class="pane-head"><span class="fname">${esc(d.file)}</span><span class="sp"></span><button class="mini-btn" type="button">Salin kode</button></div><pre class="code"></pre>`;
+  const pre=$("pre",codePane);box.appendChild(codePane);
+  if(d.noTerm)box.style.gridTemplateColumns="minmax(0,1fr)";
+  let termPre=null;
+  if(!d.noTerm){
+    const term=document.createElement("div");term.className="pane term-pane";
+    term.innerHTML=`<div class="pane-head"><span class="dots"><i></i><i></i><i></i></span><span>Terminal · PowerShell</span><span class="sp"></span><button class="mini-btn" type="button" style="background:#1E2733;border-color:#334152;color:#D8DFE8">Jalankan ulang</button></div>`;
+    if((d.params||[]).length||(d.stdin||[]).length){const st=document.createElement("div");st.className="stdin";
+      const field=p=>`<label>${esc(p.label)}<input data-k="${p.k}" id="in-${id}-${p.k}" value="${esc(p.v)}" autocomplete="off" spellcheck="false"${p.wide?' style="width:16em"':""}></label>`;
+      st.innerHTML=(d.params?`<span class="kind">Ubah nilai di kode</span>`+d.params.map(field).join(""):"")+(d.stdin?`<span class="kind">Input keyboard (stdin)</span>`+d.stdin.map(field).join(""):"");
+      term.appendChild(st);$$("input",st).forEach(inp=>inp.addEventListener("input",()=>{vals[inp.dataset.k]=inp.value;render(false)}))}
+    termPre=document.createElement("pre");termPre.className="term";term.appendChild(termPre);box.appendChild(term);
+    $(".mini-btn",term).addEventListener("click",()=>render(true));
+  }
+  el.appendChild(box);
+  const src=()=>d.code.replace(/\{\{(\w+)\}\}/g,(m,k)=>vals[k]);
+  function render(anim){
+    const list=[];const tmpl=d.code.replace(/\{\{(\w+)\}\}/g,(m,k)=>{list.push(vals[k]);return"\u0001"+(list.length-1)+"\u0002"});
+    pre.innerHTML=codeHTML(tmpl,list,d.hlLines);if(!termPre)return;
+    const exe=d.file.split(" ")[0].replace(".c","");
+    let h=`<span class="p">PS D:\\PraktikumC\\P11&gt; </span><span class="c">${esc(d.cmd||("gcc -Wall -Wextra "+exe+".c -o "+exe))}</span>\n`;
+    (d.warn||[]).forEach(w=>h+=`<span class="err">${esc(w)}</span>\n`);
+    h+=`<span class="p">PS D:\\PraktikumC\\P11&gt; </span><span class="c">${esc(d.run||".\\"+exe)}</span>\n`;
+    h+=d.out(vals).map(seg).join("\n");termPre.innerHTML=h;
+    if(anim&&!reduce){termPre.classList.remove("run-flash");void termPre.offsetWidth;termPre.classList.add("run-flash")}}
+  $(".mini-btn",codePane).addEventListener("click",e=>copy(src(),e.target));
+  render(false);
+}
+$$("[data-demo]").forEach(mountDemo);
+
+/* ---------- TOC, progress, timeline ---------- */
+const SECS=[["mulai","Lab bubble sort"],["identitas","1. Identitas & rencana"],["percabangan","A. Percabangan"],["perulangan","B. Perulangan"],["fungsi","C. Fungsi"],["array","D. Array"],["debug","E. Troubleshooting"],["rangkuman","Rangkuman"],["kuis","Kuis"],["tantangan","Tantangan"],["panduan","Panduan error"],["referensi","Referensi"]];
+$("#toc").innerHTML=SECS.map(([id,t])=>`<li><a href="#${id}" data-id="${id}">${t}</a></li>`).join("");
+$("#toc-m").innerHTML=SECS.map(([id,t])=>`<li><a href="#${id}">${t}</a></li>`).join("");
+const tocLinks=$$("#toc a");
+function onScroll(){const h=document.documentElement;$("#progress").style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight||1)*100).toFixed(1)+"%";
+  let cur=SECS[0][0];for(const [id] of SECS){const s=document.getElementById(id);if(s&&s.getBoundingClientRect().top<120)cur=id}tocLinks.forEach(a=>a.classList.toggle("active",a.dataset.id===cur))}
+window.addEventListener("scroll",onScroll,{passive:true});
+const TL=[["00–05",5,"Pembukaan & review P10","identitas","--surface-2"],["05–25",20,"A. Percabangan + Latihan 1","percabangan","--teal-soft"],["25–45",20,"B. Perulangan + Latihan 2","perulangan","--amber-soft"],["45–65",20,"C. Fungsi + Latihan 3","fungsi","--violet-soft"],["65–85",20,"D. Array + Latihan 4 (problem solving)","array","--green-soft"],["85–95",10,"E. Troubleshooting + Latihan 5","debug","--red-soft"],["95–100",5,"Kuis & penutup","kuis","--surface-2"]];
+$("#timeline").innerHTML=TL.map(([t,m,l,id,c])=>`<a href="#${id}" style="flex:${m};background:var(${c})"><b>${t}</b>${m}'</a>`).join("");
+$("#tl-list").innerHTML=TL.map(([t,m,l,id])=>`<div class="tl-row"><span class="t">${t} · ${m}'</span><a href="#${id}" style="color:inherit;text-decoration:none">${l}</a></div>`).join("");
+
+/* ---------- branch explorer ---------- */
+const CONDS=[["nilai < 0 || nilai > 100",n=>n<0||n>100,"Nilai tidak valid!"],["nilai >= 85",n=>n>=85,"A"],["nilai >= 70",n=>n>=70,"B"],["nilai >= 55",n=>n>=55,"C"],["else",()=>true,"D"]];
+function brRender(n){let hit=-1;$("#br-chain").innerHTML=CONDS.map(([c,f,g],i)=>{let cls,res;if(hit>=0){cls="skip";res="tidak diperiksa"}else if(f(n)){cls="true";res=i===4?"dijalankan":"benar → "+g;hit=i}else{cls="false";res="salah"}
+    return`<div class="cond ${cls}"><span class="ix">${i===4?"⤷":i+1}</span><span>${i===0?"if":i===4?"else":"else if"} ${i===4?"":"("+esc(c.replace(/nilai/g,"nilai"))+")"}</span><span class="res">${res}</span></div>`}).join("");
+  const g=CONDS[hit][2];$("#br-out").textContent=g.length>1?"—":g;$("#br-out").style.color=g.length>1?"var(--red)":"";
+  $("#br-note").textContent=g.length>1?"Cabang pertama benar: program mencetak \"Nilai tidak valid!\" lalu return 1.":`nilai = ${n}: ${hit} kondisi bernilai salah sebelum ${hit===4?"masuk ke else":"kondisi ke-"+(hit+1)+" benar"}; sisanya tidak diperiksa.`}
+const brR=$("#br-range"),brN=$("#br-num");
+brR.addEventListener("input",()=>{brN.value=brR.value;brRender(+brR.value)});
+brN.addEventListener("input",()=>{const n=readInt(brN.value);if(n===null)return;brR.value=Math.max(-10,Math.min(110,n));brRender(n)});
+brRender(78);
+
+/* ---------- loop tracer ---------- */
+let trRows=[],trShown=0;
+function trBuild(){let a=readInt($("#tr-in").value);trRows=[];if(a===null)a=0;let b=0,k=0;while(a>0&&k<12){const d=a%10,nb=i32(Math.imul(b,10)+d),na=cdiv(a,10);k++;trRows.push([k,a,d,nb,na,na>0?"ya":"tidak → keluar"]);a=na;b=nb}
+  if(!trRows.length)trRows.push(["–",a,"–","0","–","tidak (loop tidak dijalankan)"]);trShown=0;trRender()}
+function trRender(){$("#tr-body").innerHTML=trRows.slice(0,trShown).map((r,i)=>`<tr class="${i===trShown-1?"new":""}">${r.map(c=>`<td>${c}</td>`).join("")}</tr>`).join("")||`<tr><td colspan="6" style="color:var(--muted)">Tekan "Putaran berikutnya" untuk mulai menelusuri.</td></tr>`}
+$("#tr-step").addEventListener("click",()=>{if(trShown<trRows.length)trShown++;trRender()});
+$("#tr-all").addEventListener("click",()=>{trShown=trRows.length;trRender()});
+$("#tr-reset").addEventListener("click",trBuild);$("#tr-in").addEventListener("input",trBuild);
+trBuild();trShown=1;trRender();
+
+/* ---------- answer grids ---------- */
+function nums(s){return(String(s).replace(/,/g,".").match(/-?\d+(\.\d+)?/g)||[]).map(Number)}
+const eqNums=a=>v=>{const x=nums(v),y=nums(a);return x.length===y.length&&x.every((n,i)=>Math.abs(n-y[i])<1e-9)};
+function mkGrid(sel,items,btn,scoreSel){const pre=sel.slice(1);
+  $(sel).innerHTML=items.map((it,i)=>`<div class="ans-row" id="${pre}-${i}"><span class="mark" style="text-align:left;color:var(--muted)">${it.no}</span><code>${esc(it.q)}</code><input id="${pre}-in-${i}" aria-label="Tebakan ${it.no}" placeholder="tebakan" autocomplete="off"><span class="mark"></span><span class="why" hidden></span></div>`).join("");
+  $(btn).addEventListener("click",()=>{let ok=0;items.forEach((it,i)=>{const row=$(`#${pre}-${i}`),v=$(`#${pre}-in-${i}`).value,mk=$$(".mark",row)[1],why=$(".why",row);
+    if(!v.trim()){row.className="ans-row";mk.textContent="";why.hidden=true;return}const g=it.check(v);if(g)ok++;row.className="ans-row "+(g?"ok":"no");mk.textContent=g?"✓":"✗";why.hidden=false;why.textContent=(g?"Benar. ":"Jawaban: "+it.a+". ")+it.why});
+    $(scoreSel).textContent=`Skor ${ok}/${items.length}`})}
+mkGrid("#guess-grid",[
+ {no:"1",q:"for (int i = 0; i < 10; i += 3) count++;  → count?",a:"4",check:eqNums("4"),why:"i = 0, 3, 6, 9."},
+ {no:"2",q:"int n = 20, c = 0; while (n > 0) { n /= 2; c++; }  → c?",a:"5",check:eqNums("5"),why:"20 → 10 → 5 → 2 → 1 → 0: lima putaran."},
+ {no:"3",q:"int i = 10; do { i++; } while (i < 5);  → i?",a:"11",check:eqNums("11"),why:"do-while dijalankan minimal sekali walau kondisi awal salah."},
+ {no:"4",q:"for (i = 1; i <= 5; i++) { if (i == 3) continue; s += i; }  → s?",a:"12",check:eqNums("12"),why:"1 + 2 + 4 + 5; i = 3 dilewati."},
+ {no:"5",q:"for (i = 1; i <= 3; i++) for (j = 1; j <= 4; j++) c++;  → c?",a:"12",check:eqNums("12"),why:"Loop dalam 4 kali untuk setiap 3 putaran luar."},
+ {no:"6",q:"int k = 2; switch (k) { case 1: x+=1; case 2: x+=2; case 3: x+=3; }  (x = 0) → x?",a:"5",check:eqNums("5"),why:"Tanpa break, case 2 jatuh ke case 3: 2 + 3."}],"#guess-check","#guess-score");
+
+/* ---------- bug hunt ---------- */
+const BUGS={9:"Off-by-one: i mulai 1 dan sampai 5, nilai[0] terlewat dan nilai[5] di luar array",10:"Titik koma setelah if membuat lulus++ selalu jalan",14:"= adalah penugasan; seharusnya ==",26:"Pembagian integer total / n"};
+const bugLines=RATABUG.split("\n");
+$("#bug-code").innerHTML=bugLines.map((t,i)=>`<button type="button" class="det-line" data-l="${i+1}" aria-pressed="false"><span class="ln">${i+1}</span>${esc(t)||" "}</button>`).join("");
+$$("#bug-code .det-line").forEach(b=>b.addEventListener("click",()=>{b.classList.remove("found","wrong");b.classList.toggle("marked");b.setAttribute("aria-pressed",b.classList.contains("marked"))}));
+$("#bug-check").addEventListener("click",()=>{let hit=0,fp=0;$$("#bug-code .det-line").forEach(b=>{const l=+b.dataset.l,m=b.classList.contains("marked");b.classList.remove("found","wrong");b.title="";
+  if(m&&BUGS[l]){hit++;b.classList.add("found");b.title=BUGS[l]}else if(m){fp++;b.classList.add("wrong")}});
+  $("#bug-score").textContent=`${hit}/4 bug ditemukan`+(fp?` · ${fp} baris sebenarnya benar`:"")+(hit===4?" · lengkap! Arahkan kursor ke baris hijau untuk penjelasan":"")});
+$("#bug-reset").addEventListener("click",()=>{$$("#bug-code .det-line").forEach(b=>{b.className="det-line";b.title="";b.setAttribute("aria-pressed","false")});$("#bug-score").textContent=""});
+
+/* ---------- quiz ---------- */
+const QZ=[
+ ['Output dari int x = 7; if (x > 5) printf("A"); else if (x > 3) printf("B"); else printf("C"); adalah ...',["A","B","AB","C"],0,"Kondisi pertama sudah benar; cabang lain tidak diperiksa."],
+ ["Perulangan yang selalu menjalankan badannya minimal satu kali adalah ...",["for","while","do-while","Semua perulangan"],2,"do-while memeriksa kondisi di akhir."],
+ ['Berapa kali printf pada for (int i = 0; i < 10; i += 3) printf("*"); dijalankan?',["3","4","10","Tak terhingga"],1,"i = 0, 3, 6, 9."],
+ ['Output switch (2) { case 1: printf("1"); case 2: printf("2"); case 3: printf("3"); break; default: printf("D"); } adalah ...',["2","23","23D","123"],1,"Tanpa break, case 2 jatuh ke case 3, lalu break."],
+ ["Fungsi yang tidak mengembalikan nilai dideklarasikan dengan tipe ...",["int","null","void","empty"],2,"void berarti tidak ada nilai kembali."],
+ ["Setelah void ubah(int x) { x = 100; } dan int a = 5; ubah(a);, nilai a adalah ...",["5","100","105","Tidak dapat ditentukan"],0,"Pass by value: yang diubah hanya salinan."],
+ ["Indeks elemen terakhir dari int data[8]; adalah ...",["8","7","9","0"],1,"Indeks 0 sampai n − 1."],
+ ["Nilai sizeof(arr) / sizeof(arr[0]) untuk int arr[] = {4, 8, 15, 16, 23, 42}; adalah ...",["24","4","6","42"],2,"24 byte dibagi 4 byte per elemen."],
+ ["Jika fungsi mengubah elemen array yang dikirim kepadanya, array asli di main ...",["Tidak berubah","Ikut berubah","Menjadi kosong","Error kompilasi"],1,"Array tidak disalin; fungsi bekerja pada array asli."],
+ ["Bug pada int arr[5]; for (int i = 0; i <= 5; i++) total += arr[i]; adalah ...",["Infinite loop","Pembagian integer","Mengakses di luar batas array (off-by-one)","Tidak ada bug"],2,"i = 5 mengakses arr[5] yang tidak ada."]];
+const qf=$("#quiz");
+qf.innerHTML=QZ.map(([q,o],i)=>`<fieldset class="q" style="border:1px solid var(--line)"><legend class="sr">Soal ${i+1}</legend><h4><b>${i+1}</b>${esc(q)}</h4>${o.map((t,j)=>`<label><input type="radio" name="q${i}" id="q${i}-${j}" value="${j}"> <span>${"abcd"[j]}. ${esc(t)}</span></label>`).join("")}<p class="exp" hidden></p></fieldset>`).join("");
+qf.addEventListener("submit",e=>e.preventDefault());
+$("#quiz-check").addEventListener("click",()=>{let s=0,ans=0;QZ.forEach(([q,o,k,ex],i)=>{const f=$$("fieldset",qf)[i],pick=$(`input[name=q${i}]:checked`,f);$$("label",f).forEach(l=>l.className="");const e=$(".exp",f);
+  if(!pick){e.hidden=true;return}ans++;const p=+pick.value;if(p===k)s++;else $$("label",f)[p].className="wrongpick";$$("label",f)[k].className="right";e.hidden=false;e.textContent=(p===k?"Benar. ":"Kunci: "+"abcd"[k]+". ")+ex});
+  $("#quiz-score").textContent=`Skor ${s}/${QZ.length}`+(ans<QZ.length?` · ${QZ.length-ans} soal belum dijawab`:"")});
+$("#quiz-reset").addEventListener("click",()=>{qf.reset();$$("label",qf).forEach(l=>l.className="");$$(".exp",qf).forEach(e=>e.hidden=true);$("#quiz-score").textContent=""});
+
+/* ---------- troubleshooting ---------- */
+const TS=[["error: 'else' without a previous 'if'","Titik koma setelah if (...) sebelum blok, atau kurung kurawal tidak berpasangan","Hapus ;, periksa pasangan { }"],
+ ["warning: suggest parentheses around assignment used as truth value","Menulis = di kondisi, maksudnya ==","Ganti dengan =="],
+ ["warning: suggest braces around empty body in an 'if' statement","Titik koma tepat setelah kondisi if/for/while","Hapus ;, selalu gunakan { }"],
+ ["Program tidak berhenti (infinite loop)","Variabel kondisi tidak berubah (lupa i++) atau kondisi selalu benar","Ctrl + C, periksa update dan kondisi loop"],
+ ["Loop kurang/lebih satu putaran","Salah memilih < atau <=, atau nilai awal tertukar","Tracing dengan n kecil (n = 1, 2)"],
+ ["switch menjalankan beberapa case sekaligus","Lupa break (fall through)","Tambahkan break di akhir tiap case"],
+ ["implicit declaration of function 'xyz'","Fungsi dipanggil sebelum didefinisikan tanpa prototype, atau salah ketik","Tambahkan prototype di atas main"],
+ ["conflicting types for 'xyz'","Prototype dan definisi berbeda tipe atau parameter","Samakan tipe kembalian dan parameter"],
+ ["too few / too many arguments to function","Jumlah argumen tidak sama dengan parameter","Sesuaikan pemanggilan dengan prototype"],
+ ["warning: control reaches end of non-void function","Ada jalur di fungsi non-void tanpa return","Pastikan setiap jalur mengembalikan nilai"],
+ ["Nilai acak atau program crash saat mengakses array","Indeks di luar batas (i <= n, indeks negatif) atau array belum diisi","Gunakan i < n; inisialisasi = {0}"],
+ ["warning: excess elements in array initializer","Jumlah nilai {...} melebihi ukuran array","Perbesar ukuran atau kurangi nilai"],
+ ["sizeof(arr) di dalam fungsi memberi angka kecil (8)","Parameter int arr[] sebenarnya pointer","Kirim ukuran array sebagai parameter n"],
+ ["Rata-rata selalu bulat","Pembagian integer total / n","(double) total / n"],
+ ["scanf di dalam loop berulang tanpa henti saat input huruf","Input bukan angka tidak dikonsumsi scanf(\"%d\")","Masukkan angka; periksa nilai kembali scanf"],
+ ["error: 'i' undeclared (di luar loop)","Variabel di for (int i ...) hanya berlaku di dalam loop","Deklarasikan int i; sebelum loop"]];
+function tsRender(){const q=$("#ts-search").value.toLowerCase().trim();const rows=TS.filter(r=>!q||r.join(" ").toLowerCase().includes(q));
+  $("#ts-body").innerHTML=rows.length?rows.map(r=>`<tr><td><code style="white-space:normal">${esc(r[0])}</code></td><td>${esc(r[1])}</td><td>${esc(r[2])}</td></tr>`).join(""):`<tr><td colspan="3">Tidak ada yang cocok. Coba kata kunci lain dari pesan error.</td></tr>`}
+$("#ts-search").addEventListener("input",tsRender);tsRender();
+
+/* ---------- three.js helpers ---------- */
+function hasGL(){try{const c=document.createElement("canvas");return!!(window.WebGLRenderingContext&&(c.getContext("webgl")||c.getContext("experimental-webgl")))}catch(e){return false}}
+const GL=typeof THREE!=="undefined"&&hasGL();
+const col=n=>new THREE.Color(css(n)||"#888");
+function labelTex(text,{fg="#fff",bg=null,font="600 56px 'JetBrains Mono', monospace",w=512,h=128,radius=24}={}){
+  const c=document.createElement("canvas");c.width=w;c.height=h;const g=c.getContext("2d");
+  if(bg){g.fillStyle=bg;g.beginPath();if(g.roundRect)g.roundRect(0,0,w,h,radius);else g.rect(0,0,w,h);g.fill()}
+  g.fillStyle=fg;g.font=font;g.textAlign="center";g.textBaseline="middle";g.fillText(text,w/2,h/2+2);const t=new THREE.CanvasTexture(c);t.anisotropy=4;return t}
+function sprite(text,opts,scale){const s=new THREE.Sprite(new THREE.SpriteMaterial({map:labelTex(text,opts),transparent:true,depthWrite:false}));s.scale.set(scale[0],scale[1],1);return s}
+function makeRenderer(host){const r=new THREE.WebGLRenderer({antialias:true,alpha:true});r.setPixelRatio(Math.min(2,window.devicePixelRatio||1));host.appendChild(r.domElement);return r}
+function dragRotate(dom,obj,onMove,limit=0.7){let down=false,x0=0,r0=0;dom.style.cursor="grab";dom.style.touchAction="pan-y";
+  dom.addEventListener("pointerdown",e=>{down=true;x0=e.clientX;r0=obj.rotation.y;dom.setPointerCapture(e.pointerId);dom.style.cursor="grabbing"});
+  dom.addEventListener("pointermove",e=>{if(!down)return;obj.rotation.y=Math.max(-limit,Math.min(limit,r0+(e.clientX-x0)*0.006));onMove()});
+  const up=()=>{down=false;dom.style.cursor="grab"};dom.addEventListener("pointerup",up);dom.addEventListener("pointercancel",up)}
+
+/* ---------- bubble sort lab ---------- */
+const BS_CODE=`void bubbleSort(int arr[], int n) {
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+                tukar(arr, j, j + 1);
+            }
+        }
+    }
+}`;
+let bsArr=[5,1,4,2,8],bsSteps=[],bsK=-1,bsPlaying=false,bsTimer=null,bs3d=null;
+function bsGen(a0){const s=[],a=a0.slice(),n=a.length;let sw=0;
+  for(let i=0;i<n-1;i++){for(let j=0;j<n-i-1;j++){s.push({t:"cmp",i,j,arr:a.slice(),sw,sorted:n-i});if(a[j]>a[j+1]){[a[j],a[j+1]]=[a[j+1],a[j]];sw++;s.push({t:"swap",i,j,arr:a.slice(),sw,sorted:n-i})}}s.push({t:"pass",i,arr:a.slice(),sw,sorted:n-i-1})}
+  s.push({t:"done",arr:a.slice(),sw,sorted:0});return s}
+function bsState(){return bsK<0?{t:"start",arr:bsArr.slice(),sw:0,sorted:bsArr.length+1}:bsSteps[bsK]}
+function bsRender(){const st=bsState(),n=st.arr.length;
+  const line={cmp:[4],swap:[5],pass:[2],done:[],start:[1]}[st.t];$("#bs-code").innerHTML=codeHTML(BS_CODE,[],line);
+  const cls=k=>st.t==="done"||k>=st.sorted?"done":(st.t==="cmp"&&(k===st.j||k===st.j+1))?"cmp":(st.t==="swap"&&(k===st.j||k===st.j+1))?"swap":"";
+  $("#bs-row").innerHTML=st.arr.map((v,k)=>`<div class="arr-cell ${cls(k)}"><small>[${k}]</small>${v}</div>`).join("");
+  const has=st.t==="cmp"||st.t==="swap";
+  $("#bs-state").innerHTML=`<div><span>i</span><b>${st.i??"–"}</b></div><div><span>j</span><b>${has?st.j:"–"}</b></div><div><span>pertukaran</span><b>${st.sw}</b></div><div><span>arr[j]</span><b>${has?st.arr[st.j]:"–"}</b></div><div><span>arr[j+1]</span><b>${has?st.arr[st.j+1]:"–"}</b></div><div><span>n</span><b>${n}</b></div>`;
+  $("#bs-pass").textContent=st.t==="done"?"selesai":st.i!==undefined?`pass ${st.i+1} dari ${n-1}`:"siap";
+  const msg={start:`Array berisi ${n} elemen. Tekan <b>Langkah</b> atau <b>Putar</b>. Bubble sort membandingkan pasangan bersebelahan dan menukarnya bila terbalik.`,
+    cmp:`Bandingkan <code>arr[${st.j}] = ${st.arr[st.j]}</code> dengan <code>arr[${st.j+1}] = ${st.arr[st.j+1]}</code>: ${st.arr[st.j]>st.arr[st.j+1]?"<b>lebih besar</b>, akan ditukar.":"sudah urut, tidak ditukar."}`,
+    swap:`Ditukar. Sekarang <code>arr[${st.j}] = ${st.arr[st.j]}</code> dan <code>arr[${st.j+1}] = ${st.arr[st.j+1]}</code>.`,
+    pass:`Pass ${st.i+1} selesai: elemen terbesar yang tersisa (<b>${st.arr[st.sorted]}</b>) sudah di posisi akhirnya (hijau).`,
+    done:`Selesai dengan <b>${st.sw}</b> pertukaran. Array terurut: ${st.arr.join(", ")}.`}[st.t];
+  $("#bs-msg").innerHTML=msg;if(bs3d)bs3d.show(st,cls,bsK)}
+function bsStep(){if(bsK<bsSteps.length-1){bsK++;bsRender()}else bsStop()}
+function bsStop(){bsPlaying=false;clearInterval(bsTimer);$("#bs-play").textContent="▶ Putar"}
+$("#bs-play").addEventListener("click",()=>{if(bsPlaying){bsStop();return}if(bsK>=bsSteps.length-1)bsReset();bsPlaying=true;$("#bs-play").textContent="❚❚ Jeda";bsTimer=setInterval(bsStep,reduce?1200:750)});
+$("#bs-step").addEventListener("click",()=>{bsStop();bsStep()});
+function bsReset(){bsStop();bsSteps=bsGen(bsArr);bsK=-1;if(bs3d)bs3d.build(bsArr);bsRender()}
+$("#bs-reset").addEventListener("click",bsReset);
+$("#bs-shuffle").addEventListener("click",()=>{bsArr=Array.from({length:7},()=>1+Math.floor(Math.random()*20));$("#bs-input").value=bsArr.join(", ");bsReset()});
+$("#bs-load").addEventListener("click",()=>{const a=ints($("#bs-input").value);if(!listOK(a,2,10)||a.some(x=>x<0||x>99)){$("#bs-msg").innerHTML=`<span style="color:var(--red)">Isi 2–10 bilangan bulat 0–99, pisahkan dengan koma.</span>`;return}bsArr=a;bsReset()});
+$("#bs-input").addEventListener("keydown",e=>{if(e.key==="Enter")$("#bs-load").click()});
+
+function initBubble(){
+  const host=$("#bubble3d"),renderer=makeRenderer(host),scene=new THREE.Scene(),cam=new THREE.PerspectiveCamera(34,2,0.1,100);
+  scene.add(new THREE.AmbientLight(0xffffff,0.75));const dl=new THREE.DirectionalLight(0xffffff,0.7);dl.position.set(4,8,8);scene.add(dl);
+  const root=new THREE.Group();scene.add(root);let bars=[],n=0,maxV=1,dirty=true,lastK=-2;const GAP=1.25;
+  const X=k=>(k-(n-1)/2)*GAP;
+  function build(arr){root.clear();bars=[];n=arr.length;lastK=-2;maxV=Math.max(...arr,1);
+    const floor=new THREE.Mesh(new THREE.BoxGeometry(n*GAP+0.6,0.08,1.6),new THREE.MeshStandardMaterial({color:col("--surface-2")}));floor.position.y=-0.04;root.add(floor);
+    arr.forEach((v,k)=>{const h=0.35+v/maxV*3.3,g=new THREE.Group();
+      const mesh=new THREE.Mesh(new THREE.BoxGeometry(0.9,h,0.9),new THREE.MeshStandardMaterial({color:col("--teal"),roughness:.55}));mesh.position.y=h/2;g.add(mesh);
+      const lab=sprite(String(v),{fg:css("--ink"),font:"700 76px 'JetBrains Mono', monospace",w:256},[1.0,0.5]);lab.position.y=h+0.4;g.add(lab);
+      g.position.x=X(k);g.userData={v,tx:X(k),mesh};root.add(g);bars.push(g)});
+    for(let k=0;k<n;k++){const s=sprite(`[${k}]`,{fg:css("--muted"),font:"500 60px 'JetBrains Mono', monospace",w:256},[0.95,0.48]);s.position.set(X(k),-0.45,0.8);root.add(s)}
+    fit();dirty=true}
+  function fit(){const w=host.clientWidth,h=host.clientHeight;renderer.setSize(w,h,false);cam.aspect=w/h;const need=(n*GAP+1.2)/2/Math.tan(cam.fov*Math.PI/360)/cam.aspect;
+    const d=Math.max(need,8);cam.position.set(0,3.4,d);cam.lookAt(0,1.6,0);cam.updateProjectionMatrix();dirty=true}
+  function show(st,cls,k){if(bars.length!==st.arr.length){build(st.arr);lastK=k}
+    // reorder bar objects to match values when a new swap step arrives
+    const fresh=k!==lastK;lastK=k;
+    if(st.t==="swap"&&fresh){const a=bars[st.j],b=bars[st.j+1];bars[st.j]=b;bars[st.j+1]=a;a.userData.tx=X(st.j+1);b.userData.tx=X(st.j)}
+    const C={"":col("--teal"),cmp:col("--amber"),swap:col("--accent"),done:col("--green")};
+    bars.forEach((g,k)=>{g.userData.mesh.material.color.copy(C[cls(k)]);g.position.z=(cls(k)==="cmp"||cls(k)==="swap")?0.35:0});
+    if(reduce)bars.forEach(g=>g.position.x=g.userData.tx);dirty=true}
+  new ResizeObserver(fit).observe(host);dragRotate(renderer.domElement,root,()=>dirty=true,0.6);
+  (function loop(){let moving=false;bars.forEach(g=>{const dx=g.userData.tx-g.position.x;if(Math.abs(dx)>0.002){g.position.x+=dx*0.18;moving=true}else g.position.x=g.userData.tx});
+    if(moving||dirty){renderer.render(scene,cam);dirty=false}requestAnimationFrame(loop)})();
+  return{build,show,rebuild(){const st=bsState();build(st.arr);lastK=bsK;bsRender()}}}
+
+/* ---------- matrix lab ---------- */
+let mxR=3,mxC=4,mxOrder="rc",mxSeq=[],mxK=-1,mxTimer=null,mx3d=null;
+const mxVal=(r,c)=>r*mxC+c+1;
+function mxCode(){const rows=Array.from({length:mxR},(_,r)=>"        {"+Array.from({length:mxC},(_,c)=>mxVal(r,c)).join(", ")+"}").join(",\n");
+  const outer=mxOrder==="rc"?["r","R","baris"]:["c","C","kolom"],inner=mxOrder==="rc"?["c","C","kolom"]:["r","R","baris"];
+  return`#define R ${mxR}
+#define C ${mxC}
+int m[R][C] = {
+${rows}
+};
+for (int ${outer[0]} = 0; ${outer[0]} < ${outer[1]}; ${outer[0]}++) {     // ${outer[2]}
+    for (int ${inner[0]} = 0; ${inner[0]} < ${inner[1]}; ${inner[0]}++) { // ${inner[2]}
+        printf("%3d", m[r][c]);
+    }
+    printf("\\n");
+}`}
+function mxBuildSeq(){mxSeq=[];if(mxOrder==="rc"){for(let r=0;r<mxR;r++)for(let c=0;c<mxC;c++)mxSeq.push([r,c])}else{for(let c=0;c<mxC;c++)for(let r=0;r<mxR;r++)mxSeq.push([r,c])}}
+function mxRender(){const cur=mxK>=0?mxSeq[mxK]:null,lines=mxCode().split("\n").length;
+  $("#mx-code").innerHTML=codeHTML(mxCode(),[],cur?[lines-3]:[]);
+  const [r,c]=cur||[null,null];
+  $("#mx-state").innerHTML=`<div><span>r</span><b>${cur?r:"–"}</b></div><div><span>c</span><b>${cur?c:"–"}</b></div><div><span>m[r][c]</span><b>${cur?mxVal(r,c):"–"}</b></div><div style="grid-column:1/-1"><span>alamat</span><b style="font-size:.86rem">${cur?`&m[0][0] + (${r}×${mxC}+${c})×4 = +${(r*mxC+c)*4} byte`:"pilih langkah"}</b></div>`;
+  let out="",outer=mxOrder==="rc"?mxR:mxC,inner=mxOrder==="rc"?mxC:mxR;
+  for(let k=0;k<=mxK;k++){const [rr,cc]=mxSeq[k];out+=(k===mxK?`<span class="ok">${cf("%3d",mxVal(rr,cc))}</span>`:cf("%3d",mxVal(rr,cc)));if((k+1)%inner===0)out+="\n"}
+  $("#mx-term").innerHTML=(out||`<span style="color:var(--term-dim)">Output muncul di sini saat ditelusuri.</span>`)+(mxK===mxSeq.length-1?`\n<span style="color:var(--term-dim)">${mxR*mxC} elemen dikunjungi: loop luar ${outer}×, loop dalam ${inner}× per putaran.</span>`:"");
+  if(mx3d)mx3d.highlight(cur,mxK)}
+function mxStop(){clearInterval(mxTimer);mxTimer=null;$("#mx-play").textContent="▶ Telusuri"}
+function mxReset(){mxStop();mxR=+$("#mx-r").value;mxC=+$("#mx-c").value;mxOrder=$("#mx-order").value;mxBuildSeq();mxK=-1;if(mx3d)mx3d.build();mxRender()}
+$("#mx-play").addEventListener("click",()=>{if(mxTimer){mxStop();return}if(mxK>=mxSeq.length-1)mxK=-1;$("#mx-play").textContent="❚❚ Jeda";mxTimer=setInterval(()=>{if(mxK<mxSeq.length-1){mxK++;mxRender()}else mxStop()},reduce?1000:500)});
+$("#mx-step").addEventListener("click",()=>{mxStop();if(mxK<mxSeq.length-1){mxK++;mxRender()}});
+$("#mx-reset").addEventListener("click",mxReset);["#mx-r","#mx-c","#mx-order"].forEach(s=>$(s).addEventListener("change",mxReset));
+
+function initMatrix(){
+  const host=$("#mx3d"),renderer=makeRenderer(host),scene=new THREE.Scene(),cam=new THREE.PerspectiveCamera(34,2,0.1,100);
+  scene.add(new THREE.AmbientLight(0xffffff,0.75));const dl=new THREE.DirectionalLight(0xffffff,0.7);dl.position.set(4,8,8);scene.add(dl);
+  const root=new THREE.Group();scene.add(root);let cubes=[],dirty=true;const S=1.25;
+  function build(){root.clear();cubes=[];const ox=(mxC-1)/2*S,oy=(mxR-1)/2*S;
+    for(let r=0;r<mxR;r++)for(let c=0;c<mxC;c++){const base=col("--violet");
+      const tex=labelTex(String(mxVal(r,c)),{fg:"#fff",bg:"#"+base.getHexString(),font:"700 120px 'JetBrains Mono', monospace",w:256,h:256,radius:30});
+      const side=new THREE.MeshStandardMaterial({color:base.clone().multiplyScalar(.75)}),front=new THREE.MeshStandardMaterial({map:tex});
+      const cube=new THREE.Mesh(new THREE.BoxGeometry(1,1,1),[side,side,side,side,front,side]);cube.position.set(c*S-ox,oy-r*S,0);cube.userData={r,c,front,side,base};root.add(cube);cubes.push(cube)}
+    for(let r=0;r<mxR;r++){const s=sprite(`[${r}]`,{fg:css("--muted"),font:"600 64px 'JetBrains Mono', monospace",w:256},[0.9,0.45]);s.position.set(-ox-1.05,oy-r*S,0);root.add(s)}
+    for(let c=0;c<mxC;c++){const s=sprite(`[${c}]`,{fg:css("--muted"),font:"600 64px 'JetBrains Mono', monospace",w:256},[0.9,0.45]);s.position.set(c*S-ox,oy+0.95,0);root.add(s)}
+    fit()}
+  function fit(){const w=host.clientWidth,h=host.clientHeight;renderer.setSize(w,h,false);cam.aspect=w/h;const t=Math.tan(cam.fov*Math.PI/360);
+    const d=Math.max((mxC*S+2.4)/2/t/cam.aspect,(mxR*S+2.2)/2/t,6);cam.position.set(0,0.6,d);cam.lookAt(0,0,0);cam.updateProjectionMatrix();dirty=true}
+  function highlight(cur,k){const visited=new Set(mxSeq.slice(0,k+1).map(([r,c])=>r+","+c));
+    cubes.forEach(cb=>{const {r,c}=cb.userData,on=cur&&cur[0]===r&&cur[1]===c,vis=visited.has(r+","+c);
+      cb.position.z=on?0.6:0;cb.scale.setScalar(on?1.12:1);cb.material[4].color.set(on?0xffb27a:vis?0xbfe6c4:0xffffff);
+      cb.material[0].color.copy(on?col("--accent"):vis?col("--green"):cb.userData.base.clone().multiplyScalar(.75))});dirty=true}
+  new ResizeObserver(fit).observe(host);dragRotate(renderer.domElement,root,()=>dirty=true,0.8);
+  (function loop(){if(dirty){renderer.render(scene,cam);dirty=false}requestAnimationFrame(loop)})();
+  return{build,highlight,rebuild(){build();mxRender()}}}
+
+if(GL){try{bs3d=initBubble()}catch(e){$("#bubble-fb").hidden=false;console.warn(e)}try{mx3d=initMatrix()}catch(e){$("#mx-fb").hidden=false;console.warn(e)}}
+else{$("#bubble-fb").hidden=false;$("#mx-fb").hidden=false}
+bsReset();mxReset();
+const rebuildAll=()=>{if(bs3d)bs3d.rebuild();if(mx3d)mx3d.rebuild()};
+window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",()=>setTimeout(rebuildAll,30));
+new MutationObserver(()=>setTimeout(rebuildAll,30)).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>setTimeout(rebuildAll,50));
+onScroll();
+})();
+</script>
+</body>
+</html>
