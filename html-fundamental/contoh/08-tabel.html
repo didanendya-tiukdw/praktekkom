@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabel Jadwal Praktikum</title>
+    <!-- CSS minimal hanya agar garis tabel terlihat (CSS dibahas pada bab berikutnya) -->
+    <style>
+      table, th, td { border: 1px solid #555; border-collapse: collapse; padding: 4px 8px; }
+    </style>
+  </head>
+  <body>
+    <h1>Jadwal Praktikum Teknologi Komputer</h1>
+
+    <table>
+      <!-- <caption>: judul tabel, ditulis tepat setelah <table> -->
+      <caption>Tabel 1. Jadwal Praktikum Minggu ke-13</caption>
+
+      <!-- <thead>: baris judul kolom -->
+      <thead>
+        <tr>
+          <th scope="col">Hari</th>
+          <th scope="col">Sesi</th>
+          <th scope="col">Materi</th>
+          <th scope="col">Ruang</th>
+        </tr>
+      </thead>
+
+      <!-- <tbody>: isi data tabel -->
+      <tbody>
+        <tr>
+          <!-- rowspan="2": sel menempati 2 baris -->
+          <th scope="row" rowspan="2">Rabu</th>
+          <td>07.30&ndash;10.00</td>
+          <td>HTML Fundamental</td>
+          <td>Lab A</td>
+        </tr>
+        <tr>
+          <!-- Kolom "Hari" tidak ditulis lagi karena sudah di-rowspan -->
+          <td>10.30&ndash;13.00</td>
+          <td>HTML Fundamental</td>
+          <td>Lab B</td>
+        </tr>
+        <tr>
+          <th scope="row">Kamis</th>
+          <td>07.30&ndash;10.00</td>
+          <!-- colspan="2": sel menempati 2 kolom -->
+          <td colspan="2">Unguided HTML (daring/luring sesuai pengumuman)</td>
+        </tr>
+      </tbody>
+
+      <!-- <tfoot>: ringkasan/catatan tabel -->
+      <tfoot>
+        <tr>
+          <th scope="row">Total</th>
+          <td colspan="3">3 sesi praktikum (450 menit)</td>
+        </tr>
+      </tfoot>
+    </table>
+  </body>
+</html>

@@ -1,0 +1,27 @@
+Sumber foto contoh kode Bab 12 HTML Fundamental
+Semua foto diambil dari Wikimedia Commons (versi lebar 1280 px, tanpa perubahan isi).
+Gambar lain (diagram, grafik, ikon, logo, garis hiasan) adalah ilustrasi SVG buatan penulis.
+
+img/lab-komputer.jpg
+  Judul   : De La Salle University – Dasmariñas (DLSU–D) ICTC laboratory room 203 (ICT203) — normal view
+  Pembuat : UndueMarmot
+  Lisensi : CC0 1.0 (domain publik) — https://creativecommons.org/publicdomain/zero/1.0/
+  Sumber  : https://commons.wikimedia.org/wiki/File:De_La_Salle_University_%E2%80%93_Dasmari%C3%B1as_(DLSU%E2%80%93D)_Information_and_Communications_Technology_Center_(ICTC)_laboratory_room_203_(ICT203)_%E2%80%94_normal_view.jpg
+
+studi-kasus/img/foto-hunting.jpg
+  Judul   : Malioboro Street, Yogyakarta
+  Pembuat : Gunawan Kartapranata
+  Lisensi : CC BY-SA 3.0 — https://creativecommons.org/licenses/by-sa/3.0/
+  Sumber  : https://commons.wikimedia.org/wiki/File:Malioboro_Street,_Yogyakarta.JPG
+
+studi-kasus/img/foto-pameran.jpg
+  Judul   : Wiki Loves Monuments Ukraine 2013 Exhibition 247
+  Pembuat : Antanana
+  Lisensi : CC BY-SA 3.0 — https://creativecommons.org/licenses/by-sa/3.0/
+  Sumber  : https://commons.wikimedia.org/wiki/File:Wiki_Loves_Monuments_Ukraine_2013_Exhibition_247.JPG
+
+latihan/img/nasi-goreng.jpg
+  Judul   : Nasi Goreng Kampung Telur Ceplok
+  Pembuat : Fhikri Latifi
+  Lisensi : CC0 1.0 (domain publik) — https://creativecommons.org/publicdomain/zero/1.0/
+  Sumber  : https://commons.wikimedia.org/wiki/File:Nasi_Goreng_Kampung_Telur_Ceplok.jpg

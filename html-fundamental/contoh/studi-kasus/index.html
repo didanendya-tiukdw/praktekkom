@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <!-- [SK-01] Metadata dasar dokumen -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Profil dan pendaftaran anggota UKM DWPh UKDW">
+    <title>UKM Fotografi DWPh UKDW</title>
+    <!-- CSS minimal hanya untuk garis tabel -->
+    <style>
+      table, th, td { border: 1px solid #555; border-collapse: collapse; padding: 4px 8px; }
+    </style>
+  </head>
+  <body>
+    <!-- [SK-02] Header: logo dan nama organisasi -->
+    <header>
+      <img src="img/logo-dwph.svg" alt="Logo UKM DWPh UKDW" width="64" height="64">
+      <h1>UKM Fotografi DWPh UKDW</h1>
+      <p>Belajar memotret, berkarya, dan berbagi cerita lewat gambar.</p>
+    </header>
+
+    <!-- [SK-03] Navigasi internal halaman -->
+    <nav aria-label="Navigasi utama">
+      <a href="#tentang">Tentang</a> |
+      <a href="#divisi">Divisi</a> |
+      <a href="#galeri">Galeri</a> |
+      <a href="#jadwal">Jadwal</a> |
+      <a href="#daftar">Pendaftaran</a>
+    </nav>
+
+    <main>
+      <!-- [SK-04] Section Tentang: paragraf dan pemformatan teks semantik -->
+      <section id="tentang">
+        <h2>Tentang Kami</h2>
+        <p>UKM Fotografi <strong>DWPh UKDW</strong> berdiri pada tahun 2015 sebagai wadah
+           mahasiswa yang ingin mengembangkan kemampuan <em>fotografi</em> dan
+           <em>visual storytelling</em>.</p>
+        <blockquote>
+          <p>Satu foto yang jujur lebih bermakna daripada seribu foto yang indah.</p>
+        </blockquote>
+      </section>
+
+      <!-- [SK-05] Section Divisi: nested list dan description list -->
+      <section id="divisi">
+        <h2>Divisi dan Program Kerja</h2>
+        <ul>
+          <li>Divisi Edukasi
+            <ol>
+              <li>Kelas dasar kamera</li>
+              <li>Kelas editing foto</li>
+            </ol>
+          </li>
+          <li>Divisi Hunting
+            <ol>
+              <li>Hunting bulanan</li>
+              <li>Photo walk kota</li>
+            </ol>
+          </li>
+        </ul>
+        <h3>Istilah Dasar</h3>
+        <dl>
+          <dt>Aperture</dt>
+          <dd>Bukaan lensa yang mengatur banyaknya cahaya masuk.</dd>
+          <dt>Shutter speed</dt>
+          <dd>Lama sensor kamera terkena cahaya.</dd>
+        </dl>
+      </section>
+
+      <!-- [SK-06] Section Galeri: gambar dengan figure dan figcaption -->
+      <section id="galeri">
+        <h2>Galeri Kegiatan</h2>
+        <article>
+          <h3>Hunting Foto Malioboro</h3>
+          <figure>
+            <img src="img/foto-hunting.jpg"
+                 alt="Jalan Malioboro dengan papan nama jalan, becak, dan deretan toko"
+                 width="300" height="200">
+            <figcaption>Lokasi hunting foto: Jalan Malioboro, Yogyakarta.
+              <small>Foto: Gunawan Kartapranata, CC BY-SA 3.0, Wikimedia Commons</small>
+            </figcaption>
+          </figure>
+        </article>
+        <article>
+          <h3>Pameran Karya Anggota</h3>
+          <figure>
+            <img src="img/foto-pameran.jpg"
+                 alt="Pengunjung melihat foto-foto yang digantung dengan penjepit"
+                 width="300" height="199">
+            <figcaption>Contoh tata pamer foto dengan tali dan penjepit.
+              <small>Foto: Antanana, CC BY-SA 3.0, Wikimedia Commons</small>
+            </figcaption>
+          </figure>
+        </article>
+      </section>
+
+      <!-- [SK-07] Section Jadwal: tabel semantik dengan rowspan, colspan, scope -->
+      <section id="jadwal">
+        <h2>Jadwal Kegiatan Desember 2026</h2>
+        <table>
+          <caption>Jadwal kegiatan rutin UKM DWPh UKDW</caption>
+          <thead>
+            <tr>
+              <th scope="col">Minggu</th>
+              <th scope="col">Kegiatan</th>
+              <th scope="col">Waktu</th>
+              <th scope="col">Tempat</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row" rowspan="2">Ke-1</th>
+              <td>Kelas dasar kamera</td>
+              <td>Sabtu, 09.00</td>
+              <td>Ruang Seminar</td>
+            </tr>
+            <tr>
+              <td>Kelas editing foto</td>
+              <td>Sabtu, 13.00</td>
+              <td>Lab Multimedia</td>
+            </tr>
+            <tr>
+              <th scope="row">Ke-2</th>
+              <td colspan="3">Libur akhir semester</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="4">Jadwal dapat berubah, pantau pengumuman di grup anggota.</td>
+            </tr>
+          </tfoot>
+        </table>
+      </section>
+
+      <!-- [SK-08] Section Pendaftaran: form dengan validasi HTML5 -->
+      <section id="daftar">
+        <h2>Formulir Pendaftaran Anggota</h2>
+        <form action="https://httpbin.org/post" method="post">
+          <fieldset>
+            <legend>Data Calon Anggota</legend>
+            <p>
+              <label for="nama">Nama lengkap</label><br>
+              <input type="text" id="nama" name="nama" required minlength="3" maxlength="60">
+            </p>
+            <p>
+              <label for="nim">NIM (8 digit)</label><br>
+              <input type="text" id="nim" name="nim" required pattern="[0-9]{8}"
+                     title="NIM terdiri atas 8 digit angka">
+            </p>
+            <p>
+              <label for="email">Email</label><br>
+              <input type="email" id="email" name="email" required>
+            </p>
+            <p>
+              <label for="divisi-pilihan">Divisi pilihan</label><br>
+              <select id="divisi-pilihan" name="divisi" required>
+                <option value="">-- Pilih divisi --</option>
+                <option value="edukasi">Edukasi</option>
+                <option value="hunting">Hunting</option>
+              </select>
+            </p>
+            <p>Kamera yang dimiliki:
+              <input type="radio" id="dslr" name="kamera" value="dslr" required>
+              <label for="dslr">DSLR/Mirrorless</label>
+              <input type="radio" id="hp" name="kamera" value="ponsel">
+              <label for="hp">Kamera ponsel</label>
+            </p>
+            <p>
+              <label for="alasan">Alasan bergabung</label><br>
+              <textarea id="alasan" name="alasan" rows="3" cols="40"
+                        minlength="20" maxlength="250" required></textarea>
+            </p>
+          </fieldset>
+          <button type="submit">Kirim Pendaftaran</button>
+          <button type="reset">Kosongkan</button>
+        </form>
+      </section>
+
+      <!-- [SK-09] Aside: informasi pendukung -->
+      <aside>
+        <h2>Info Penting</h2>
+        <p>Pendaftaran dibuka sampai <strong>15 Desember 2026</strong>.</p>
+      </aside>
+    </main>
+
+    <!-- [SK-10] Footer: kontak mailto, tel, dan tautan eksternal -->
+    <footer>
+      <p>Kontak: <a href="mailto:dwph@example.ac.id">dwph@example.ac.id</a> |
+         <a href="tel:+6281234567890">0812-3456-7890</a></p>
+      <p>Pelajari sejarah fotografi di
+         <a href="https://id.wikipedia.org/wiki/Fotografi" target="_blank"
+            rel="noopener noreferrer">Wikipedia</a>.</p>
+      <p>&copy; 2026 UKM Fotografi DWPh UKDW</p>
+    </footer>
+  </body>
+</html>

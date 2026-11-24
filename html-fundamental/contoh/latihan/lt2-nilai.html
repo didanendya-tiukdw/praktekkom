@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rekap Nilai Unguided</title>
+    <style>
+      table, th, td { border: 1px solid #555; border-collapse: collapse; padding: 4px 8px; }
+    </style>
+  </head>
+  <body>
+    <h1>Rekap Nilai Unguided</h1>
+    <table>
+      <caption>Rekap nilai unguided kelompok A</caption>
+      <thead>
+        <!-- Baris judul pertama: No dan Nama di-rowspan, Nilai di-colspan -->
+        <tr>
+          <th scope="col" rowspan="2">No</th>
+          <th scope="col" rowspan="2">Nama</th>
+          <th scope="colgroup" colspan="3">Nilai</th>
+          <th scope="col" rowspan="2">Rata-rata</th>
+        </tr>
+        <!-- Baris judul kedua: rincian kolom Nilai -->
+        <tr>
+          <th scope="col">UG HTML</th>
+          <th scope="col">UG CSS</th>
+          <th scope="col">UG Pages</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <th scope="row">Bima</th>
+          <td>85</td><td>80</td><td>90</td><td>85,0</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <th scope="row">Citra</th>
+          <td>90</td><td>88</td><td>86</td><td>88,0</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <th scope="row" colspan="2">Rata-rata kelas</th>
+          <td>87,5</td><td>84,0</td><td>88,0</td><td>86,5</td>
+        </tr>
+      </tfoot>
+    </table>
+  </body>
+</html>

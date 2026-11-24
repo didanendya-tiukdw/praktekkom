@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="120" viewBox="0 0 360 120" font-family="Arial, sans-serif" font-size="12">
+  <rect width="360" height="120" fill="#ffffff"/>
+  <defs><marker id="p" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#444"/></marker></defs>
+  <rect x="10" y="35" width="90" height="50" rx="6" fill="#e3f2fd" stroke="#1e88e5"/>
+  <text x="55" y="56" text-anchor="middle">Working</text><text x="55" y="72" text-anchor="middle">Directory</text>
+  <rect x="135" y="35" width="90" height="50" rx="6" fill="#fff8e1" stroke="#f9a825"/>
+  <text x="180" y="56" text-anchor="middle">Staging</text><text x="180" y="72" text-anchor="middle">Area</text>
+  <rect x="260" y="35" width="90" height="50" rx="6" fill="#e8f5e9" stroke="#43a047"/>
+  <text x="305" y="64" text-anchor="middle">Repository</text>
+  <line x1="100" y1="60" x2="133" y2="60" stroke="#444" marker-end="url(#p)"/><text x="117" y="28" text-anchor="middle" font-size="10">git add</text>
+  <line x1="225" y1="60" x2="258" y2="60" stroke="#444" marker-end="url(#p)"/><text x="242" y="28" text-anchor="middle" font-size="10">git commit</text>
+</svg>

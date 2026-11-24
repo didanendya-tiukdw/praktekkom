@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peminjaman Ruang Laboratorium</title>
+  </head>
+  <body>
+    <h1>Formulir Peminjaman Ruang Laboratorium</h1>
+    <form action="https://httpbin.org/get" method="get">
+      <fieldset>
+        <legend>Data Peminjam</legend>
+        <p>
+          <label for="nama">Nama peminjam</label><br>
+          <input type="text" id="nama" name="nama" required minlength="3">
+        </p>
+        <p>
+          <label for="nim">NIM</label><br>
+          <input type="text" id="nim" name="nim" required pattern="[0-9]{8}"
+                 title="NIM terdiri atas 8 digit angka">
+        </p>
+      </fieldset>
+
+      <fieldset>
+        <legend>Detail Peminjaman</legend>
+        <p>
+          <label for="ruang">Ruang</label><br>
+          <select id="ruang" name="ruang" required>
+            <option value="">-- Pilih ruang --</option>
+            <option value="lab-a">Lab A</option>
+            <option value="lab-b">Lab B</option>
+          </select>
+        </p>
+        <p>
+          <label for="tanggal">Tanggal</label><br>
+          <input type="date" id="tanggal" name="tanggal" required>
+        </p>
+        <p>
+          <label for="jumlah">Jumlah peserta</label><br>
+          <input type="number" id="jumlah" name="jumlah" required min="5" max="40">
+        </p>
+        <p>
+          <label for="keperluan">Keperluan</label><br>
+          <textarea id="keperluan" name="keperluan" rows="3" cols="40"
+                    required minlength="10" maxlength="200"></textarea>
+        </p>
+      </fieldset>
+      <button type="submit">Ajukan</button>
+      <button type="reset">Batal</button>
+    </form>
+  </body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hyperlink dan Navigasi</title>
+  </head>
+  <body>
+    <h1 id="atas">Pusat Informasi Praktikum</h1>
+
+    <!-- 1. Tautan internal halaman: href="#id" menuju elemen ber-id -->
+    <nav aria-label="Daftar isi halaman">
+      <p>Lompat ke: <a href="#referensi">Referensi</a> |
+         <a href="#dokumen">Dokumen</a> | <a href="#kontak">Kontak</a></p>
+    </nav>
+
+    <h2 id="referensi">Referensi Belajar</h2>
+    <!-- 2. Absolute URL: alamat lengkap (protokol + domain + path) -->
+    <p><a href="https://developer.mozilla.org/id/docs/Web/HTML">
+       Dokumentasi HTML di MDN</a></p>
+
+    <!-- 3. target="_blank" membuka tab baru; rel="noopener noreferrer"
+            mencegah halaman tujuan mengakses halaman asal -->
+    <p><a href="https://validator.w3.org/" target="_blank" rel="noopener noreferrer">
+       W3C Markup Validation Service</a> (terbuka di tab baru)</p>
+
+    <h2 id="dokumen">Dokumen Praktikum</h2>
+    <!-- 4. Relative URL: lokasi relatif terhadap file HTML ini -->
+    <ul>
+      <li><a href="halaman/jadwal.html">Jadwal praktikum</a> (subfolder)</li>
+      <li><a href="02-semantic.html">Contoh elemen semantik</a> (folder yang sama)</li>
+      <li><a href="halaman/jadwal.html#unguided">Jadwal unguided</a> (halaman lain + id)</li>
+    </ul>
+
+    <h2 id="kontak">Kontak Asisten</h2>
+    <!-- 5. mailto: membuka aplikasi email; tel: memanggil nomor telepon -->
+    <p>Email:
+      <a href="mailto:asisten.lab@example.ac.id?subject=Pertanyaan%20Praktikum">
+        asisten.lab@example.ac.id</a></p>
+    <p>Telepon: <a href="tel:+62274563929">+62 274 563929</a></p>
+
+    <p><a href="#atas">Kembali ke atas &uarr;</a></p>
+  </body>
+</html>

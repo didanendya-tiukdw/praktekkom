@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menampilkan Gambar</title>
+  </head>
+  <body>
+    <h1>Galeri Laboratorium</h1>
+
+    <!-- Gambar informatif: alt menjelaskan isi/fungsi gambar -->
+    <img src="img/lab-komputer.jpg"
+         alt="Laboratorium komputer berisi deretan meja bersekat dengan monitor"
+         width="320" height="241">
+    <!-- Kredit foto: wajib untuk lisensi CC BY/CC BY-SA, dianjurkan untuk CC0 -->
+    <p><small>Foto: UndueMarmot, CC0, via Wikimedia Commons</small></p>
+
+    <!-- Gambar + keterangan dibungkus <figure> dan <figcaption> -->
+    <figure>
+      <img src="img/grafik-kehadiran.svg"
+           alt="Grafik batang kehadiran praktikum: minggu 1 95%, minggu 2 90%,
+                minggu 3 85%"
+           width="320" height="200">
+      <figcaption>Gambar 2. Persentase kehadiran praktikum minggu 1&ndash;3</figcaption>
+    </figure>
+
+    <!-- Gambar sebagai tautan: alt menjelaskan tujuan tautan -->
+    <p>
+      <a href="https://www.w3.org/">
+        <img src="img/tombol-w3c.svg" alt="Situs resmi W3C" width="96" height="48">
+      </a>
+    </p>
+
+    <!-- Gambar dekoratif: alt dikosongkan agar dilewati screen reader -->
+    <img src="img/garis-hiasan.svg" alt="" width="320" height="16">
+  </body>
+</html>

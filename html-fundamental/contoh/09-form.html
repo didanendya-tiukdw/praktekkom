@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulir Pendaftaran Workshop</title>
+  </head>
+  <body>
+    <h1>Pendaftaran Workshop Web Dasar</h1>
+
+    <!-- action: alamat tujuan pengiriman data; method: cara pengiriman.
+         httpbin.org adalah layanan uji yang menampilkan kembali data terkirim -->
+    <form action="https://httpbin.org/post" method="post">
+
+      <!-- <fieldset> mengelompokkan field; <legend> menjadi judul kelompok -->
+      <fieldset>
+        <legend>Data Diri</legend>
+
+        <!-- label for="nama" terhubung dengan input id="nama" -->
+        <p>
+          <label for="nama">Nama lengkap</label><br>
+          <input type="text" id="nama" name="nama" required minlength="3" maxlength="60"
+                 placeholder="contoh: Andreas Wijaya">
+        </p>
+        <p>
+          <!-- pattern: NIM harus tepat 8 digit angka -->
+          <label for="nim">NIM</label><br>
+          <input type="text" id="nim" name="nim" required pattern="[0-9]{8}"
+                 inputmode="numeric" title="NIM terdiri atas 8 digit angka">
+        </p>
+        <p>
+          <label for="email">Email kampus</label><br>
+          <input type="email" id="email" name="email" required>
+        </p>
+        <p>
+          <label for="sandi">Kata sandi akun peserta</label><br>
+          <input type="password" id="sandi" name="sandi" required minlength="8">
+        </p>
+        <p>
+          <label for="telepon">Nomor WhatsApp</label><br>
+          <input type="tel" id="telepon" name="telepon" pattern="08[0-9]{8,11}"
+                 placeholder="08xxxxxxxxxx">
+        </p>
+        <p>
+          <!-- min dan max membatasi rentang angka -->
+          <label for="angkatan">Tahun angkatan</label><br>
+          <input type="number" id="angkatan" name="angkatan" min="2020" max="2026" value="2026">
+        </p>
+      </fieldset>
+
+      <fieldset>
+        <legend>Pilihan Workshop</legend>
+
+        <!-- Radio button: hanya satu pilihan dalam satu name -->
+        <p>Sesi:
+          <input type="radio" id="pagi" name="sesi" value="pagi" required>
+          <label for="pagi">Pagi</label>
+          <input type="radio" id="siang" name="sesi" value="siang">
+          <label for="siang">Siang</label>
+        </p>
+
+        <!-- Checkbox: boleh memilih lebih dari satu -->
+        <p>Materi yang diminati:
+          <input type="checkbox" id="m-html" name="materi" value="html" checked>
+          <label for="m-html">HTML</label>
+          <input type="checkbox" id="m-css" name="materi" value="css">
+          <label for="m-css">CSS</label>
+          <input type="checkbox" id="m-git" name="materi" value="github-pages">
+          <label for="m-git">GitHub Pages</label>
+        </p>
+
+        <p>
+          <!-- <select> dan <option>: daftar pilihan dropdown -->
+          <label for="prodi">Program studi</label><br>
+          <select id="prodi" name="prodi" required>
+            <option value="">-- Pilih program studi --</option>
+            <option value="informatika">Informatika</option>
+            <option value="sistem-informasi">Sistem Informasi</option>
+          </select>
+        </p>
+        <p>
+          <label for="tanggal">Tanggal kehadiran</label><br>
+          <input type="date" id="tanggal" name="tanggal" min="2026-12-01" max="2026-12-12">
+        </p>
+        <p>
+          <!-- <textarea>: input teks multi-baris -->
+          <label for="motivasi">Motivasi mengikuti workshop</label><br>
+          <textarea id="motivasi" name="motivasi" rows="4" cols="45"
+                    minlength="20" maxlength="300"></textarea>
+        </p>
+      </fieldset>
+
+      <p>
+        <input type="checkbox" id="setuju" name="setuju" required>
+        <label for="setuju">Saya menyatakan data yang diisi benar.</label>
+      </p>
+
+      <!-- <button>: type="submit" mengirim, type="reset" mengosongkan form -->
+      <button type="submit">Daftar</button>
+      <button type="reset">Ulangi</button>
+    </form>
+  </body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Praktikum - Elemen Semantik</title>
+  </head>
+  <body>
+    <!-- Kepala halaman: identitas situs -->
+    <header>
+      <h1>Blog Praktikum Teknologi Komputer</h1>
+      <p>Catatan belajar mahasiswa Informatika</p>
+    </header>
+
+    <!-- Navigasi utama situs -->
+    <nav aria-label="Navigasi utama">
+      <a href="#artikel">Artikel</a> |
+      <a href="#tips">Tips</a> |
+      <a href="#kontak">Kontak</a>
+    </nav>
+
+    <!-- Konten utama; hanya boleh ada satu <main> yang tampil -->
+    <main>
+      <section id="artikel">
+        <h2>Artikel Terbaru</h2>
+
+        <!-- <article>: konten mandiri yang dapat berdiri sendiri -->
+        <article>
+          <h3>Mengenal Version Control dengan Git</h3>
+          <p>Git membantu kita mencatat setiap perubahan kode sehingga
+             riwayat pekerjaan dapat ditelusuri kembali.</p>
+
+          <!-- <figure>: konten ilustrasi beserta keterangannya -->
+          <figure>
+            <img src="img/alur-git.svg"
+                 alt="Diagram alur kerja Git: working directory, staging area, repository"
+                 width="360" height="120">
+            <figcaption>Gambar 1. Tiga area kerja pada Git</figcaption>
+          </figure>
+        </article>
+      </section>
+
+      <!-- <aside>: informasi pendukung yang terkait secara tidak langsung -->
+      <aside id="tips">
+        <h2>Tips Singkat</h2>
+        <p>Lakukan <em>commit</em> sesering mungkin dengan pesan yang jelas.</p>
+      </aside>
+    </main>
+
+    <!-- Kaki halaman: hak cipta dan informasi kontak -->
+    <footer id="kontak">
+      <p>&copy; 2026 Blog Praktikum. Program Studi Informatika.</p>
+    </footer>
+  </body>
+</html>

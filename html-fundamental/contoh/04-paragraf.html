@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paragraf dan Pemformatan Teks</title>
+  </head>
+  <body>
+    <h1>Tata Tertib Laboratorium</h1>
+
+    <!-- <p>: satu blok paragraf. Spasi dan enter berlebih diabaikan browser -->
+    <p>Mahasiswa wajib hadir <strong>15 menit sebelum</strong> praktikum dimulai.
+       Keterlambatan lebih dari 15 menit dianggap <em>tidak hadir</em>.</p>
+
+    <!-- <br>: pindah baris di dalam satu paragraf (misalnya alamat) -->
+    <p>Laboratorium Komputer Dasar<br>
+       Gedung Agape Lantai 2<br>
+       Jl. Dr. Wahidin Sudirohusodo 5-25, Yogyakarta</p>
+
+    <!-- <hr>: pergantian topik (thematic break) -->
+    <hr>
+
+    <h2>Kutipan</h2>
+    <!-- <blockquote>: kutipan panjang dari sumber lain; cite = URL sumber -->
+    <blockquote cite="https://www.w3.org/standards/webdesign/accessibility">
+      <p>The Web is fundamentally designed to work for all people.</p>
+    </blockquote>
+    <p>&mdash; World Wide Web Consortium (W3C)</p>
+
+    <hr>
+
+    <h2>Potongan Kode</h2>
+    <!-- <code>: potongan kode di dalam kalimat -->
+    <p>Jalankan perintah <code>git status</code> untuk melihat status repositori.</p>
+
+    <!-- <pre>: teks preformatted, spasi dan baris baru dipertahankan -->
+    <pre><code>#include &lt;stdio.h&gt;
+
+int main(void) {
+    printf("Halo, Praktikum!\n");
+    return 0;
+}</code></pre>
+  </body>
+</html>
