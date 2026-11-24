@@ -1,8 +1,8 @@
-Paket contoh kode P12 - HTML Fundamental
+Paket contoh kode P13 - HTML Fundamentals
 Praktikum Teknologi Komputer (IT0022), Informatika UKDW
 
 Cara pakai:
-1. Ekstrak folder ini ke D:\PraktikumWeb\P12 (atau folder kerja Anda).
+1. Ekstrak folder ini ke D:\PraktikumWeb\P13 (atau folder kerja Anda).
 2. Buka file .html dengan browser (klik dua kali) atau dengan VS Code.
 3. Ubah kode, simpan (Ctrl+S), lalu muat ulang browser (F5).
 
